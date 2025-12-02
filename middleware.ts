@@ -7,16 +7,23 @@ const ADMIN_HOST = "admin.candorsurvey.com"
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone()
   const host = request.headers.get("host") || ""
+  
+  // Check if running on localhost
+  const isLocalhost = host.includes("localhost") || host.includes("127.0.0.1")
+
+  // ----------------------------------------------------
+  // 0) ALLOW LOCALHOST - Skip all restrictions
+  // ----------------------------------------------------
+  if (isLocalhost) {
+    return await updateSession(request)
+  }
 
   // ----------------------------------------------------
   // 1) BLOCK /dashboard access from non-admin domains
   // ----------------------------------------------------
   if (url.pathname.startsWith("/dashboard") && host !== ADMIN_HOST) {
-    // Redirect to home or show 404
     url.pathname = "/"
     return NextResponse.redirect(url)
-    // OR return 404:
-    // return new NextResponse("Not Found", { status: 404 })
   }
 
   // ----------------------------------------------------
