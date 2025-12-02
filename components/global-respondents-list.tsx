@@ -223,6 +223,8 @@ export function GlobalRespondentsList({
         );
       case "TERMINATED":
         return <Badge variant="destructive">Terminated</Badge>;
+      case "QUOTA_FULL":
+        return <Badge className="bg-yellow-500 text-black">Quota Full</Badge>
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -230,7 +232,9 @@ export function GlobalRespondentsList({
 
   const getProgressDisplay = (status: string, answerCount: number) => {
     if (status === "COMPLETED") return "100%";
-    if (status === "TERMINATED") return "Quota Full";
+    if (status === "QUOTA_FULL") return "Quota Full";
+    if (status === "TERMINATED") return "Terminated";
+
     return "-";
   };
 

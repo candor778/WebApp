@@ -1,6 +1,6 @@
 export type DeviceType = "DESKTOP" | "MOBILE" | "TABLET"
 export type BrowserName = "CHROME" | "SAFARI" | "FIREFOX" | "EDGE" | "OTHER"
-export type ResponseStatus = "STARTED" | "COMPLETED" | "TERMINATED"
+export type ResponseStatus = "STARTED" | "COMPLETED" | "TERMINATED" | "QUOTA FULL"
 
 export interface Project {
   id: string

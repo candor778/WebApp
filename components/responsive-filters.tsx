@@ -210,6 +210,7 @@ export function ResponsiveFilters({
             <SelectItem value="COMPLETED">Completed</SelectItem>
             <SelectItem value="TERMINATED">Terminated</SelectItem>
             <SelectItem value="STARTED">Started</SelectItem>
+            <SelectItem value="QUOTA_FULL">Quota Full</SelectItem>
           </SelectContent>
         </Select>
 
@@ -360,6 +361,8 @@ export function ResponsiveFilters({
                         <SelectItem value="COMPLETED">Completed</SelectItem>
                         <SelectItem value="TERMINATED">Terminated</SelectItem>
                         <SelectItem value="STARTED">Started</SelectItem>
+                        <SelectItem value="QUOTA_FULL">Quota Full</SelectItem>
+
                       </SelectContent>
                     </Select>
                   </div>

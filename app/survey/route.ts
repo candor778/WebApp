@@ -36,11 +36,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Validate status enum
-    const validStatuses = ["STARTED", "COMPLETED", "TERMINATED"]
+    const validStatuses = ["STARTED", "COMPLETED", "TERMINATED", "QUOTA_FULL"]
     const upperStatus = status.toUpperCase()
     if (!validStatuses.includes(upperStatus)) {
       return NextResponse.json(
-        { error: "Invalid status. Must be one of: started, completed, terminated" },
+        { error: "Invalid status. Must be one of: completed, terminated, quota full" },
         { status: 400 },
       )
     }

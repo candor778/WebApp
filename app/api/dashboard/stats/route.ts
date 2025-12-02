@@ -23,6 +23,7 @@ export async function GET() {
       { count: totalResponses },
       { count: completedResponses },
       { count: terminatedResponses },
+      { count: quotaFullResponses },
       { count: responsesToday },
       { count: responsesThisWeek },
       { data: recentProjects },
@@ -50,6 +51,11 @@ export async function GET() {
         .from("responses")
         .select("*", { count: "exact", head: true })
         .eq("status", "TERMINATED"),
+      // Quota full responses
+      supabase
+        .from("responses")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "QUOTA_FULL"),
       // Responses today
       supabase
         .from("responses")
@@ -100,6 +106,7 @@ export async function GET() {
         totalResponses: totalResponses || 0,
         completedResponses: completedResponses || 0,
         terminatedResponses: terminatedResponses || 0,
+        quotaFullResponses: quotaFullResponses || 0,
         responsesToday: responsesToday || 0,
         responsesThisWeek: responsesThisWeek || 0,
       },

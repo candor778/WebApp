@@ -29,7 +29,7 @@ interface Respondent {
 
 interface ProjectRespondentsListProps {
   projectId: string
-  projectIdLabel: string
+  projectIdLabel?: string
 }
 
 const PAGE_SIZE = 50
@@ -126,6 +126,8 @@ export function ProjectRespondentsList({ projectId, projectIdLabel }: ProjectRes
         return <Badge variant="destructive">Terminated</Badge>
       case "STARTED":
         return <Badge variant="secondary">Started</Badge>
+      case "QUOTA_FULL":
+        return <Badge className="bg-yellow-500 hover:bg-amber-600 text-black">Quota Full</Badge>
       default:
         return <Badge variant="outline">{status}</Badge>
     }

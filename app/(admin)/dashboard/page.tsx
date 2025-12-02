@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { FileText, CheckCircle, XCircle, BarChart3, TrendingUp, Clock, ArrowRight } from "lucide-react"
+import { FileText, CheckCircle, XCircle, BarChart3, TrendingUp, Clock, ArrowRight, AlertTriangle } from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { getSupabaseAdmin } from "@/lib/supabase/admin"
@@ -31,6 +31,7 @@ export default async function DashboardPage() {
     { count: totalResponses },
     { count: completedResponses },
     { count: terminatedResponses },
+    { count: quotaFullResponses },
     { count: responsesToday },
     { count: responsesThisWeek },
     { data: recentProjects },
@@ -40,6 +41,7 @@ export default async function DashboardPage() {
     adminClient.from("responses").select("*", { count: "exact", head: true }),
     adminClient.from("responses").select("*", { count: "exact", head: true }).eq("status", "COMPLETED"),
     adminClient.from("responses").select("*", { count: "exact", head: true }).eq("status", "TERMINATED"),
+    adminClient.from("responses").select("*", { count: "exact", head: true }).eq("status", "QUOTA_FULL"),
     adminClient
       .from("responses")
       .select("*", { count: "exact", head: true })
@@ -93,10 +95,20 @@ export default async function DashboardPage() {
     {
       title: "Total Submissions",
       value: totalResponses || 0,
-      description: `${completedResponses || 0} completed, ${terminatedResponses || 0} terminated`,
+      description: `${completedResponses || 0} completed, ${terminatedResponses || 0} terminated, ${
+        quotaFullResponses || 0
+      } quota full`,
       icon: BarChart3,
       color: "text-purple-600",
       bgColor: "bg-purple-50 dark:bg-purple-950",
+    },
+    {
+      title: "Quota Full",
+      value: quotaFullResponses || 0,
+      description: "Respondents blocked due to full quota",
+      icon: AlertTriangle,
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-50 dark:bg-yellow-950",
     },
     {
       title: "Today",
