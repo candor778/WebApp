@@ -4,8 +4,34 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseAdmin } from "@/lib/supabase/admin"
 import { parseDeviceType, parseBrowserName, getIpAddress } from "@/lib/db"
 
+// 👇 Add a small helper + list of known preview/crawler agents
+const BLOCKED_AGENT_SUBSTRINGS = [
+  "WhatsApp",           // WhatsApp link preview
+  "facebookexternalhit",
+  "Facebot",
+  "Twitterbot",
+  "Slackbot",
+  "TelegramBot",
+  "Discordbot",
+  "LinkedInBot",
+]
+
+function isPreviewOrCrawler(ua: string | null): boolean {
+  if (!ua) return false
+  const lower = ua.toLowerCase()
+  return BLOCKED_AGENT_SUBSTRINGS.some(token => lower.includes(token.toLowerCase()))
+}
+
 export async function GET(request: NextRequest) {
   try {
+    // 👇 Read UA immediately and block previews BEFORE any DB / heavy logic
+    const userAgent = request.headers.get("user-agent") || "unknown"
+
+    if (isPreviewOrCrawler(userAgent)) {
+      // 204 = No Content (safe for bots, invisible to users)
+      return new NextResponse(null, { status: 204 })
+    }
+
     const searchParams = request.nextUrl.searchParams
     const projectId = searchParams.get("projectId")
     const status = searchParams.get("status")
@@ -47,7 +73,6 @@ export async function GET(request: NextRequest) {
 
     // Get metadata from request
     const ipAddress = getIpAddress(request.headers)
-    const userAgent = request.headers.get("user-agent") || "unknown"
     const deviceType = parseDeviceType(userAgent)
     const browserName = parseBrowserName(userAgent)
 
