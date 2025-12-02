@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model answers {
+  id          String    @id
+  response_id String
+  question_id String
+  option_id   String?
+  text_answer String?
+  created_at  DateTime  @default(now())
+  options     options?  @relation(fields: [option_id], references: [id], onDelete: Cascade)
+  questions   questions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  responses   responses @relation(fields: [response_id], references: [id], onDelete: Cascade)
+
+  @@index([option_id])
+  @@index([question_id])
+  @@index([response_id])
+}
+
+model options {
+  id             String    @id
+  question_id    String
+  text           String
+  capacity_limit Int?
+  current_count  Int       @default(0)
+  order_index    Int
+  created_at     DateTime  @default(now())
+  answers        answers[]
+  questions      questions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+
+  @@index([question_id])
+}
+
+model questions {
+  id            String       @id
+  survey_id     String
+  text          String
+  description   String?
+  question_type QuestionType @default(SINGLE_CHOICE)
+  order_index   Int
+  is_required   Boolean      @default(true)
+  created_at    DateTime     @default(now())
+  answers       answers[]
+  options       options[]
+  surveys       surveys      @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+
+  @@index([survey_id])
+}
+
+model responses {
+  id                 String         @id
+  survey_id          String
+  respondent_name    String
+  respondent_phone   String
+  respondent_address String?
+  respondent_email   String?
+  ip_address         String?
+  user_agent         String?
+  device_type        DeviceType?
+  browser_name       BrowserName?
+  status             ResponseStatus @default(COMPLETED)
+  completed_at       DateTime?
+  created_at         DateTime       @default(now())
+  answers            answers[]
+  surveys            surveys        @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([survey_id])
+}
+
+model surveys {
+  id              String      @id
+  user_id         String
+  project_id      String      @unique
+  title           String
+  description     String?
+  preview_content String?
+  is_published    Boolean     @default(false)
+  created_at      DateTime    @default(now())
+  updated_at      DateTime
+  questions       questions[]
+  responses       responses[]
+
+  @@index([user_id])
+}
+
+enum BrowserName {
+  CHROME
+  SAFARI
+  FIREFOX
+  EDGE
+  OTHER
+}
+
+enum DeviceType {
+  DESKTOP
+  MOBILE
+  TABLET
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  SHORT_TEXT
+  LONG_TEXT
+}
+
+enum ResponseStatus {
+  STARTED
+  COMPLETED
+  TERMINATED
+}
