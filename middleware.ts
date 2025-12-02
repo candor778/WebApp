@@ -9,7 +9,18 @@ export async function middleware(request: NextRequest) {
   const host = request.headers.get("host") || ""
 
   // ----------------------------------------------------
-  // 1) ADMIN SUBDOMAIN LOGIC
+  // 1) BLOCK /dashboard access from non-admin domains
+  // ----------------------------------------------------
+  if (url.pathname.startsWith("/dashboard") && host !== ADMIN_HOST) {
+    // Redirect to home or show 404
+    url.pathname = "/"
+    return NextResponse.redirect(url)
+    // OR return 404:
+    // return new NextResponse("Not Found", { status: 404 })
+  }
+
+  // ----------------------------------------------------
+  // 2) ADMIN SUBDOMAIN LOGIC
   // ----------------------------------------------------
   // When user opens https://admin.candorsurvey.com/
   // internally serve /dashboard (URL stays as admin.candorsurvey.com/)
@@ -19,30 +30,13 @@ export async function middleware(request: NextRequest) {
   }
 
   // ----------------------------------------------------
-  // 2) Supabase session middleware (AUTH must always run)
-  //    This handles:
-  //    - Session refresh
-  //    - Cookie management
-  //    - Auth protection for /dashboard, /projects, /respondents
+  // 3) Supabase session middleware (AUTH must always run)
   // ----------------------------------------------------
   return await updateSession(request)
 }
 
-// --------------------------------------------------------
-// 3) MATCHER — Run middleware on all routes except static assets
-// --------------------------------------------------------
 export const config = {
   matcher: [
-    /**
-     * Run middleware on everything EXCEPT:
-     * - _next/static
-     * - _next/image
-     * - favicon + public assets (images)
-     * - /auth/*
-     * - /survey
-     * - /thank-you
-     * - /api/survey   (if you want survey hit to be as cheap as possible)
-     */
     "/((?!_next/static|_next/image|favicon.ico|auth|survey|thank-you|api/survey|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 }
