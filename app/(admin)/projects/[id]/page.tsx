@@ -1,11 +1,11 @@
-//app/(admin)/projects/[id]/page.tsx
+// app/(admin)/projects/[id]/page.tsx
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/server"
 import { redirect, notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Users, CheckCircle, XCircle, Clock, TrendingUp } from "lucide-react"
+import { ArrowLeft, Users, CheckCircle, XCircle, Clock, TrendingUp, AlertTriangle } from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { ProjectRespondentsList } from "@/components/project-respondents-list"
@@ -44,6 +44,7 @@ export default async function ProjectDetailPage({
     { count: totalResponses },
     { count: completedResponses },
     { count: terminatedResponses },
+    { count: quotaFullResponses },
     { count: responsesToday },
     { count: responsesThisWeek },
   ] = await Promise.all([
@@ -58,6 +59,11 @@ export default async function ProjectDetailPage({
       .select("*", { count: "exact", head: true })
       .eq("project_id", id)
       .eq("status", "TERMINATED"),
+    adminClient
+      .from("responses")
+      .select("*", { count: "exact", head: true })
+      .eq("project_id", id)
+      .eq("status", "QUOTA_FULL"),
     adminClient
       .from("responses")
       .select("*", { count: "exact", head: true })
@@ -93,6 +99,13 @@ export default async function ProjectDetailPage({
       bgColor: "bg-red-50 dark:bg-red-950",
     },
     {
+      title: "Quota Full",
+      value: quotaFullResponses || 0,
+      icon: AlertTriangle,
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-50 dark:bg-yellow-950",
+    },
+    {
       title: "Today",
       value: responsesToday || 0,
       icon: Clock,
@@ -119,7 +132,6 @@ export default async function ProjectDetailPage({
             Back
           </Button>
         </Link>
-        
       </header>
 
       <main className="flex-1 p-4 md:p-6 space-y-6">
@@ -139,7 +151,7 @@ export default async function ProjectDetailPage({
           </div>
         </div>
 
-        <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
           {statsCards.map((stat) => (
             <Card key={stat.title}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
