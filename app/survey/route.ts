@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
   try {
     // 👇 Read UA immediately and block previews BEFORE any DB / heavy logic
     const userAgent = request.headers.get("user-agent") || "unknown"
-
     if (isPreviewOrCrawler(userAgent)) {
       // 204 = No Content (safe for bots, invisible to users)
       return new NextResponse(null, { status: 204 })
@@ -79,7 +78,7 @@ export async function GET(request: NextRequest) {
     const adminClient = getSupabaseAdmin()
 
     // Parallel fetch: Check both project and existing response simultaneously
-    const [projectResult, existingResponseResult] = await Promise.allSettled([
+    const [projectResult, existingResponsesResult] = await Promise.allSettled([
       adminClient
         .from("projects")
         .select("id, is_active")
@@ -90,7 +89,6 @@ export async function GET(request: NextRequest) {
         .select("id, status, ip_address, created_at")
         .eq("project_id", projectId) // Use projectId string for initial check
         .eq("user_id", userId)
-        .maybeSingle() // Use maybeSingle to avoid error on no results
     ])
 
     // Handle project fetch result
@@ -161,30 +159,40 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Handle existing response check result
-    let existingResponse = null
-    if (existingResponseResult.status === "fulfilled") {
-      const { data, error } = existingResponseResult.value
+    // Handle existing responses check result
+    let existingResponses: Array<{ id: string; status: string; ip_address: string | null; created_at: string }> = []
+    if (existingResponsesResult.status === "fulfilled") {
+      const { data, error } = existingResponsesResult.value
       if (error) {
-        console.error("Error checking for existing response:", error)
+        console.error("Error checking for existing responses:", error)
         // Continue anyway - better to allow potential duplicate than block legitimate user
       } else {
-        existingResponse = data
+        existingResponses = data || []
       }
     }
 
-    if (existingResponse) {
-      // User already submitted - redirect with existing data
+    // NEW LOGIC: Check if user has already submitted from THIS IP address
+    const existingResponseFromSameIP = existingResponses.find(
+      (response) => response.ip_address === ipAddress
+    )
+
+    if (existingResponseFromSameIP) {
+      // User already submitted from this IP - redirect with existing data
       const thankYouUrl = new URL("/thank-you", request.url)
       thankYouUrl.searchParams.set("projectId", projectId)
       thankYouUrl.searchParams.set("userId", userId)
-      thankYouUrl.searchParams.set("status", existingResponse.status)
-      thankYouUrl.searchParams.set("ipAddress", existingResponse.ip_address || "N/A")
-      thankYouUrl.searchParams.set("responseId", existingResponse.id)
+      thankYouUrl.searchParams.set("status", existingResponseFromSameIP.status)
+      thankYouUrl.searchParams.set("ipAddress", existingResponseFromSameIP.ip_address || "N/A")
+      thankYouUrl.searchParams.set("responseId", existingResponseFromSameIP.id)
       thankYouUrl.searchParams.set("duplicate", "true")
       
       return NextResponse.redirect(thankYouUrl)
     }
+
+    // If we reach here, either:
+    // 1. User has never submitted for this project, OR
+    // 2. User has submitted before but from a different IP address
+    // In both cases, we allow the submission
 
     // Additional check: Verify userId doesn't contain suspicious patterns
     const suspiciousPatterns = [
@@ -222,6 +230,7 @@ export async function GET(request: NextRequest) {
       console.error("Error creating response:", responseError)
       
       // Handle duplicate key error (race condition)
+      // Note: This should rarely happen now since we're checking IP address
       if (responseError.code === "23505") {
         // Fetch the existing response that was created in parallel
         const { data: racedResponse } = await adminClient
@@ -229,6 +238,7 @@ export async function GET(request: NextRequest) {
           .select("id, status, ip_address")
           .eq("project_id", project.id)
           .eq("user_id", userId)
+          .eq("ip_address", ipAddress)
           .single()
         
         if (racedResponse) {
@@ -251,7 +261,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Log successful response creation
-    console.log(`Response created successfully - userId: ${userId}, projectId: ${projectId}, responseId: ${response.id}`)
+    console.log(`Response created successfully - userId: ${userId}, projectId: ${projectId}, responseId: ${response.id}, ipAddress: ${ipAddress}`)
+    
+    // If this is a subsequent submission from a different IP, log it
+    if (existingResponses.length > 0) {
+      console.log(`User ${userId} has submitted ${existingResponses.length} time(s) before from different IP address(es)`)
+    }
 
     // Redirect to thank you page
     const thankYouUrl = new URL("/thank-you", request.url)
