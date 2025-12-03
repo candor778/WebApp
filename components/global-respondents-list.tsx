@@ -226,7 +226,7 @@ export function GlobalRespondentsList({
       case "QUOTA_FULL":
         return <Badge className="bg-yellow-500 text-black">Quota Full</Badge>    
       case "QUALITY_TERMINATED":
-        return <Badge className="bg-orange-500  text-black">Quality_Terminated</Badge>;
+        return <Badge className="bg-blue-500  text-black">Quality_Terminated</Badge>;
         default:
         return <Badge variant="outline">{status}</Badge>;
     }
