@@ -65,7 +65,7 @@ export async function GET(
     }
 
     if (userId && userId.trim()) {
-      query = query.ilike("user_id", `%${userId.trim()}%`)
+      query = query.like("user_id", `%${userId.trim()}%`)
     }
 
     // Order and paginate
