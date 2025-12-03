@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
 
     const projectId = searchParams.get("projectId")
-    const status = searchParams.get("status") // STARTED, COMPLETED, TERMINATED, QUOTA_FULL, or all
+    const status = searchParams.get("status") // STARTED, COMPLETED, TERMINATED, QUOTA_FULL, QUALITY_TERMINATED or all
     const userId = searchParams.get("userId") // partial match
 
     if (!projectId) {

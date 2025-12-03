@@ -47,7 +47,7 @@ interface Project {
   title: string;
 }
 
-type FilterMode = 'global' | 'project';
+type FilterMode = "global" | "project";
 
 interface ResponsiveFiltersProps {
   searchUserId: string;
@@ -61,7 +61,7 @@ interface ResponsiveFiltersProps {
   isLoading: boolean;
   handleRefresh: () => void;
   ExportButton: React.ComponentType<any>;
-  
+
   // Optional - only for global mode
   mode?: FilterMode;
   selectedProject?: string;
@@ -73,7 +73,7 @@ interface ResponsiveFiltersProps {
   setProjectSearchQuery?: (value: string) => void;
   projectComboOpen?: boolean;
   setProjectComboOpen?: (value: boolean) => void;
-  
+
   // Optional - only for project mode
   projectId?: string;
 }
@@ -90,7 +90,7 @@ export function ResponsiveFilters({
   isLoading,
   handleRefresh,
   ExportButton,
-  mode = 'global',
+  mode = "global",
   selectedProject,
   setSelectedProject,
   selectedProjectData,
@@ -103,7 +103,7 @@ export function ResponsiveFilters({
   projectId,
 }: ResponsiveFiltersProps) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const isGlobalMode = mode === 'global';
+  const isGlobalMode = mode === "global";
 
   return (
     <>
@@ -211,6 +211,9 @@ export function ResponsiveFilters({
             <SelectItem value="TERMINATED">Terminated</SelectItem>
             <SelectItem value="STARTED">Started</SelectItem>
             <SelectItem value="QUOTA_FULL">Quota Full</SelectItem>
+            <SelectItem value="QUALITY_TERMINATED">
+              QUALITY_TERMINATED
+            </SelectItem>
           </SelectContent>
         </Select>
 
@@ -239,16 +242,18 @@ export function ResponsiveFilters({
             {totalCount === 1 ? "respondent" : "respondents"}
           </div>
           <ExportButton
-            {...(isGlobalMode ? {
-              selectedProject: selectedProject,
-              selectedStatus: selectedStatus,
-              searchUserId: searchUserId,
-              searchProjectId: "",
-            } : {
-              projectId: projectId,
-              selectedStatus: selectedStatus,
-              searchUserId: searchUserId,
-            })}
+            {...(isGlobalMode
+              ? {
+                  selectedProject: selectedProject,
+                  selectedStatus: selectedStatus,
+                  searchUserId: searchUserId,
+                  searchProjectId: "",
+                }
+              : {
+                  projectId: projectId,
+                  selectedStatus: selectedStatus,
+                  searchUserId: searchUserId,
+                })}
           />
           <Button
             variant="outline"
@@ -312,7 +317,7 @@ export function ResponsiveFilters({
                 <SheetHeader className="space-y-1 pb-2">
                   <SheetTitle>Filters</SheetTitle>
                   <SheetDescription>
-                    {isGlobalMode 
+                    {isGlobalMode
                       ? "Refine respondents by project and status."
                       : "Refine respondents by status."}
                   </SheetDescription>
@@ -362,7 +367,9 @@ export function ResponsiveFilters({
                         <SelectItem value="TERMINATED">Terminated</SelectItem>
                         <SelectItem value="STARTED">Started</SelectItem>
                         <SelectItem value="QUOTA_FULL">Quota Full</SelectItem>
-
+                        <SelectItem value="QUALITY_TERMINATED">
+                          QUALITY_TERMINATED
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -401,17 +408,19 @@ export function ResponsiveFilters({
                             <X className="ml-1 h-3 w-3" />
                           </Button>
                         )}
-                        {isGlobalMode && selectedProject !== "all" && selectedProjectData && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setSelectedProject?.("all")}
-                            className="h-7 rounded-full px-2 text-xs"
-                          >
-                            {selectedProjectData.project_id}
-                            <X className="ml-1 h-3 w-3" />
-                          </Button>
-                        )}
+                        {isGlobalMode &&
+                          selectedProject !== "all" &&
+                          selectedProjectData && (
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => setSelectedProject?.("all")}
+                              className="h-7 rounded-full px-2 text-xs"
+                            >
+                              {selectedProjectData.project_id}
+                              <X className="ml-1 h-3 w-3" />
+                            </Button>
+                          )}
                         {selectedStatus !== "all" && (
                           <Button
                             variant="secondary"
@@ -448,16 +457,18 @@ export function ResponsiveFilters({
 
             <div className="flex items-center gap-1.5">
               <ExportButton
-                {...(isGlobalMode ? {
-                  selectedProject: selectedProject,
-                  selectedStatus: selectedStatus,
-                  searchUserId: searchUserId,
-                  searchProjectId: "",
-                } : {
-                  projectId: projectId,
-                  selectedStatus: selectedStatus,
-                  searchUserId: searchUserId,
-                })}
+                {...(isGlobalMode
+                  ? {
+                      selectedProject: selectedProject,
+                      selectedStatus: selectedStatus,
+                      searchUserId: searchUserId,
+                      searchProjectId: "",
+                    }
+                  : {
+                      projectId: projectId,
+                      selectedStatus: selectedStatus,
+                      searchUserId: searchUserId,
+                    })}
               />
               <Button
                 variant="outline"
@@ -489,17 +500,19 @@ export function ResponsiveFilters({
                 <X className="ml-1 h-3 w-3" />
               </Button>
             )}
-            {isGlobalMode && selectedProject !== "all" && selectedProjectData && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedProject?.("all")}
-                className="h-7 rounded-full border-dashed px-2 text-xs"
-              >
-                {selectedProjectData.project_id}
-                <X className="ml-1 h-3 w-3" />
-              </Button>
-            )}
+            {isGlobalMode &&
+              selectedProject !== "all" &&
+              selectedProjectData && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedProject?.("all")}
+                  className="h-7 rounded-full border-dashed px-2 text-xs"
+                >
+                  {selectedProjectData.project_id}
+                  <X className="ml-1 h-3 w-3" />
+                </Button>
+              )}
             {selectedStatus !== "all" && (
               <Button
                 variant="outline"

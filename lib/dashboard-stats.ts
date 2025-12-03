@@ -117,6 +117,7 @@ export async function getDashboardStats(): Promise<{
       completed: number;
       failed: number;
       quota: number;
+      quality_terminated: number;
     }
   >();
 
@@ -152,12 +153,14 @@ export async function getDashboardStats(): Promise<{
         completed: 0,
         failed: 0,
         quota: 0,
+        quality_terminated:0,
       };
 
       current.total += 1;
       if (r.status === "COMPLETED") current.completed += 1;
       if (r.status === "TERMINATED") current.failed += 1;
       if (r.status === "QUOTA_FULL") current.quota += 1;
+      if (r.status === "QUALITY_TERMINATED") current.quality_terminated += 1;
 
       projectStats.set(r.project_id, current);
     }
@@ -203,6 +206,7 @@ export async function getDashboardStats(): Promise<{
         completed: 0,
         failed: 0,
         quota: 0,
+        quality_terminated:0,
       };
 
       const total = stats.total;
@@ -220,6 +224,7 @@ export async function getDashboardStats(): Promise<{
         completed_responses: stats.completed,
         failed_responses: stats.failed,
         quota_full_hits: stats.quota,
+        quality_terminated: stats.quality_terminated,
         completion_rate_percentage: completionRate,
         failure_rate_percentage: failureRate,
       };
@@ -240,6 +245,7 @@ export async function getDashboardStats(): Promise<{
         completed: 0,
         failed: 0,
         quota: 0,
+        quality_terminated:0,
       };
 
       return {

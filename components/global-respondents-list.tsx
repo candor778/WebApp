@@ -224,8 +224,10 @@ export function GlobalRespondentsList({
       case "TERMINATED":
         return <Badge variant="destructive">Terminated</Badge>;
       case "QUOTA_FULL":
-        return <Badge className="bg-yellow-500 text-black">Quota Full</Badge>
-      default:
+        return <Badge className="bg-yellow-500 text-black">Quota Full</Badge>    
+      case "QUALITY_TERMINATED":
+        return <Badge className="bg-orange-500  text-black">Quality_Terminated</Badge>;
+        default:
         return <Badge variant="outline">{status}</Badge>;
     }
   };
@@ -234,6 +236,7 @@ export function GlobalRespondentsList({
     if (status === "COMPLETED") return "100%";
     if (status === "QUOTA_FULL") return "Quota Full";
     if (status === "TERMINATED") return "Terminated";
+    if (status === "QUALITY_TERMINATED") return "Quality Terminated"
 
     return "-";
   };

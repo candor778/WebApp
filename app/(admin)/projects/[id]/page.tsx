@@ -64,6 +64,11 @@ export default async function ProjectDetailPage({
       .select("*", { count: "exact", head: true })
       .eq("project_id", id)
       .eq("status", "QUOTA_FULL"),
+      adminClient
+      .from("responses")
+      .select("*", { count: "exact", head: true })
+      .eq("project_id", id)
+      .eq("status", "QUALITY_TERMINATED"),
     adminClient
       .from("responses")
       .select("*", { count: "exact", head: true })
