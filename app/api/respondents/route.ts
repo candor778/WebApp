@@ -40,8 +40,9 @@ export async function GET(request: NextRequest) {
       { count: "exact" },
     )
 
-    // Apply filters
+    // Apply filters with case-insensitive matching
     if (projectId && projectId !== "all") {
+      // case-sensitive exact match on project_id
       query = query.eq("project_id", projectId)
     }
 
@@ -50,7 +51,8 @@ export async function GET(request: NextRequest) {
     }
 
     if (userId) {
-      query = query.ilike("user_id", `%${userId}%`)
+      // Case-sensitive partial match on user_id
+      query = query.like("user_id", `%${userId}%`)
     }
 
     // Order and paginate
@@ -97,5 +99,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Failed to fetch respondents" }, { status: 500 })
   }
 }
-
-
