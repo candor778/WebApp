@@ -34,7 +34,7 @@ export function BulletPointWhite({ title, description }: BulletPointProps) {
 
 export default function AboutSection() {
   return (
-    <section className="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8">
+    <section id="about"  className="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8 scroll-mt-20">
       <div className="max-w-7xl mx-auto">
         {/* Section Title */}
         <div className="text-center mb-16">

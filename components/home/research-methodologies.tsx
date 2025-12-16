@@ -12,7 +12,7 @@ export default function ResearchMethodologiesSection() {
   ];
 
   return (
-    <section className="py-20 px-4 bg-gray-50">
+    <section id="industries"  className="scroll-mt-20 py-20 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Title */}
         <div className="text-center mb-12">

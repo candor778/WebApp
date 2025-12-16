@@ -19,28 +19,28 @@ export default function ServicesSection() {
       description:
         "Understand the current landscape and future potential of your industry with reliable data and clear forecasts.",
       icon: TrendingUp,
-      image: "/business-charts-and-graphs-on-desk.jpg",
+      image: "https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&h=350",
     },
     {
       title: "Consumer Behavior Analysis",
       description:
         "Get detailed insights into evolving customer preferences, motivations, and purchase behavior.",
       icon: Users,
-      image: "/professional-analyzing-data-on-computer-screens.jpg",
+      image: "https://images.pexels.com/photos/7567537/pexels-photo-7567537.jpeg?auto=compress&cs=tinysrgb&h=350",
     },
     {
       title: "Competitive Landscape Overview",
       description:
         "Analyze key competitors, their strategies, market share, and positioning to identify gaps and opportunities.",
       icon: Target,
-      image: "/hands-pointing-at-business-analytics-charts.jpg",
+      image: "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&h=350",
     },
     {
       title: "Strategic Recommendations",
       description:
         "Turn data into actionable strategies that drive growth, optimize operations, and enhance market positioning.",
       icon: Lightbulb,
-      image: "/business-analytics-report-with-magnifying-glass.jpg",
+      image: "https://images.pexels.com/photos/7947663/pexels-photo-7947663.jpeg?auto=compress&cs=tinysrgb&h=350",
     },
   ];
 
@@ -108,7 +108,7 @@ export default function ServicesSection() {
   };
 
   return (
-    <section className="bg-[#0f1c3f] py-20 px-6">
+    <section id="services"  className="bg-[#0f1c3f] scroll-mt-20 py-20 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">

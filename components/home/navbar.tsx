@@ -55,12 +55,20 @@ export default function Navbar() {
             Services
           </a>
           <a
-            href="#methodology"
+            href="#industries"
             className={`transition-colors duration-300 ${
               isScrolled ? "text-gray-700 hover:text-[#0099ff]" : "text-white/80 hover:text-[#0099ff]"
             }`}
           >
-            Methodology
+            Industries
+          </a>
+          <a
+            href="#contact"
+            className={`transition-colors duration-300 ${
+              isScrolled ? "text-gray-700 hover:text-[#0099ff]" : "text-white/80 hover:text-[#0099ff]"
+            }`}
+          >
+            Contact
           </a>
         </div>
 

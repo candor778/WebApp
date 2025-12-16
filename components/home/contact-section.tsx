@@ -27,7 +27,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white py-20">
+    <section id="contact"  className="scroll-mt-20 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
