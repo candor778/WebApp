@@ -253,58 +253,43 @@ export default function LandingPage() {
       `}</style>
 
       <div className="w-full overflow-hidden">
-        <nav
-          style={{
-            position: "fixed",
-            top: 0,
-            width: "100%",
-            backgroundColor: "rgba(10, 22, 40, 0.8)",
-            backdropFilter: "blur(12px)",
-            zIndex: 50,
-            borderBottom: "1px solid rgba(0, 153, 255, 0.2)",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: "80rem",
-              margin: "0 auto",
-              padding: "1rem 1.5rem",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+        <nav className="fixed top-0 w-full bg-[#0a1628]/80 backdrop-blur-md z-50 border-b border-[#0099ff]/20">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            {/* Logo */}
             <Image
               src="/assets/candor-logo-transparent.png"
               alt="Candor Survey"
               width={150}
               height={40}
-              style={{ height: "auto" }}
+              priority
             />
-            <div style={{ display: "none", gap: "2rem" }} className="md:flex">
-              {["about", "services", "methodology"].map((link) => (
-                <a
-                  key={link}
-                  href={`#${link}`}
-                  style={{
-                    color: "rgba(255, 255, 255, 0.8)",
-                    transition: "color 0.3s",
-                    textTransform: "capitalize",
-                  }}
-                  onMouseOver={(e) => (e.currentTarget.style.color = "#0099ff")}
-                  onMouseOut={(e) =>
-                    (e.currentTarget.style.color = "rgba(255, 255, 255, 0.8)")
-                  }
-                >
-                  {link}
-                </a>
-              ))}
+
+            {/* Desktop Nav */}
+            <div className="hidden md:flex gap-8">
+              <a
+                href="#about"
+                className="text-white/80 hover:text-[#0099ff] transition"
+              >
+                About
+              </a>
+              <a
+                href="#services"
+                className="text-white/80 hover:text-[#0099ff] transition"
+              >
+                Services
+              </a>
+              <a
+                href="#methodology"
+                className="text-white/80 hover:text-[#0099ff] transition"
+              >
+                Methodology
+              </a>
             </div>
           </div>
         </nav>
 
         <section
-          className="gradient-hero"
+          className="bg-[linear-gradient(to_bottom_right,#0a1628,#0f1f35,#1a2f4d)]"
           style={{
             minHeight: "100vh",
             position: "relative",

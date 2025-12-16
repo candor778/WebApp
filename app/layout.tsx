@@ -14,10 +14,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
-export const metadata: Metadata = {
-  title: "Response Tracker - Survey Completion Capture",
-  description: "Lightweight app to capture and track survey completions from external survey tools",
-  generator: "v0.app",
+export const metadata = {
+  title: "Candor Survey",
+  description: "Market research and consumer insights platform",
+  icons: {
+    icon: "/icon0.svg",
+    apple: "/apple-icon.png",
+  },
 }
 
 export default function RootLayout({
