@@ -54,9 +54,9 @@ export default function HeroSection() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
-            <button className="px-8 py-3 bg-transparent border-2 border-gray-400 hover:border-white text-white font-semibold rounded-lg transition-all duration-300 hover:bg-white/10">
+            <a href="#services" className="px-8 py-3 bg-transparent border-2 border-gray-400 hover:border-white text-white font-semibold rounded-lg transition-all duration-300 hover:bg-white/10">
               Explore Services
-            </button>
+            </a>
           </div>
 
           {/* Stats Cards */}
