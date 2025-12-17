@@ -12,38 +12,38 @@ export default function ResearchMethodologiesSection() {
   ];
 
   return (
-    <section id="industries"  className="scroll-mt-20 py-20 px-4 bg-gray-50">
+    <section id="industries" className="scroll-mt-20 py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Title */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
             Research Methodologies
           </h2>
-          <div className="w-24 h-1 bg-cyan-400 mx-auto mb-6"></div>
-          <p className="text-gray-600 text-base">
+          <div className="w-20 sm:w-24 h-1 bg-cyan-400 mx-auto mb-4 sm:mb-6"></div>
+          <p className="text-gray-600 text-sm sm:text-base px-4">
             Comprehensive research solutions powered by proven methodologies
           </p>
         </div>
 
         {/* Container */}
-        <div className="bg-[#1e3a5f] rounded-3xl p-8 md:p-12">
+        <div className="bg-[#1e3a5f] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12">
           {/* Tabs */}
-          <div className="flex flex-wrap justify-center gap-4 mb-10">
+          <div className="flex flex-col xs:flex-row flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8 md:mb-10">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
 
-              const tabStyles: Record<string, string> = {
+              const tabStyles = {
                 quantitative: isActive
                   ? "bg-cyan-500 text-white ring-2 ring-cyan-300/40"
-                  : "bg-[#2c4a6f] text-cyan-300 hover:bg-cyan-500/10",
+                  : "bg-[#2c4a6f] text-cyan-300 hover:bg-cyan-500/10 active:bg-cyan-500/20",
 
                 qualitative: isActive
                   ? "bg-purple-500 text-white ring-2 ring-purple-300/40"
-                  : "bg-[#2c4a6f] text-purple-300 hover:bg-purple-500/10",
+                  : "bg-[#2c4a6f] text-purple-300 hover:bg-purple-500/10 active:bg-purple-500/20",
 
                 support: isActive
                   ? "bg-emerald-500 text-white ring-2 ring-emerald-300/40"
-                  : "bg-[#2c4a6f] text-emerald-300 hover:bg-emerald-500/10",
+                  : "bg-[#2c4a6f] text-emerald-300 hover:bg-emerald-500/10 active:bg-emerald-500/20",
               };
 
               return (
@@ -51,11 +51,12 @@ export default function ResearchMethodologiesSection() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`
-          px-6 py-2.5 rounded-full text-sm font-semibold
-          transition-all duration-300
-          ${tabStyles[tab.id]}
-          ${isActive ? "scale-105 shadow-lg" : "hover:scale-[1.03]"}
-        `}
+                    w-full xs:w-auto px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-full 
+                    text-xs sm:text-sm font-semibold
+                    transition-all duration-300
+                    ${tabStyles[tab.id]}
+                    ${isActive ? "scale-105 shadow-lg" : "hover:scale-[1.03] active:scale-95"}
+                  `}
                 >
                   {tab.label}
                 </button>
@@ -64,28 +65,28 @@ export default function ResearchMethodologiesSection() {
           </div>
 
           {/* Content */}
-          <div className="bg-slate-900/50 rounded-2xl p-8 border border-cyan-500/20">
+          <div className="bg-slate-900/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-cyan-500/20">
             {/* Quantitative */}
             {activeTab === "quantitative" && (
               <div className="animate-fadeIn">
-                <div className="bg-[#0ea5e9] inline-block px-5 py-2 rounded-full mb-6">
-                  <h3 className="text-white font-semibold text-lg">
+                <div className="bg-[#0ea5e9] inline-block px-4 sm:px-5 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
+                  <h3 className="text-white font-semibold text-base sm:text-lg">
                     Quantitative Research
                   </h3>
                 </div>
 
-                <div className="mb-8">
-                  <h4 className="text-cyan-400 font-semibold text-base mb-3">
+                <div className="mb-6 sm:mb-8">
+                  <h4 className="text-cyan-400 font-semibold text-sm sm:text-base mb-2 sm:mb-3">
                     Robust data collection
                   </h4>
-                  <p className="text-gray-300 text-sm leading-relaxed">
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
                     We specialize in quantitative data collection via CLTs for
                     sensory evaluation, alongside efficient interview methods
                     like CAPI and CATI.
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {[
                     {
                       title: "Central Location Tests (CLT)",
@@ -122,23 +123,23 @@ export default function ResearchMethodologiesSection() {
             {/* Qualitative */}
             {activeTab === "qualitative" && (
               <div className="animate-fadeIn">
-                <div className="bg-[#0ea5e9] inline-block px-5 py-2 rounded-full mb-6">
-                  <h3 className="text-white font-semibold text-lg">
+                <div className="bg-[#0ea5e9] inline-block px-4 sm:px-5 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
+                  <h3 className="text-white font-semibold text-base sm:text-lg">
                     Qualitative Research
                   </h3>
                 </div>
 
-                <div className="mb-8">
-                  <h4 className="text-cyan-400 font-semibold text-base mb-3">
+                <div className="mb-6 sm:mb-8">
+                  <h4 className="text-cyan-400 font-semibold text-sm sm:text-base mb-2 sm:mb-3">
                     Deep insights through conversation
                   </h4>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    Our qualitative methods uncover the “why” behind behavior
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
+                    Our qualitative methods uncover the "why" behind behavior
                     through direct human interaction and observation.
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {[
                     {
                       title: "Focus Group Discussions (FGD)",
@@ -175,23 +176,23 @@ export default function ResearchMethodologiesSection() {
             {/* Support */}
             {activeTab === "support" && (
               <div className="animate-fadeIn">
-                <div className="bg-[#0ea5e9] inline-block px-5 py-2 rounded-full mb-6">
-                  <h3 className="text-white font-semibold text-lg">
+                <div className="bg-[#0ea5e9] inline-block px-4 sm:px-5 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
+                  <h3 className="text-white font-semibold text-base sm:text-lg">
                     Research Support
                   </h3>
                 </div>
 
-                <div className="mb-8">
-                  <h4 className="text-cyan-400 font-semibold text-base mb-3">
+                <div className="mb-6 sm:mb-8">
+                  <h4 className="text-cyan-400 font-semibold text-sm sm:text-base mb-2 sm:mb-3">
                     End-to-end research support
                   </h4>
-                  <p className="text-gray-300 text-sm leading-relaxed">
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
                     We ensure your research runs smoothly from design to final
                     delivery.
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {[
                     {
                       title: "Professional Panel Sourcing",
@@ -227,6 +228,23 @@ export default function ResearchMethodologiesSection() {
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </section>
   );
 }
@@ -242,16 +260,16 @@ function MethodCard({
   desc: string;
 }) {
   return (
-    <div className="bg-[#2c4a6f] rounded-2xl p-5 hover:bg-[#3a5a85] transition-colors duration-300">
-      <div className="flex items-start gap-4">
-        <div className="bg-cyan-500 rounded-full w-9 h-9 flex items-center justify-center flex-shrink-0">
-          <span className="text-white font-bold text-sm">{index + 1}</span>
+    <div className="bg-[#2c4a6f] rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 hover:bg-[#3a5a85] active:bg-[#455f90] transition-colors duration-300">
+      <div className="flex items-start gap-3 sm:gap-4">
+        <div className="bg-cyan-500 rounded-full w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 flex items-center justify-center flex-shrink-0">
+          <span className="text-white font-bold text-xs sm:text-sm">{index + 1}</span>
         </div>
-        <div>
-          <h5 className="text-cyan-400 font-semibold text-base mb-1">
+        <div className="flex-1 min-w-0">
+          <h5 className="text-cyan-400 font-semibold text-sm sm:text-base mb-1 break-words">
             {title}
           </h5>
-          <p className="text-gray-300 text-sm leading-relaxed">{desc}</p>
+          <p className="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">{desc}</p>
         </div>
       </div>
     </div>
