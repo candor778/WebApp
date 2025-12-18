@@ -11,6 +11,31 @@ import {
   Eye,
   ShieldCheck,
 } from "lucide-react";
+function MethodCard({
+  index,
+  title,
+  desc,
+}: {
+  index: number;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="bg-[#2c4a6f] rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 hover:bg-[#3a5a85] active:bg-[#455f90] transition-colors duration-300">
+      <div className="flex items-start gap-3 sm:gap-4">
+        <div className="bg-cyan-500 rounded-full w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 flex items-center justify-center flex-shrink-0">
+          <span className="text-white font-bold text-xs sm:text-sm">{index + 1}</span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <h5 className="text-cyan-400 font-semibold text-sm sm:text-base mb-1 break-words">
+            {title}
+          </h5>
+          <p className="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">{desc}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function ServicesSection() {
   const coreServices = [
@@ -220,7 +245,7 @@ export default function ServicesSection() {
               <h4 className="text-2xl font-bold text-white mb-6 text-center">
                 B2B
               </h4>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {industryServices.b2b.map((service, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center text-[#0f1c3f] font-bold text-sm">

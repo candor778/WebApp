@@ -38,7 +38,7 @@ export default function AboutSection() {
       <div className="max-w-7xl mx-auto">
         {/* Section Title */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold text-gray-800 mb-2">
+          <h2 className="text-4xl mt-10 md:text-6xl font-bold text-gray-800 mb-2">
             About Candor Survey
           </h2>
           <p className="text-gray-800">Uncovering the Truth Behind Every Data Point</p>
