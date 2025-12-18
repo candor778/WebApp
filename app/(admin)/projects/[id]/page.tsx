@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { ProjectRespondentsList } from "@/components/project-respondents-list"
 import { getSupabaseAdmin } from "@/lib/supabase/admin"
 import { ExportButton } from "@/components/export-button"
+import { ProjectRemarks } from "@/components/project-remakrs"
 
 export default async function ProjectDetailPage({
   params,
@@ -141,7 +142,7 @@ export default async function ProjectDetailPage({
 
       <main className="flex-1 p-4 md:p-6 space-y-6">
         <div className="flex items-start justify-between">
-          <div>
+          <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <span className="font-mono text-sm text-muted-foreground">{project.project_id}</span>
               <Badge
@@ -153,6 +154,9 @@ export default async function ProjectDetailPage({
             </div>
             <h1 className="text-2xl font-bold">{project.title}</h1>
             {project.description && <p className="text-muted-foreground mt-1">{project.description}</p>}
+          </div>
+          <div className="ml-4">
+            <ProjectRemarks projectId={project.id} />
           </div>
         </div>
 
