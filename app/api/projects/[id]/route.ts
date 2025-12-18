@@ -1,3 +1,4 @@
+//api/projects/[id]/route.ts
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { getSupabaseAdmin } from "@/lib/supabase/admin"
@@ -25,6 +26,64 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   } catch (error) {
     console.error("Error fetching project:", error)
     return NextResponse.json({ error: "Internal Error" }, { status: 500 })
+  }
+}
+
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  try {
+    const body = await request.json()
+    const { is_active } = body
+
+    if (typeof is_active !== "boolean") {
+      return NextResponse.json({ error: "is_active must be a boolean" }, { status: 400 })
+    }
+
+    const adminClient = getSupabaseAdmin()
+
+    // Check if project exists
+    const { data: project, error: fetchError } = await adminClient
+      .from("projects")
+      .select("id, is_active")
+      .eq("id", id)
+      .single()
+
+    if (fetchError || !project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 })
+    }
+
+    // Update the project status
+    const { data: updatedProject, error: updateError } = await adminClient
+      .from("projects")
+      .update({ 
+        is_active,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", id)
+      .select()
+      .single()
+
+    if (updateError) {
+      throw updateError
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Project ${is_active ? "activated" : "deactivated"} successfully`,
+      project: updatedProject,
+    })
+  } catch (error) {
+    console.error("Error updating project:", error)
+    return NextResponse.json({ error: "Failed to update project" }, { status: 500 })
   }
 }
 

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { FolderKanban } from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
@@ -74,7 +73,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
             </div>
             <h3 className="mt-4 text-lg font-semibold">No projects found</h3>
             <p className="mb-4 mt-2 text-sm text-muted-foreground">
-              No projects match the search: `&quot;`{searchQuery}`&quot;`
+              No projects match the search: "{searchQuery}"
             </p>
           </div>
         ) : projects.length === 0 ? (
@@ -88,11 +87,9 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
             </p>
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-col gap-4">
             {filteredProjects.map((project) => (
-              <Link key={project.id} href={`/projects/${project.id}`} prefetch={true} className="block group">
-                <ProjectCard project={project} />
-              </Link>
+              <ProjectCard key={project.id} project={project} />
             ))}
           </div>
         )}

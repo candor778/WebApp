@@ -80,7 +80,7 @@ export default function RecentProjects({
                     className={
                       p.is_active
                         ? "border-transparent"
-                        : "border-muted-foreground/40 text-muted-foreground"
+                        : "border-muted-foreground/40"
                     }
                   >
                     {p.is_active ? "Active" : "Inactive"}

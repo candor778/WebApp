@@ -1,13 +1,11 @@
 "use client"
-
-import type React from "react"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
-import { Loader2, UserPlus, Trash2, Users, RefreshCw, Key } from "lucide-react"
+import { Loader2, UserPlus, Trash2, Users, RefreshCw, Key, EyeOff, Eye } from "lucide-react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,7 +26,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 
 interface User {
@@ -36,6 +33,48 @@ interface User {
   email: string
   createdAt: string
   lastSignIn: string | null
+}
+
+function PasswordInput({
+  value,
+  onChange,
+  placeholder,
+  required,
+  minLength,
+  id,
+  className,
+}: {
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  placeholder?: string
+  required?: boolean
+  minLength?: number
+  id?: string
+  className?: string
+}) {
+  const [show, setShow] = useState(false)
+  return (
+    <div className="relative">
+      <Input
+        id={id}
+        type={show ? "text" : "password"}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        minLength={minLength}
+        className={`pr-10 ${className ?? ""}`}
+      />
+      <button
+        type="button"
+        onClick={() => setShow((p) => !p)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
+        aria-label={show ? "Hide password" : "Show password"}
+      >
+        {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+      </button>
+    </div>
+  )
 }
 
 export function UserManagement() {
@@ -69,11 +108,9 @@ export function UserManagement() {
     try {
       const res = await fetch("/api/admin/users")
       const data = await res.json()
-
       if (!res.ok) {
         throw new Error(data.error || "Failed to fetch users")
       }
-
       setUsers(data.users)
     } catch (error: any) {
       toast({
@@ -89,7 +126,6 @@ export function UserManagement() {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-
     try {
       const res = await fetch("/api/admin/users", {
         method: "POST",
@@ -100,18 +136,14 @@ export function UserManagement() {
           password: newUser.password,
         }),
       })
-
       const data = await res.json()
-
       if (!res.ok) {
         throw new Error(data.error || "Failed to create user")
       }
-
       toast({
         title: "Success",
         description: `User ${newUser.email} created successfully`,
       })
-
       setNewUser({ email: "", password: "" })
       setCreateSuperPassword("")
       setCreateDialogOpen(false)
@@ -136,9 +168,7 @@ export function UserManagement() {
       })
       return
     }
-
     setIsDeleting(userId)
-
     try {
       const res = await fetch("/api/admin/users", {
         method: "DELETE",
@@ -148,18 +178,14 @@ export function UserManagement() {
           userId,
         }),
       })
-
       const data = await res.json()
-
       if (!res.ok) {
         throw new Error(data.error || "Failed to delete user")
       }
-
       toast({
         title: "Success",
         description: `User ${userEmail} deleted successfully`,
       })
-
       setDeleteSuperPassword("")
       fetchUsers()
     } catch (error: any) {
@@ -175,7 +201,6 @@ export function UserManagement() {
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault()
-
     if (!selectedUserId) return
 
     if (newPassword !== confirmPassword) {
@@ -197,7 +222,6 @@ export function UserManagement() {
     }
 
     setIsChangingPassword(selectedUserId)
-
     try {
       const res = await fetch("/api/admin/users/password", {
         method: "PUT",
@@ -208,18 +232,14 @@ export function UserManagement() {
           newPassword,
         }),
       })
-
       const data = await res.json()
-
       if (!res.ok) {
         throw new Error(data.error || "Failed to change password")
       }
-
       toast({
         title: "Success",
         description: `Password changed for ${selectedUserEmail}`,
       })
-
       setPasswordSuperPassword("")
       setNewPassword("")
       setConfirmPassword("")
@@ -282,12 +302,11 @@ export function UserManagement() {
                     <DialogTitle>Create New User</DialogTitle>
                     <DialogDescription>Add a new user to the system. Requires Super Password.</DialogDescription>
                   </DialogHeader>
-                  <form onSubmit={handleCreateUser} className="space-y-4">
+                  <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="createSuperPassword">Super Password</Label>
-                      <Input
+                      <PasswordInput
                         id="createSuperPassword"
-                        type="password"
                         placeholder="Enter super password"
                         required
                         value={createSuperPassword}
@@ -307,9 +326,8 @@ export function UserManagement() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="createPassword">User Password</Label>
-                      <Input
+                      <PasswordInput
                         id="createPassword"
-                        type="password"
                         placeholder="Password for new user"
                         required
                         minLength={6}
@@ -321,15 +339,14 @@ export function UserManagement() {
                       <Button type="button" variant="outline" onClick={() => setCreateDialogOpen(false)}>
                         Cancel
                       </Button>
-                      <Button type="submit" disabled={isLoading}>
+                      <Button onClick={handleCreateUser} disabled={isLoading}>
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Create User
                       </Button>
                     </DialogFooter>
-                  </form>
+                  </div>
                 </DialogContent>
               </Dialog>
-
               <Button variant="outline" size="sm" onClick={fetchUsers} disabled={isLoadingUsers}>
                 <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingUsers ? "animate-spin" : ""}`} />
                 Refresh
@@ -343,16 +360,14 @@ export function UserManagement() {
             <Label htmlFor="deleteSuperPassword" className="text-sm text-muted-foreground">
               Enter Super Password to enable deletion
             </Label>
-            <Input
+            <PasswordInput
               id="deleteSuperPassword"
-              type="password"
               placeholder="Super password for deletion"
               value={deleteSuperPassword}
               onChange={(e) => setDeleteSuperPassword(e.target.value)}
               className="mt-1"
             />
           </div>
-
           {isLoadingUsers ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -361,94 +376,96 @@ export function UserManagement() {
             <p className="text-center py-8 text-muted-foreground">No users found</p>
           ) : (
             <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead>Last Sign In</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((user) => {
-                    const isAdmin = user.email === adminEmail
-                    return (
-                      <TableRow key={user.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            {user.email}
-                            {isAdmin && (
-                              <Badge variant="secondary" className="text-xs">
-                                Admin
-                              </Badge>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">{formatDate(user.createdAt)}</TableCell>
-                        <TableCell className="text-muted-foreground">{formatDate(user.lastSignIn)}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => openPasswordDialog(user.id, user.email)}
-                              disabled={isChangingPassword === user.id}
-                            >
-                              {isChangingPassword === user.id ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <Key className="h-4 w-4" />
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="border-b bg-muted/50">
+                    <tr>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Created</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Last Sign In</th>
+                      <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map((user) => {
+                      const isAdmin = user.email === adminEmail
+                      return (
+                        <tr key={user.id} className="border-b transition-colors hover:bg-muted/50">
+                          <td className="p-4 align-middle font-medium">
+                            <div className="flex items-center gap-2">
+                              {user.email}
+                              {isAdmin && (
+                                <Badge variant="secondary" className="text-xs">
+                                  Admin
+                                </Badge>
                               )}
-                              <span className="ml-1 hidden sm:inline">Password</span>
-                            </Button>
-
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                  disabled={isAdmin || !deleteSuperPassword || isDeleting === user.id}
-                                >
-                                  {isDeleting === user.id ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                  ) : (
-                                    <Trash2 className="h-4 w-4" />
-                                  )}
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete User</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Are you sure you want to delete <strong>{user.email}</strong>? This action cannot be
-                                    undone. The user will lose access to the system immediately.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDeleteUser(user.id, user.email || "")}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            </div>
+                          </td>
+                          <td className="p-4 align-middle text-muted-foreground">{formatDate(user.createdAt)}</td>
+                          <td className="p-4 align-middle text-muted-foreground">{formatDate(user.lastSignIn)}</td>
+                          <td className="p-4 align-middle text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openPasswordDialog(user.id, user.email)}
+                                disabled={isChangingPassword === user.id}
+                              >
+                                {isChangingPassword === user.id ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Key className="h-4 w-4" />
+                                )}
+                                <span className="ml-1 hidden sm:inline">Password</span>
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                    disabled={isAdmin || !deleteSuperPassword || isDeleting === user.id}
                                   >
-                                    Delete User
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
-                </TableBody>
-              </Table>
+                                    {isDeleting === user.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <Trash2 className="h-4 w-4" />
+                                    )}
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete User</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete <strong>{user.email}</strong>? This action cannot be
+                                      undone. The user will lose access to the system immediately.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDeleteUser(user.id, user.email || "")}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      Delete User
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </CardContent>
       </Card>
 
+      {/* Change Password Dialog */}
       <Dialog
         open={passwordDialogOpen}
         onOpenChange={(open) => {
@@ -469,12 +486,11 @@ export function UserManagement() {
               Change password for <strong>{selectedUserEmail}</strong>
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleChangePassword} className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="passwordSuperPassword">Super Password</Label>
-              <Input
+              <PasswordInput
                 id="passwordSuperPassword"
-                type="password"
                 placeholder="Enter super password"
                 required
                 value={passwordSuperPassword}
@@ -483,9 +499,8 @@ export function UserManagement() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="newPassword">New Password</Label>
-              <Input
+              <PasswordInput
                 id="newPassword"
-                type="password"
                 placeholder="Enter new password"
                 required
                 minLength={6}
@@ -495,9 +510,8 @@ export function UserManagement() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
+              <PasswordInput
                 id="confirmPassword"
-                type="password"
                 placeholder="Confirm new password"
                 required
                 minLength={6}
@@ -512,12 +526,12 @@ export function UserManagement() {
               <Button type="button" variant="outline" onClick={() => setPasswordDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isChangingPassword !== null || newPassword !== confirmPassword}>
+              <Button onClick={handleChangePassword} disabled={isChangingPassword !== null || newPassword !== confirmPassword}>
                 {isChangingPassword && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Update Password
               </Button>
             </DialogFooter>
-          </form>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

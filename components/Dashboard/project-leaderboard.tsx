@@ -196,7 +196,7 @@ export default function ProjectLeaderboard({
                       className={
                         item.is_active
                           ? "border-transparent"
-                          : "border-muted-foreground/40 text-muted-foreground"
+                          : "border-muted-foreground/40"
                       }
                     >
                       {item.is_active ? "Active" : "Inactive"}

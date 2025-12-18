@@ -1,3 +1,4 @@
+//app/survey/route.ts
 // Survey Capture Route
 // This is called when external surveys redirect users to capture metadata
 import { type NextRequest, NextResponse } from "next/server"
@@ -81,7 +82,7 @@ export async function GET(request: NextRequest) {
     const [projectResult, existingResponsesResult] = await Promise.allSettled([
       adminClient
         .from("projects")
-        .select("id, is_active")
+        .select("id, is_active, title")
         .eq("project_id", projectId)
         .single(),
       adminClient
@@ -118,7 +119,7 @@ export async function GET(request: NextRequest) {
           description: `Auto-generated project for ${projectId}`,
           is_active: true,
         })
-        .select("id, is_active")
+        .select("id, is_active, title")
         .single()
 
       if (createError) {
@@ -127,7 +128,7 @@ export async function GET(request: NextRequest) {
           // Try to fetch again - another request may have created it
           const { data: retryProject } = await adminClient
             .from("projects")
-            .select("id, is_active")
+            .select("id, is_active, title")
             .eq("project_id", projectId)
             .single()
           
@@ -151,12 +152,13 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Check if project is active
+    // Check if project is active - REDIRECT TO DISABLED PAGE
     if (!project.is_active) {
-      return NextResponse.json(
-        { error: "Project is not active and cannot accept responses" },
-        { status: 403 },
-      )
+      const disabledUrl = new URL("/project-disabled", request.url)
+      disabledUrl.searchParams.set("projectId", projectId)
+      disabledUrl.searchParams.set("projectName", project.title || projectId)
+      
+      return NextResponse.redirect(disabledUrl)
     }
 
     // Handle existing responses check result
