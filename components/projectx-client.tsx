@@ -1,39 +1,39 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { FolderKanban } from "lucide-react"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
-import { ProjectCard } from "@/components/project-card"
-import { Input } from "@/components/ui/input"
-import { Search, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { FolderKanban } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import { ProjectCard } from "@/components/project-card";
+import { Input } from "@/components/ui/input";
+import { Search, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Project {
-  id: string
-  project_id: string
-  title: string
-  description: string | null
-  is_active: boolean
-  created_at: string
-  responseCount: number
+  id: string;
+  project_id: string;
+  title: string;
+  description: string | null;
+  is_active: boolean;
+  created_at: string;
+  responseCount: number;
 }
 
 interface ProjectsClientProps {
-  projects: Project[]
+  projects: Project[];
 }
 
 export function ProjectsClient({ projects }: ProjectsClientProps) {
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Case-sensitive filtering on project_id
   const filteredProjects = projects.filter((project) =>
     project.project_id.includes(searchQuery)
-  )
+  );
 
   const clearSearch = () => {
-    setSearchQuery("")
-  }
+    setSearchQuery("");
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -83,17 +83,22 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
             </div>
             <h3 className="mt-4 text-lg font-semibold">No projects yet</h3>
             <p className="mb-4 mt-2 text-sm text-muted-foreground">
-              Projects are auto-created when external surveys redirect users here.
+              Projects are auto-created when external surveys redirect users
+              here.
             </p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+            {filteredProjects.map((project, index) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                serial={`CS-${index + 1}`}
+              />
             ))}
           </div>
         )}
       </main>
     </div>
-  )
+  );
 }
