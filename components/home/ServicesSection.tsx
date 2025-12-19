@@ -39,74 +39,98 @@ function MethodCard({
 
 export default function ServicesSection() {
   const coreServices = [
-    {
-      title: "Market Size & Growth Projections",
-      description:
-        "Understand the current landscape and future potential of your industry with reliable data and clear forecasts.",
-      icon: TrendingUp,
-      image: "https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&h=350",
-    },
-    {
-      title: "Consumer Behavior Analysis",
-      description:
-        "Get detailed insights into evolving customer preferences, motivations, and purchase behavior.",
-      icon: Users,
-      image: "https://images.pexels.com/photos/7567537/pexels-photo-7567537.jpeg?auto=compress&cs=tinysrgb&h=350",
-    },
-    {
-      title: "Competitive Landscape Overview",
-      description:
-        "Analyze key competitors, their strategies, market share, and positioning to identify gaps and opportunities.",
-      icon: Target,
-      image: "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&h=350",
-    },
-    {
-      title: "Strategic Recommendations",
-      description:
-        "Turn data into actionable strategies that drive growth, optimize operations, and enhance market positioning.",
-      icon: Lightbulb,
-      image: "https://images.pexels.com/photos/7947663/pexels-photo-7947663.jpeg?auto=compress&cs=tinysrgb&h=350",
-    },
-  ];
+      {
+        title: "Market Size & Growth Projections",
+        description:
+          "Understand the current landscape and future potential of your industry with reliable data and clear forecasts.",
+        detailedInfo:
+          "Our market sizing methodology combines top-down and bottom-up approaches, validated through multiple data sources. We provide 5-year forecasts with quarterly updates, scenario planning, and sensitivity analysis to help you make confident investment decisions.",
+        icon: TrendingUp,
+        image:
+          "https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&h=350",
+      },
+      {
+        title: "Consumer Behavior Analysis",
+        description:
+          "Get detailed insights into evolving customer preferences, motivations, and purchase behavior.",
+        detailedInfo:
+          "We employ advanced behavioral economics principles, neuromarketing techniques, and psychological profiling to understand the 'why' behind consumer choices. Our analysis includes purchase journey mapping, decision-making triggers, and emotional drivers.",
+        icon: Users,
+        image:
+          "https://images.pexels.com/photos/7567537/pexels-photo-7567537.jpeg?auto=compress&cs=tinysrgb&h=350",
+      },
+      {
+        title: "Competitive Landscape Overview",
+        description:
+          "Analyze key competitors, their strategies, market share, and positioning to identify gaps and opportunities.",
+        detailedInfo:
+          "Our competitive intelligence includes SWOT analysis, Porter's Five Forces evaluation, strategic group mapping, and white space identification. We track competitor moves in real-time and provide early warning signals for market disruptions.",
+        icon: Target,
+        image:
+          "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&h=350",
+      },
+      {
+        title: "Strategic Recommendations",
+        description:
+          "Turn data into actionable strategies that drive growth, optimize operations, and enhance market positioning.",
+        detailedInfo:
+          "We don't just deliver insights - we provide implementation roadmaps. Our strategic recommendations include prioritized action plans, resource allocation guidance, risk mitigation strategies, and KPIs to measure success.",
+        icon: Lightbulb,
+        image:
+          "https://images.pexels.com/photos/7947663/pexels-photo-7947663.jpeg?auto=compress&cs=tinysrgb&h=350",
+      },
+    ];
 
   const processItems = [
-    {
-      title: "Analytics",
-      description:
-        "We use strong data analysis to predict market changes and help you get the best return on your investment.",
-      icon: BarChart3,
-    },
-    {
-      title: "Programming",
-      description:
-        "We carefully build complex surveys and trackers, so they are easy for people to use on every platform.",
-      icon: Code,
-    },
-    {
-      title: "Diverse Insights",
-      description:
-        "We have a diverse variety of respondents who provide us with real and accurate opinions.",
-      icon: Users,
-    },
-    {
-      title: "Global Reach",
-      description:
-        "We maintain a dedicated global footprint, drawing perspectives from diverse international markets.",
-      icon: Globe,
-    },
-    {
-      title: "Mystery Shopping",
-      description:
-        "We check real customer experiences secretly to provide honest information on service quality.",
-      icon: Eye,
-    },
-    {
-      title: "Survey Audit",
-      description:
-        "We check surveys to make the data is accurate and high-quality, giving reliable and unbiased results.",
-      icon: ShieldCheck,
-    },
-  ];
+  {
+    title: "Analytics",
+    short:
+      "We use strong data analysis to predict market changes and maximize ROI.",
+    long:
+      "Our analytics suite includes predictive modeling, machine learning algorithms, statistical forecasting, and real-time dashboards. We transform raw data into clear, visual insights that enable faster decisions and measurable business impact.",
+    icon: BarChart3,
+  },
+  {
+    title: "Programming",
+    short:
+      "We build complex surveys and trackers that work seamlessly across platforms.",
+    long:
+      "Our survey programming leverages adaptive questioning, logic branching, and mobile-first design. We ensure cross-device compatibility, accessibility compliance, and 99.9% uptime for a smooth respondent experience.",
+    icon: Code,
+  },
+  {
+    title: "Diverse Insights",
+    short:
+      "We gather real opinions from a broad and verified respondent base.",
+    long:
+      "Our panel includes over 10 million verified respondents across 50+ countries, covering diverse demographics, professions, and psychographic profiles. Rigorous sampling and quality checks ensure reliable and representative insights.",
+    icon: Users,
+  },
+  {
+    title: "Global Reach",
+    short:
+      "We deliver insights from diverse international markets worldwide.",
+    long:
+      "With research teams operating in 30+ countries and multilingual capabilities across 40+ languages, we provide global perspectives while respecting local culture, behavior, and market dynamics.",
+    icon: Globe,
+  },
+  {
+    title: "Mystery Shopping",
+    short:
+      "We secretly evaluate real customer experiences to assess service quality.",
+    long:
+      "Our mystery shopping programs use trained evaluators, standardized scoring, photo and video documentation, and detailed reporting. We conduct both announced and unannounced audits for unbiased performance insights.",
+    icon: Eye,
+  },
+  {
+    title: "Survey Audit",
+    short:
+      "We verify data accuracy to ensure unbiased and high-quality results.",
+    long:
+      "Our audit framework includes response validation, fraud detection, pattern analysis, and quality scoring. Every dataset is thoroughly reviewed to meet strict reliability and ethical research standards.",
+    icon: ShieldCheck,
+  },
+];
 
   const industryServices = {
     b2b: [

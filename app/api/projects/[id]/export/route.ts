@@ -16,6 +16,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    // Get date filter parameters from URL
+    const searchParams = request.nextUrl.searchParams
+    const startDate = searchParams.get("startDate")
+    const endDate = searchParams.get("endDate")
+
     const adminClient = getSupabaseAdmin()
 
     // Fetch project
@@ -25,12 +30,25 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
     }
 
-    // Fetch all responses for this project
-    const { data: responses, error: responsesError } = await adminClient
+    // Build query for responses
+    let query = adminClient
       .from("responses")
       .select("*")
       .eq("project_id", id)
-      .order("created_at", { ascending: false })
+
+    // Apply date range filter if provided
+    if (startDate && endDate) {
+      const start = new Date(startDate)
+      start.setHours(0, 0, 0, 0)
+      
+      const end = new Date(endDate)
+      end.setHours(23, 59, 59, 999)
+      
+      query = query.gte("created_at", start.toISOString())
+      query = query.lte("created_at", end.toISOString())
+    }
+
+    const { data: responses, error: responsesError } = await query.order("created_at", { ascending: false })
 
     if (responsesError) {
       console.error("Error fetching responses:", responsesError)
@@ -82,6 +100,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Responses")
 
+    // Generate filename with date range if provided
+    let filename = `${project.project_id}_responses`
+    
+    if (startDate && endDate) {
+      filename += `_${startDate}_to_${endDate}`
+    }
+    
+    filename += `_${new Date().toISOString().split("T")[0]}.xlsx`
+
     // Generate buffer
     const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" })
 
@@ -89,7 +116,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename="${project.project_id}_responses_${new Date().toISOString().split("T")[0]}.xlsx"`,
+        "Content-Disposition": `attachment; filename="${filename}"`,
       },
     })
   } catch (error) {

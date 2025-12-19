@@ -21,9 +21,11 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status")
     const userId = searchParams.get("userId")
     const searchProjectId = searchParams.get("searchProjectId")
+    const startDate = searchParams.get("startDate")
+    const endDate = searchParams.get("endDate")
 
     const adminClient = getSupabaseAdmin()
-    console.log(searchParams, projectId, status, userId, searchProjectId);
+    console.log(searchParams, projectId, status, userId, searchProjectId, startDate, endDate);
     
     // Fetch all projects
     const { data: projects, error: projectsError } = await adminClient
@@ -56,6 +58,18 @@ export async function GET(request: NextRequest) {
 
     if (searchProjectId && searchProjectId.trim()) {
       query = query.ilike("projects.project_id", `%${searchProjectId.trim()}%`)
+    }
+
+    // Apply date range filter
+    if (startDate && endDate) {
+      const start = new Date(startDate)
+      start.setHours(0, 0, 0, 0)
+      
+      const end = new Date(endDate)
+      end.setHours(23, 59, 59, 999)
+      
+      query = query.gte("created_at", start.toISOString())
+      query = query.lte("created_at", end.toISOString())
     }
 
     const { data: responses, error: responsesError } = await query.order("created_at", { ascending: false })
@@ -125,6 +139,11 @@ export async function GET(request: NextRequest) {
 
     if (status && status !== "all") {
       filename += `_${status.toLowerCase()}`
+    }
+
+    // Add date range to filename if present
+    if (startDate && endDate) {
+      filename += `_${startDate}_to_${endDate}`
     }
 
     filename += `_${new Date().toISOString().split("T")[0]}.xlsx`
