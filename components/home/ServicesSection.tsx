@@ -246,7 +246,7 @@ export default function ServicesSection() {
 
                   {/* Description */}
                   <p className="text-gray-300 text-sm leading-relaxed">
-                    {item.description}
+                    {item.short}
                   </p>
                 </div>
               );
