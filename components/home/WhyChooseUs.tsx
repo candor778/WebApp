@@ -71,7 +71,7 @@ const WhyChooseUs = () => {
         <div className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-3xl p-8 md:p-12 lg:p-16 shadow-2xl">
           {/* Header */}
           <div className="text-center mb-12">
-            <h2 className="  text-3xl md:text-4xl lg:text-5xl text-white mb-6">
+            <h2 className="  text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               Why Choose Candor Survey?
             </h2>
             <p className="text-base text-[#94a3b8] max-w-3xl mx-auto leading-relaxed">
