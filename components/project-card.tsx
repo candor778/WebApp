@@ -1,150 +1,175 @@
-// components/project-card.tsx
-"use client";
+"use client"
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Eye, Download, Calendar, Users } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-import { ToggleProjectButton } from "./toggle-project-button";
-import { DeleteProjectButton } from "./delete-project-button";
+import type React from "react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Eye, Download, Calendar, Users } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { toast } from "sonner"
+import { ToggleProjectButton } from "./toggle-project-button"
+import { DeleteProjectButton } from "./delete-project-button"
+import { ExportButton } from "./respondent-export-button"
 
 interface ProjectRowProps {
   project: {
-    id: string;
-    project_id: string;
-    title: string;
-    description: string | null;
-    is_active: boolean;
-    created_at: string;
-    responseCount?: number;
-  };
-  serial: string;
+    id: string
+    project_id: string
+    title: string
+    description: string | null
+    is_active: boolean
+    created_at: string
+    responseCount?: number
+  }
+  serial: string
 }
 
 export function ProjectCard({ project, serial }: ProjectRowProps) {
-  const router = useRouter();
-  const [isExporting, setIsExporting] = useState(false);
+  const router = useRouter()
 
-  const handleExport = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    setIsExporting(true);
-    try {
-      const res = await fetch(`/api/projects/${project.id}/export`);
-      if (!res.ok) throw new Error("Export failed");
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${project.project_id}_responses_${
-        new Date().toISOString().split("T")[0]
-      }.xlsx`;
-
-      document.body.appendChild(a);
-      a.click();
-      URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      toast.success("Export successful");
-    } catch {
-      toast.error("Failed to export data");
-    } finally {
-      setIsExporting(false);
-    }
-  };
 
   return (
     <div
       onClick={() => router.push(`/projects/${project.id}`)}
-      className="group flex items-center gap-4 rounded-xl border-2 border-gray-200 px-4 py-3 
-                 hover:border-[#1b3750]/30 hover:bg-[#1b3750]/5 hover:shadow-md 
-                 transition-all cursor-pointer"
+      className="group relative flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4 
+                 rounded-2xl border border-gray-200 bg-white p-4 lg:px-6 lg:py-4
+                 hover:border-[#22d3ee]/40 hover:shadow-lg hover:shadow-[#22d3ee]/10
+                 transition-all duration-300 cursor-pointer
+                 active:scale-[0.98]"
     >
-      {/* Serial */}
-      <div className="w-16 shrink-0">
-        <span className="inline-flex items-center justify-center rounded-md bg-[#1b3750]/10 px-2 py-1 text-xs font-mono font-semibold text-black">
-          {serial}
-        </span>
-      </div>
-
-      {/* Project Info */}
-      <div className="min-w-0 flex-1 space-y-1">
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-xs text-[#1b3750]/70 bg-[#1b3750]/10 px-2 py-0.5 rounded font-medium">
-            {project.project_id}
+      {/* Top Row: Serial, Status, Actions (Mobile) */}
+      <div className="flex items-center justify-between lg:contents">
+        {/* Serial Number */}
+        <div className="shrink-0">
+          <span
+            className="inline-flex items-center justify-center rounded-lg 
+                         bg-gradient-to-br from-[#1b3750] to-[#1b3750]/80 
+                         px-3 py-1.5 lg:px-3 lg:py-2 
+                         text-xs lg:text-sm font-mono font-bold text-white 
+                         shadow-sm group-hover:shadow-md transition-shadow"
+          >
+            #{serial}
           </span>
+        </div>
+
+        {/* Mobile Actions */}
+        <div className="flex lg:hidden items-center gap-2" onClick={(e) => e.stopPropagation()}>
           <Badge
             variant={project.is_active ? "default" : "secondary"}
-            className={project.is_active ? "bg-green-600 hover:bg-green-700" : ""}
+            className={`text-xs ${project.is_active ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm" : "bg-gray-200 text-gray-700"}`}
           >
             {project.is_active ? "Active" : "Inactive"}
           </Badge>
+
+          <ToggleProjectButton id={project.id} isActive={project.is_active} />
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 min-w-0 space-y-2 lg:space-y-1">
+        {/* Project ID & Status (Desktop only for status) */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span
+            className="font-mono text-xs lg:text-sm text-[#1b3750] bg-[#22d3ee]/10 
+                         px-2.5 py-1 rounded-md font-semibold border border-[#22d3ee]/20
+                         group-hover:bg-[#22d3ee]/20 transition-colors"
+          >
+            {project.project_id}
+          </span>
+
+          {/* Desktop Status Badge */}
+          <Badge
+            variant={project.is_active ? "default" : "secondary"}
+            className={`hidden lg:inline-flex text-xs ${
+              project.is_active
+                ? "bg-[#1b3750]/90 hover:bg-[#1b3750] text-white shadow-sm"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            {project.is_active ? "Active" : "Inactive"}
+          </Badge>
+
+          {/* Mobile Date */}
+          <div className="flex lg:hidden items-center gap-1.5 text-xs text-gray-500 ml-auto">
+            <Calendar className="h-3.5 w-3.5" />
+            <span>
+              {new Date(project.created_at).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
+          </div>
         </div>
 
-        <p className="truncate text-sm font-semibold text-[#1b3750]">
+        {/* Project Title */}
+        <h3
+          className="text-sm lg:text-base font-semibold text-[#1b3750] 
+                     line-clamp-1 lg:line-clamp-none
+                     group-hover:text-[#1b3750] transition-colors"
+        >
           {project.title}
-        </p>
+        </h3>
       </div>
 
-      {/* Created Date */}
-      <div className="hidden md:flex items-center gap-2 text-sm min-w-[140px]">
-        <Calendar className="h-4 w-4 text-[#1b3750]/60" />
-        <span className="text-[#1b3750]/70">
-          {new Date(project.created_at).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </span>
-      </div>
-
-      {/* Responses */}
-      <div className="flex items-center gap-2 min-w-[120px] px-3 py-1 rounded-lg 
-                      bg-[#1b3750]/5 border border-[#1b3750]/10">
-        <Users className="h-4 w-4 text-[#1b3750]" />
-        <span className="font-bold text-lg text-[#1b3750]">
-          {project.responseCount ?? 0}
-        </span>
-        <span className="text-sm text-[#1b3750]/60">
-          {project.responseCount === 1 ? "response" : "responses"}
-        </span>
-      </div>
-
-      {/* Toggle */}
-      <div onClick={(e) => e.stopPropagation()}>
-        <ToggleProjectButton id={project.id} isActive={project.is_active} />
-      </div>
-
-      {/* Actions */}
-      <div
-        className="flex items-center gap-2"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Button
-          size="icon"
-          variant="outline"
-          className="hover:bg-[#1b3750] hover:text-white hover:border-[#1b3750]"
+      {/* Stats & Actions Row */}
+      <div className="flex items-center justify-between lg:contents gap-3">
+        {/* Created Date (Desktop) */}
+        <div
+          className="hidden lg:flex items-center gap-2 text-sm min-w-[140px] 
+                      px-3 py-2 rounded-lg bg-gray-50 border border-gray-100"
         >
-          <Eye className="h-4 w-4" />
-        </Button>
+          <Calendar className="h-4 w-4 text-[#1b3750]/60" />
+          <span className="text-[#1b3750]/80 font-medium">
+            {new Date(project.created_at).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </span>
+        </div>
 
-        <Button
-          size="icon"
-          variant="outline"
-          onClick={handleExport}
-          disabled={isExporting || !project.responseCount}
-          className="hover:bg-blue-600 hover:text-white hover:border-blue-600 disabled:opacity-50"
+        {/* Response Count */}
+        <div
+          className="flex items-center gap-2 px-3 py-2 lg:px-4 lg:py-2.5 
+                      rounded-xl bg-gradient-to-br from-[#22d3ee]/10 to-[#22d3ee]/5 
+                      border border-[#22d3ee]/20
+                      group-hover:from-[#22d3ee]/20 group-hover:to-[#22d3ee]/10
+                      group-hover:border-[#22d3ee]/30
+                      transition-all duration-300 min-w-[130px] lg:min-w-[140px]"
         >
-          <Download className="h-4 w-4" />
-        </Button>
+          <Users className="h-4 w-4 lg:h-5 lg:w-5 text-[#22d3ee] flex-shrink-0" />
+          <div className="flex items-baseline gap-1.5">
+            <span className="font-bold text-lg lg:text-xl text-[#1b3750]">{project.responseCount ?? 0}</span>
+            <span className="text-xs lg:text-sm text-[#1b3750]/60 font-medium">
+              {project.responseCount === 1 ? "response" : "responses"}
+            </span>
+          </div>
+        </div>
 
-        <DeleteProjectButton id={project.id} />
+        {/* Desktop Toggle */}
+        <div className="hidden lg:block" onClick={(e) => e.stopPropagation()}>
+          <ToggleProjectButton id={project.id} isActive={project.is_active} />
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+          <Button
+            size="icon"
+            variant="outline"
+            className="h-9 w-9 lg:h-10 lg:w-10 rounded-lg border-gray-200
+                     hover:bg-[#1b3750] hover:text-white hover:border-[#1b3750]
+                     hover:shadow-md hover:scale-105
+                     transition-all duration-200 bg-transparent"
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
+
+          <ExportButton />
+
+          <DeleteProjectButton id={project.id} />
+        </div>
       </div>
     </div>
-  );
+  )
 }
