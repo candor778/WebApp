@@ -50,7 +50,7 @@ const Contact = () => {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "YOUR_WEB3FORMS_ACCESS_KEY", // Use environment variable
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "88c1d037-376d-4731-a174-d57d6b20c176", // Use environment variable
           name: formData.fullName,
           email: formData.email,
           phone: formData.phone,
