@@ -1,46 +1,99 @@
 "use client"
-
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Phone, Mail, Send } from "lucide-react"
+import { Phone, Mail, Send, CheckCircle, AlertCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
 
+interface FormData {
+  fullName: string
+  email: string
+  phone: string
+  company: string
+  message: string
+}
+
+interface ToastState {
+  show: boolean
+  type: "success" | "error"
+  message: string
+}
+
+interface Web3FormsResponse {
+  success: boolean
+  message?: string
+}
+
 const Contact = () => {
   const { toast } = useToast()
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
     phone: "",
     company: "",
     message: "",
   })
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "YOUR_WEB3FORMS_ACCESS_KEY", // Use environment variable
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          message: formData.message,
+          subject: "New Contact Form Submission from Candor Survey",
+          from_name: "Candor Survey Website",
+        }),
+      })
 
-    toast({
-      title: "Message Sent!",
-      description: "We'll get back to you as soon as possible.",
-    })
+      const result: Web3FormsResponse = await response.json()
 
-    setFormData({
-      fullName: "",
-      email: "",
-      phone: "",
-      company: "",
-      message: "",
-    })
-    setIsSubmitting(false)
+      if (result.success) {
+        toast({
+          title: "Message Sent!",
+          description: "We'll get back to you as soon as possible.",
+        })
+        
+        // Reset form
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          company: "",
+          message: "",
+        })
+      } else {
+        toast({
+          title: "Error",
+          description: "Something went wrong. Please try again.",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      console.error("Form submission error:", error)
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -52,10 +105,13 @@ const Contact = () => {
       }}
     >
       <div className="container mx-auto px-4 md:px-6">
+        {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="  text-3xl md:text-4xl lg:text-5xl text-[#e5e9f0] mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl text-[#e5e9f0] mb-4">
             Get In{" "}
-            <span className="bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] bg-clip-text text-transparent">Touch</span>
+            <span className="bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] bg-clip-text text-transparent">
+              Touch
+            </span>
           </h2>
           <p className="text-lg text-[#8a9bb5] max-w-2xl mx-auto">
             Ready to transform your business with data-driven insights? Let&apos;s start a conversation.
@@ -63,12 +119,13 @@ const Contact = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+          {/* Left Column - Info */}
           <div className="space-y-8">
             <div>
-              <h3 className="  text-2xl text-[#e5e9f0] mb-4">Let&apos;s Work Together</h3>
+              <h3 className="text-2xl text-[#e5e9f0] mb-4">Let&apos;s Work Together</h3>
               <p className="text-[#8a9bb5]">
-                Whether you need market research, consumer insights, or competitive analysis, our team is ready to help
-                you make informed decisions that drive growth.
+                Whether you need market research, consumer insights, or competitive analysis, our team is ready to
+                help you make informed decisions that drive growth.
               </p>
             </div>
 
@@ -108,10 +165,12 @@ const Contact = () => {
                 className="relative rounded-2xl shadow-xl w-full object-cover aspect-video"
                 width={940}
                 height={529}
+                priority
               />
             </div>
           </div>
 
+          {/* Right Column - Form */}
           <div className="backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-2xl p-8">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
@@ -120,6 +179,7 @@ const Contact = () => {
                 </label>
                 <Input
                   id="fullName"
+                  name="fullName"
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                   required
@@ -134,6 +194,7 @@ const Contact = () => {
                 </label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -149,6 +210,7 @@ const Contact = () => {
                 </label>
                 <Input
                   id="phone"
+                  name="phone"
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -164,6 +226,7 @@ const Contact = () => {
                 </label>
                 <Input
                   id="company"
+                  name="company"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                   className="bg-[#1e293b]/50 border-[#2a3f5f] focus:border-[#22d3ee] text-white"
@@ -177,6 +240,7 @@ const Contact = () => {
                 </label>
                 <Textarea
                   id="message"
+                  name="message"
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   rows={4}
@@ -192,7 +256,7 @@ const Contact = () => {
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
-                <Send className="w-4 h-4" />
+                <Send className="w-4 h-4 ml-2" />
               </Button>
             </form>
           </div>
