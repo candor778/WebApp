@@ -19,6 +19,11 @@ const quantitativeMethods = [
     icon: Users,
     title: "Central Location Tests (CLT)",
     description: "Controlled environment testing for product evaluation",
+    popupTitle: "Central Location Tests (CLT)",
+    popupSubtitle: "Standardized, controlled venues ensuring high data quality for sensory testing, concept evaluation, and packaging feedback.",
+    popupDescription:
+      "Our CLT facilities are equipped with state-of-the-art technology for product testing, sensory evaluation, and concept validation. We maintain controlled environments that eliminate external biases and ensure data consistency across multiple test locations.",
+  },
   },
   {
     icon: Headphones,
