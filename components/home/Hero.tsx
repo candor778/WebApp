@@ -20,7 +20,7 @@ const Hero = () => {
       }}
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-slate-900/80 to-blue-900/80" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-slate-900/90 to-blue-900/90" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a1628]/50 to-[#0a1628]" />
       {/* Subtle pattern overlay */}
       <div
@@ -45,8 +45,9 @@ const Hero = () => {
             critical business decisions.
           </p>
           <div className="hero-buttons flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <button
-              className="
+            <a href="#contact">
+              <button
+                className="
     inline-flex items-center justify-center gap-2
     whitespace-nowrap font-semibold
     ring-offset-background
@@ -62,22 +63,23 @@ const Hero = () => {
     h-12 px-8
     rounded-lg text-[#0f1729]
   "
-            >
-              Get Started
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5 ml-2"
               >
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </button>
+                Get Started
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-5 h-5 ml-2"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </button>
+            </a>
 
             <a href="/services">
               <button
