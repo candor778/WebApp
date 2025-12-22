@@ -63,7 +63,7 @@ const InfoPopup = ({
             rounded-xl
             bg-[hsl(220,50%,18%)]
             border
-            border-[#0fb6cc33]/10
+            border-[#0fb6cc33]/50
           "
         >
           <p className="text-white leading-relaxed">
