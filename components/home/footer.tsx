@@ -1,105 +1,148 @@
+import { TrendingUp, Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from "lucide-react"
 import Link from "next/link"
-import { Phone, Mail, Linkedin, Twitter, Facebook } from "lucide-react"
 
-export default function Footer() {
+const Footer = () => {
   return (
-    <footer className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-          {/* Brand Section */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-cyan-400 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-900" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z" />
-                  <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z" />
-                  <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
-                </svg>
+    <footer className="bg-[#0f1724] border-t border-[#2a3f5f] py-16">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+          {/* Brand */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-[#0a1628]" />
               </div>
-              <div>
-                <h3 className="text-xl font-bold">CANDOR SURVEY</h3>
-                <p className="text-xs text-cyan-300">Market Research Excellence</p>
-              </div>
+              <span className="text-xl font-semibold text-[#e5e9f0] tracking-tight">CANDOR</span>
             </div>
-            <p className="text-sm text-gray-300 leading-relaxed">
-              Uncovering truth through data-driven insights. Your strategic partner in navigating market complexity.
+            <p className="text-[#8a9bb5] text-sm">
+              Uncovering the truth behind every data point. Your trusted partner in market research and consumer
+              insights.
             </p>
+            <div className="flex gap-3">
+              <a
+                href="#"
+                className="w-9 h-9 rounded-lg bg-[#1e293b] hover:bg-[#22d3ee]/20 flex items-center justify-center transition-colors"
+              >
+                <Linkedin className="w-4 h-4 text-[#8a9bb5]" />
+              </a>
+              <a
+                href="#"
+                className="w-9 h-9 rounded-lg bg-[#1e293b] hover:bg-[#22d3ee]/20 flex items-center justify-center transition-colors"
+              >
+                <Twitter className="w-4 h-4 text-[#8a9bb5]" />
+              </a>
+              <a
+                href="#"
+                className="w-9 h-9 rounded-lg bg-[#1e293b] hover:bg-[#22d3ee]/20 flex items-center justify-center transition-colors"
+              >
+                <Facebook className="w-4 h-4 text-[#8a9bb5]" />
+              </a>
+            </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Services */}
           <div>
-            <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+            <h4 className="font-semibold text-[#e5e9f0] mb-4">Services</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="#about" className="text-gray-300 hover:text-cyan-300 transition-colors text-sm">
+                <Link
+                  href="/services#methodologies"
+                  className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors"
+                >
+                  Market Research
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services#core-services"
+                  className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors"
+                >
+                  Consumer Insights
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services#deep-dive"
+                  className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors"
+                >
+                  Competitive Analysis
+                </Link>
+              </li>
+              <li>
+                <Link href="/services" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
+                  Strategic Consulting
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h4 className="font-semibold text-[#e5e9f0] mb-4">Company</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/#about" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="#services" className="text-gray-300 hover:text-cyan-300 transition-colors text-sm">
-                  Services
+                <Link
+                  href="/services#process"
+                  className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors"
+                >
+                  Our Process
                 </Link>
               </li>
               <li>
-                <Link href="#industries" className="text-gray-300 hover:text-cyan-300 transition-colors text-sm">
-                  Industries
+                <Link
+                  href="/services#methodologies"
+                  className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors"
+                >
+                  Methodologies
                 </Link>
               </li>
               <li>
-                <Link href="#contact" className="text-gray-300 hover:text-cyan-300 transition-colors text-sm">
+                <Link href="/#contact" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
                   Contact
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Contact Us */}
+          {/* Contact */}
           <div>
-            <h3 className="text-lg font-bold mb-4">Contact Us</h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-cyan-300" />
-                <span className="text-sm text-gray-300">+91 76888 95925</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-cyan-300" />
-                <span className="text-sm text-gray-300">contact@candorsurvey.com</span>
-              </div>
-              <div className="flex items-center gap-4 mt-6">
-                <Link
-                  href="#"
-                  className="w-10 h-10 bg-blue-800/50 rounded-lg flex items-center justify-center hover:bg-cyan-400 hover:text-blue-900 transition-all duration-300"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </Link>
-                <Link
-                  href="#"
-                  className="w-10 h-10 bg-blue-800/50 rounded-lg flex items-center justify-center hover:bg-cyan-400 hover:text-blue-900 transition-all duration-300"
-                  aria-label="Twitter"
-                >
-                  <Twitter className="w-5 h-5" />
-                </Link>
-                <Link
-                  href="#"
-                  className="w-10 h-10 bg-blue-800/50 rounded-lg flex items-center justify-center hover:bg-cyan-400 hover:text-blue-900 transition-all duration-300"
-                  aria-label="Facebook"
-                >
-                  <Facebook className="w-5 h-5" />
-                </Link>
-              </div>
-            </div>
+            <h4 className="font-semibold text-[#e5e9f0] mb-4">Contact</h4>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3 text-sm text-[#8a9bb5]">
+                <Phone className="w-4 h-4 text-[#22d3ee]" />
+                +91 76888 95925
+              </li>
+              <li className="flex items-center gap-3 text-sm text-[#8a9bb5]">
+                <Mail className="w-4 h-4 text-[#22d3ee]" />
+                contact@candorsurvey.com
+              </li>
+              <li className="flex items-start gap-3 text-sm text-[#8a9bb5]">
+                <MapPin className="w-4 h-4 text-[#22d3ee] flex-shrink-0 mt-0.5" />
+                Mumbai, India
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Bottom Copyright Bar */}
-        <div className="border-t border-blue-700/50 pt-8">
-          <p className="text-center text-sm text-gray-400">
-            © 2025 Candor Survey. All rights reserved. | Uncovering Truth Through Data Driven Insights
-          </p>
+        <div className="mt-12 pt-8 border-t border-[#2a3f5f] flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-[#8a9bb5]">© 2025 Candor Survey. All rights reserved.</p>
+          <div className="flex gap-6">
+            <a href="#" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
+              Terms of Service
+            </a>
+          </div>
         </div>
       </div>
     </footer>
   )
 }
+
+export default Footer

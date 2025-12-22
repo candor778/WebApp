@@ -1,29 +1,22 @@
-"use client";
+import About from "@/components/home/About";
+import Contact from "@/components/home/Contact";
+import Footer from "@/components/home/Footer";
+import Header from "@/components/home/Header";
+import Hero from "@/components/home/Hero";
+import WhyChooseUs from "@/components/home/WhyChooseUs";
 
-import Navbar from "@/components/home/navbar";
-import HeroSection from "@/components/home/hero-section";
-import AboutSection from "@/components/home/about-section";
-import WhyChooseUs from "@/components/home/why-choose-us";
-import ResearchProcess from "@/components/home/research-process";
-import ServicesSection from "@/components/home/ServicesSection";
-import ResearchMethodologiesSection from "@/components/home/research-methodologies";
-import ContactSection from "@/components/home/contact-section";
-import Footer from "@/components/home/footer";
 
-export default function LandingPage() {
+export default function Home() {
   return (
-    <div className="w-full overflow-hidden">
-      <Navbar />
-
-      <HeroSection />
-      <AboutSection />
-      <WhyChooseUs />
-      <ResearchProcess />
-      <ServicesSection />
-      <ResearchMethodologiesSection />
-      <ContactSection />
-
+    <div className="min-h-screen bg-[#0f1724]">
+      <Header />
+      <main>
+        <Hero />
+        <About />
+        <WhyChooseUs />
+        <Contact />
+      </main>
       <Footer />
     </div>
-  );
+  )
 }
