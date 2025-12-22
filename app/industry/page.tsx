@@ -10,7 +10,7 @@ export default function IndustryPage() {
       <Header />
       <main className="pt-16">
         {/* Hero Banner for Industry Page */}
-        <section className="py-20 bg-[#0a1628]">
+        <section className="py-20 bg-[#1e293b]/30">
           <div className="container mx-auto px-4 md:px-6 text-center">
             <h1 className="  text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
               Industry Solutions

@@ -58,14 +58,14 @@ const Contact = () => {
             <span className="bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] bg-clip-text text-transparent">Touch</span>
           </h2>
           <p className="text-lg text-[#8a9bb5] max-w-2xl mx-auto">
-            Ready to transform your business with data-driven insights? Let`&apos;`s start a conversation.
+            Ready to transform your business with data-driven insights? Let&apos;s start a conversation.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           <div className="space-y-8">
             <div>
-              <h3 className="  text-2xl text-[#e5e9f0] mb-4">Let`&apos;`s Work Together</h3>
+              <h3 className="  text-2xl text-[#e5e9f0] mb-4">Let&apos;s Work Together</h3>
               <p className="text-[#8a9bb5]">
                 Whether you need market research, consumer insights, or competitive analysis, our team is ready to help
                 you make informed decisions that drive growth.
@@ -87,7 +87,7 @@ const Contact = () => {
               </a>
 
               <a
-                href="mailto:contact@candorsurvey.com"
+                href="mailto:info@candorsurvey.com"
                 className="flex items-center gap-4 p-4 backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-xl hover:border-[#22d3ee]/40 transition-all group"
               >
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -95,7 +95,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <div className="text-sm text-[#8a9bb5]">Email Us</div>
-                  <div className="text-[#e5e9f0] font-medium">contact@candorsurvey.com</div>
+                  <div className="text-[#e5e9f0] font-medium">Info@candorsurvey.com</div>
                 </div>
               </a>
             </div>

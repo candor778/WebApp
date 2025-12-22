@@ -199,7 +199,7 @@ const CoreServices = () => {
                 key={item.title}
                 className={`rounded-xl p-6 cursor-pointer transition-all duration-300 ${
                   index % 2 === 0
-                    ? "bg-[#0a1628] hover:bg-[#0d1d35]"
+                    ? "bg-gradient-to-br from-[#1e3a5f] via-slate-800 to-[#1e3a5f] hover:bg-[#0d1d35]"
                     : "bg-gradient-to-br from-[#22d3ee] to-[#14b8a6] hover:from-[#06b6d4] hover:to-[#0891b2]"
                 }`}
                 onClick={() => openPopup(item.popupTitle, item.popupSubtitle, item.popupDescription)}

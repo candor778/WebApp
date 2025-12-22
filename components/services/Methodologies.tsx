@@ -87,7 +87,7 @@ const Methodologies = () => {
   return (
     <section
       id="methodologies"
-      className="py-24 bg-[#0f1724] relative"
+      className="py-24 bg-[#072657] relative"
       style={{
         backgroundImage: `radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(20, 184, 166, 0.03) 0%, transparent 40%)`,
       }}
@@ -167,7 +167,7 @@ const Methodologies = () => {
           </TabsList>
 
           <TabsContent value="quantitative">
-            <div className="backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-2xl p-8">
+            <div className="backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#111c31] rounded-2xl p-8">
               <div className="mb-8">
                 <h3 className="  text-2xl text-[#e5e9f0] mb-2">
                   Quantitative Research
@@ -187,7 +187,7 @@ const Methodologies = () => {
                 {quantitativeMethods.map((method, index) => (
                   <div
                     key={method.title}
-                    className="p-4 rounded-xl bg-[#1e293b]/50 hover:bg-[#1e293b] transition-colors group"
+                    className="p-4 rounded-xl bg-[#15213b] hover:bg-[#1e293b] transition-colors group"
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <span className="w-8 h-8 rounded-lg bg-[#22d3ee]/20 flex items-center justify-center text-[#22d3ee] font-semibold text-sm">
@@ -215,7 +215,7 @@ const Methodologies = () => {
           </TabsContent>
 
           <TabsContent value="qualitative">
-            <div className="backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-2xl p-8">
+            <div className="backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#111c31] rounded-2xl p-8">
               <div className="mb-8">
                 <h3 className="  text-2xl text-[#e5e9f0] mb-2">
                   Qualitative Research
@@ -224,7 +224,7 @@ const Methodologies = () => {
                   Deep human understanding
                 </p>
                 <p className="text-[#8a9bb5]">
-                  Our qualitative methods uncover the `&apos;`why`&apos;` behind
+                  Our qualitative methods uncover the &apos;why&apos; behind
                   consumer behavior, providing rich narratives and emotional
                   insights that quantitative data alone cannot reveal.
                 </p>
@@ -234,7 +234,7 @@ const Methodologies = () => {
                 {qualitativeMethods.map((method, index) => (
                   <div
                     key={method.title}
-                    className="p-4 rounded-xl bg-[#1e293b]/50 hover:bg-[#1e293b] transition-colors group"
+                    className="p-4 rounded-xl bg-[#15213b] hover:bg-[#1e293b] transition-colors group"
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <span className="w-8 h-8 rounded-lg bg-[#14b8a6]/20 flex items-center justify-center text-[#14b8a6] font-semibold text-sm">
@@ -255,7 +255,7 @@ const Methodologies = () => {
           </TabsContent>
 
           <TabsContent value="support">
-            <div className="backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-2xl p-8">
+            <div className="backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#111c31] rounded-2xl p-8">
               <div className="mb-8">
                 <h3 className="  text-2xl text-[#e5e9f0] mb-2">
                   Research Support
@@ -274,7 +274,7 @@ const Methodologies = () => {
                 {supportServices.map((service, index) => (
                   <div
                     key={service.title}
-                    className="p-4 rounded-xl bg-[#1e293b]/50 hover:bg-[#1e293b] transition-colors group text-center"
+                    className="p-4 rounded-xl bg-[#15213b] hover:bg-[#1e293b] transition-colors group text-center"
                   >
                     <div className="w-12 h-12 rounded-xl bg-[#22d3ee]/10 flex items-center justify-center mx-auto mb-3">
                       <service.icon className="w-6 h-6 text-[#22d3ee]" />

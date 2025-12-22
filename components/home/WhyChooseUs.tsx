@@ -68,7 +68,7 @@ const WhyChooseUs = () => {
     <section className="py-24 bg-[#f8fafc]">
       <div className="container mx-auto px-4 md:px-6">
         {/* Dark Navy Container */}
-        <div className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-3xl p-8 md:p-12 lg:p-16 shadow-2xl">
+        <div className="bg-gradient-to-br hover:scale-105 transition-all duration-300 from-[#1e3a5f] via-slate-800 to-[#1e3a5f] rounded-3xl p-8 md:p-12 lg:p-16 shadow-2xl">
           {/* Header */}
           <div className="text-center mb-12">
             <h2 className="  text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">

@@ -18,9 +18,9 @@ const Hero = () => {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-8"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/95 via-[#0d1e36]/90 to-[#0a1628]/95" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-slate-900/80 to-blue-900/80" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a1628]/50 to-[#0a1628]" />
       {/* Subtle pattern overlay */}
       <div
@@ -102,7 +102,7 @@ const Hero = () => {
             </a>
           </div>
           {/* Stats */}
-          <div className="hero-stats grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 md:mb-6 xl:mb-10 max-w-3xl mx-auto">
+          <div className="hero-stats grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
             {stats.map((stat) => (
               <div
                 key={stat.label}
@@ -117,17 +117,19 @@ const Hero = () => {
             ))}
           </div>
         </div>
-        {/* Scroll Down Indicator - Hidden on small phones */}
-        <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 z-10 hidden sm:block">
-          <div className="animate-bounce">
-            <div className="w-7 h-11 sm:w-8 sm:h-12 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
-              <div className="w-1.5 h-3 bg-white rounded-full animate-pulse"></div>
-            </div>
+      </div>
+
+      {/* Scroll Down Indicator - Fixed to bottom */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden sm:block">
+        <div className="animate-bounce">
+          <div className="w-7 h-11 sm:w-8 sm:h-12 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
+            <div className="w-1.5 h-3 bg-white rounded-full animate-pulse"></div>
           </div>
         </div>
       </div>
+
       {/* Bottom fade to background */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0f1724] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0f1724] to-transparent pointer-events-none" />
     </section>
   );
 };

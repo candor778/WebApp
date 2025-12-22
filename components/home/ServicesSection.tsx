@@ -157,7 +157,7 @@ export default function ServicesSection() {
   };
 
   return (
-    <section id="services"  className="bg-[#0f1c3f] scroll-mt-20 py-20 px-6">
+    <section id="services"  className="bg-[#1e293b]/30 scroll-mt-20 py-20 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">

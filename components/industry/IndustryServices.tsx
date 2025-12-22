@@ -1,9 +1,26 @@
 "use client"
-
 import { useState } from "react"
-import { ChevronRight } from "lucide-react"
-import InfoPopup from "@/components/home/InfoPopup"
+import { ChevronRight, Users, Target, TrendingUp, Handshake, Zap, UserCheck, Eye, Map, TestTube, Package, Stethoscope, Heart, Shield, UserPlus, Microscope } from "lucide-react"
 
+const InfoPopup = ({ isOpen, onClose, title, subtitle, description }) => {
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
+      <div className="bg-[#1a2942] rounded-2xl border border-[#2a3f5f] p-8 max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
+        <h3 className="text-2xl font-bold text-[#22d3ee] mb-2">{title}</h3>
+        <p className="text-[#8a9bb5] text-sm mb-4">{subtitle}</p>
+        <p className="text-[#e5e9f0] leading-relaxed mb-6">{description}</p>
+        <button
+          onClick={onClose}
+          className="px-6 py-2 bg-[#22d3ee] text-[#0a1628] rounded-lg font-medium hover:bg-[#1db9d4] transition-colors"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  )
+}
 
 const industries = [
   {
@@ -13,6 +30,7 @@ const industries = [
     services: [
       {
         title: "Key Stakeholder & Expert Interviews",
+        icon: Users,
         popupTitle: "Key Stakeholder & Expert Interviews",
         popupSubtitle: "Insights from decision-makers",
         popupDescription:
@@ -20,6 +38,7 @@ const industries = [
       },
       {
         title: "Product/Service Feasibility & Needs Assessment",
+        icon: Target,
         popupTitle: "Feasibility & Needs Assessment",
         popupSubtitle: "Validating market opportunities",
         popupDescription:
@@ -27,6 +46,7 @@ const industries = [
       },
       {
         title: "Vendor Evaluation & Competitive Benchmarking",
+        icon: TrendingUp,
         popupTitle: "Vendor Evaluation & Benchmarking",
         popupSubtitle: "Know where you stand",
         popupDescription:
@@ -34,6 +54,7 @@ const industries = [
       },
       {
         title: "Sales Channel Optimization & Partner Strategy",
+        icon: Handshake,
         popupTitle: "Channel & Partner Strategy",
         popupSubtitle: "Maximizing go-to-market effectiveness",
         popupDescription:
@@ -41,6 +62,7 @@ const industries = [
       },
       {
         title: "Technology Adoption & Trend Forecasting",
+        icon: Zap,
         popupTitle: "Technology Adoption Research",
         popupSubtitle: "Stay ahead of digital transformation",
         popupDescription:
@@ -55,6 +77,7 @@ const industries = [
     services: [
       {
         title: "Consumer Segmentation & Persona Development",
+        icon: UserCheck,
         popupTitle: "Consumer Segmentation",
         popupSubtitle: "Know your customers deeply",
         popupDescription:
@@ -62,6 +85,7 @@ const industries = [
       },
       {
         title: "Brand Perception & Health Tracking",
+        icon: Eye,
         popupTitle: "Brand Health Tracking",
         popupSubtitle: "Monitor and protect your brand",
         popupDescription:
@@ -69,6 +93,7 @@ const industries = [
       },
       {
         title: "Customer Experience (CX) & Journey Mapping",
+        icon: Map,
         popupTitle: "Customer Experience Research",
         popupSubtitle: "Optimize every touchpoint",
         popupDescription:
@@ -76,6 +101,7 @@ const industries = [
       },
       {
         title: "Multimedia & Concept Testing",
+        icon: TestTube,
         popupTitle: "Concept & Creative Testing",
         popupSubtitle: "Validate before you launch",
         popupDescription:
@@ -83,6 +109,7 @@ const industries = [
       },
       {
         title: "Product Concept & Packaging Testing",
+        icon: Package,
         popupTitle: "Product & Packaging Research",
         popupSubtitle: "Design for success",
         popupDescription:
@@ -97,6 +124,7 @@ const industries = [
     services: [
       {
         title: "Physician & KOL Interviews",
+        icon: Stethoscope,
         popupTitle: "Physician & KOL Research",
         popupSubtitle: "Expert medical insights",
         popupDescription:
@@ -104,6 +132,7 @@ const industries = [
       },
       {
         title: "Patient Journey & Needs Assessment",
+        icon: Heart,
         popupTitle: "Patient Journey Research",
         popupSubtitle: "Understanding the patient experience",
         popupDescription:
@@ -111,6 +140,7 @@ const industries = [
       },
       {
         title: "Regulatory Compliance & Data Security",
+        icon: Shield,
         popupTitle: "Healthcare Compliance",
         popupSubtitle: "Research you can trust",
         popupDescription:
@@ -118,6 +148,7 @@ const industries = [
       },
       {
         title: "Clinical Trial Recruitment Support",
+        icon: UserPlus,
         popupTitle: "Clinical Trial Support",
         popupSubtitle: "Accelerating patient recruitment",
         popupDescription:
@@ -125,6 +156,7 @@ const industries = [
       },
       {
         title: "Pharma/Device Concept Testing",
+        icon: Microscope,
         popupTitle: "Medical Product Testing",
         popupSubtitle: "Validate with HCPs and patients",
         popupDescription:
@@ -135,29 +167,25 @@ const industries = [
 ]
 
 const IndustryServices = () => {
-  const [activeItems, setActiveItems] = useState<{ [key: string]: number }>({
+  const [activeItems, setActiveItems] = useState({
     b2b: 0,
     b2c: 0,
     healthcare: 0,
   })
-  const [popup, setPopup] = useState<{
-    isOpen: boolean
-    title: string
-    subtitle: string
-    description: string
-  }>({
+
+  const [popup, setPopup] = useState({
     isOpen: false,
     title: "",
     subtitle: "",
     description: "",
   })
 
-  const handleItemClick = (industryId: string, index: number, service: (typeof industries)[0]["services"][0]) => {
+  const handleItemClick = (industryId, index, service) => {
     setActiveItems((prev) => ({ ...prev, [industryId]: index }))
     openPopup(service.popupTitle, service.popupSubtitle, service.popupDescription)
   }
 
-  const openPopup = (title: string, subtitle: string, description: string) => {
+  const openPopup = (title, subtitle, description) => {
     setPopup({ isOpen: true, title, subtitle, description })
   }
 
@@ -166,7 +194,7 @@ const IndustryServices = () => {
   }
 
   return (
-    <section className="py-24 bg-[#0f1724]">
+    <section className="py-24 bg-[#072657]">
       <div className="container mx-auto px-4 md:px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -188,7 +216,7 @@ const IndustryServices = () => {
               <div className="space-y-2">
                 {industry.services.map((service, index) => {
                   const isActive = activeItems[industry.id] === index
-
+                  const IconComponent = service.icon
                   return (
                     <button
                       key={service.title}
@@ -197,17 +225,13 @@ const IndustryServices = () => {
                         isActive ? "bg-[#1e293b]/80 border border-[#2a3f5f]" : "hover:bg-[#1e293b]/30"
                       }`}
                     >
-                      {/* Number or Chevron */}
+                      {/* Icon */}
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                           isActive ? "bg-[#22d3ee] text-[#0a1628]" : "bg-[#2a3f5f] text-[#8a9bb5]"
                         }`}
                       >
-                        {isActive ? (
-                          <ChevronRight className="w-5 h-5" />
-                        ) : (
-                          <span className="text-sm font-medium">{index + 1}</span>
-                        )}
+                        <IconComponent className="w-4 h-4" />
                       </div>
 
                       {/* Service Title */}
@@ -216,13 +240,13 @@ const IndustryServices = () => {
                       >
                         {service.title}
                       </span>
+
+                      {/* Chevron for active items */}
+                      {isActive && <ChevronRight className="w-5 h-5 text-[#22d3ee] ml-auto" />}
                     </button>
                   )
                 })}
               </div>
-
-              {/* Hint Text */}
-              <p className="text-[#22d3ee] text-sm text-center mt-6">Click the next item to reveal more services</p>
             </div>
           ))}
         </div>

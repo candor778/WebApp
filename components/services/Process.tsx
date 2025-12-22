@@ -12,48 +12,46 @@ const steps = [
     subtitle: "We start by understanding you",
     description:
       "We don't just take orders; we are partnering with you. We sit down to understand your business goals, your specific challenges, and exactly what you need to learn. We ask tough questions to ensure our research strategy is perfectly aligned with your objectives.",
-    image: "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&h=350",
+    image:
+      "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&h=350",
     icon: Users,
     popupTitle: "Listen & Align",
     popupSubtitle: "Building the foundation for success",
     popupDescription:
-      "Our discovery process involves in-depth stakeholder interviews, competitive landscape analysis, and objective mapping. We identify key success metrics, potential research pitfalls, and ensure every team member understands the project's strategic importance. This alignment phase typically includes 2-3 collaborative sessions where we refine the research scope and methodology together.",
+      "Our discovery process involves in-depth stakeholder interviews, competitive landscape analysis, and objective mapping. We identify key success metrics, potential research pitfalls, and ensure every team member understands the project's strategic importance.",
   },
   {
     number: "02",
     title: "Research & Gather",
     subtitle: "We go where the data is",
     description:
-      "Using our global network, we reach out to the right people—whether that's hard-to-find C-suite executives, medical specialists, or everyday consumers. We use a mix of surveys, interviews, and secret shopping to gather authentic, high-quality data from the source.",
-    image: "https://images.pexels.com/photos/7947663/pexels-photo-7947663.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "Using our global network, we reach out to the right people—whether that's hard-to-find C-suite executives, medical specialists, or everyday consumers.",
+    image:
+      "https://images.pexels.com/photos/7947663/pexels-photo-7947663.jpeg?auto=compress&cs=tinysrgb&h=350",
     icon: Search,
     popupTitle: "Research & Gather",
     popupSubtitle: "Reaching the right respondents globally",
     popupDescription:
-      "Our proprietary respondent network spans 50+ countries with access to over 100 million verified participants. We employ multi-modal recruitment strategies including online panels, social media targeting, professional networks, and on-ground field teams. Every response is validated through quality checks, attention filters, and cross-reference verification to ensure data integrity.",
+      "Our proprietary respondent network spans 50+ countries with access to over 100 million verified participants.",
   },
   {
     number: "03",
     title: "Analyze & Deliver",
     subtitle: "We turn data into direction",
     description:
-      "Data without context is just noise. We rigorously scrub, validate, and analyze the data to find the patterns that matter. Then, we deliver a clear, visually engaging report with actionable recommendations that you can implement immediately to drive growth.",
-    image: "https://images.pexels.com/photos/590045/pexels-photo-590045.jpeg?auto=compress&cs=tinysrgb&h=350",
+      "Data without context is just noise. We rigorously scrub, validate, and analyze the data to find the patterns that matter.",
+    image:
+      "https://images.pexels.com/photos/590045/pexels-photo-590045.jpeg?auto=compress&cs=tinysrgb&h=350",
     icon: BarChart3,
     popupTitle: "Analyze & Deliver",
     popupSubtitle: "Transforming data into strategic action",
     popupDescription:
-      "Our analytics team combines traditional statistical methods with advanced AI and machine learning to uncover insights that manual analysis would miss. We create interactive dashboards, executive summaries, and detailed appendices tailored to different stakeholder needs. Every deliverable includes clear, prioritized recommendations with implementation roadmaps and expected impact metrics.",
+      "Our analytics team combines statistical methods with AI to uncover insights that manual analysis would miss.",
   },
 ]
 
 const Process = () => {
-  const [popup, setPopup] = useState<{
-    isOpen: boolean
-    title: string
-    subtitle: string
-    description: string
-  }>({
+  const [popup, setPopup] = useState({
     isOpen: false,
     title: "",
     subtitle: "",
@@ -65,13 +63,13 @@ const Process = () => {
   }
 
   const closePopup = () => {
-    setPopup({ ...popup, isOpen: false })
+    setPopup((prev) => ({ ...prev, isOpen: false }))
   }
 
   return (
     <section id="process" className="py-24 bg-white">
       <div className="container mx-auto px-4 md:px-6">
-        {/* Section Header */}
+        {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl text-[#1a1a2e] mb-2">
             Our Research Process
@@ -82,51 +80,94 @@ const Process = () => {
           </p>
         </div>
 
-        {/* Process Steps */}
+        {/* Steps */}
         <div className="space-y-16 max-w-6xl mx-auto">
           {steps.map((step, index) => {
             const IconComponent = step.icon
             const isReversed = index % 2 === 1
 
             return (
-              <div key={step.number} className={`grid lg:grid-cols-2 gap-12 items-center`}>
+              <div
+                key={step.number}
+                className="
+                  group
+                  grid lg:grid-cols-2 gap-12 items-center
+                  transition-all duration-300
+                "
+              >
                 {/* Image */}
-                <div className={`${isReversed ? "lg:order-2" : ""}`}>
+                <div className={isReversed ? "lg:order-2" : ""}>
                   <Image
-                    src={step.image || "/placeholder.svg"}
+                    src={step.image}
                     alt={step.title}
-                    className="rounded-xl shadow-lg w-full object-cover aspect-[4/3]"
                     width={600}
                     height={450}
+                    className="
+                      rounded-xl shadow-lg w-full object-cover aspect-[4/3]
+                      transition-transform duration-300
+                      group-hover:scale-105
+                    "
                   />
                 </div>
 
                 {/* Content */}
-                <div className={`${isReversed ? "lg:order-1" : ""}`}>
-                  {/* Icon and Number */}
+                <div
+                  className={`
+                    ${isReversed ? "lg:order-1" : ""}
+                    
+                  `}
+                >
+                  {/* Icon + Number */}
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-[#22d3ee] rounded-lg flex items-center justify-center">
-                      <IconComponent className="w-6 h-6 text-white" />
+                    <div className="w-12 h-12 group-hover:scale-110  transition-all duration-300 bg-[#22d3ee] rounded-lg flex items-center justify-center">
+                      <IconComponent
+                        className="
+                          w-6 h-6 text-white
+                          transition-transform duration-300
+                          
+                        "
+                      />
                     </div>
-                    <span className="text-4xl font-light text-[#22d3ee]">{step.number}</span>
+                    <span className="text-4xl group-hover:scale-110 transition-all duration-300 font-light text-[#22d3ee]">
+                      {step.number}
+                    </span>
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-2xl md:text-3xl font-semibold text-[#1a1a2e] mb-2">{step.title}</h3>
+                  {/* Text */}
+                  <h3 className="text-2xl md:text-3xl font-semibold text-[#1a1a2e] mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-[#22d3ee] font-medium mb-4">
+                    {step.subtitle}
+                  </p>
+                  <p className="text-[#6b7280] mb-6 leading-relaxed">
+                    {step.description}
+                  </p>
 
-                  {/* Subtitle */}
-                  <p className="text-[#22d3ee] font-medium mb-4">{step.subtitle}</p>
-
-                  {/* Description */}
-                  <p className="text-[#6b7280] mb-6 leading-relaxed">{step.description}</p>
-
-                  {/* Learn More Link */}
+                  {/* CTA */}
                   <button
-                    className="inline-flex items-center gap-2 text-[#22d3ee] hover:text-[#06b6d4] transition-colors font-medium"
-                    onClick={() => openPopup(step.popupTitle, step.popupSubtitle, step.popupDescription)}
+                    onClick={() =>
+                      openPopup(
+                        step.popupTitle,
+                        step.popupSubtitle,
+                        step.popupDescription
+                      )
+                    }
+                    className="
+                      inline-flex items-center gap-2
+                      text-[#22d3ee] font-medium
+                      transition-colors
+                      group-hover:text-[#06b6d4]
+                    "
                   >
                     Click to learn more
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight
+                      className="
+                        w-4 h-4
+                        transition-transform duration-300
+                        group-hover:translate-x-2
+                      "
+                    />
                   </button>
                 </div>
               </div>
@@ -135,6 +176,7 @@ const Process = () => {
         </div>
       </div>
 
+      {/* Popup */}
       <InfoPopup
         isOpen={popup.isOpen}
         onClose={closePopup}

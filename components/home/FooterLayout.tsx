@@ -1,5 +1,15 @@
-import { TrendingUp, Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from "lucide-react"
-import Link from "next/link"
+import {
+  TrendingUp,
+  Mail,
+  Phone,
+  MapPin,
+  Linkedin,
+  Twitter,
+  Facebook,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import Logo from "@/public/assets/candor-logo-transparent.png";
 
 const Footer = () => {
   return (
@@ -8,15 +18,19 @@ const Footer = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-[#0a1628]" />
-              </div>
-              <span className="text-xl font-semibold text-[#e5e9f0] tracking-tight">CANDOR</span>
-            </div>
+            <Link href="/" className="flex items-center">
+              <Image
+                src={Logo}
+                alt="Candor Survey"
+                width={180}
+                height={60}
+                priority
+                className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto transition-all"
+              />
+            </Link>
             <p className="text-[#8a9bb5] text-sm">
-              Uncovering the truth behind every data point. Your trusted partner in market research and consumer
-              insights.
+              Uncovering the truth behind every data point. Your trusted partner
+              in market research and consumer insights.
             </p>
             <div className="flex gap-3">
               <a
@@ -69,7 +83,10 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/services" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
+                <Link
+                  href="/services"
+                  className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors"
+                >
                   Strategic Consulting
                 </Link>
               </li>
@@ -81,7 +98,10 @@ const Footer = () => {
             <h4 className="font-semibold text-[#e5e9f0] mb-4">Company</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/#about" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
+                <Link
+                  href="/#about"
+                  className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors"
+                >
                   About Us
                 </Link>
               </li>
@@ -102,7 +122,10 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/#contact" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
+                <Link
+                  href="/#contact"
+                  className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors"
+                >
                   Contact
                 </Link>
               </li>
@@ -115,34 +138,50 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-sm text-[#8a9bb5]">
                 <Phone className="w-4 h-4 text-[#22d3ee]" />
-                +91 76888 95925
+                <a
+                  href="tel:+917688895925"
+                  className="hover:text-white transition-colors"
+                >
+                  +91 76888 95925
+                </a>
               </li>
+
               <li className="flex items-center gap-3 text-sm text-[#8a9bb5]">
                 <Mail className="w-4 h-4 text-[#22d3ee]" />
-                contact@candorsurvey.com
+                <a
+                  href="mailto:info@candorsurvey.com"
+                  className="hover:text-white transition-colors lowercase"
+                >
+                  info@candorsurvey.com
+                </a>
               </li>
+
               <li className="flex items-start gap-3 text-sm text-[#8a9bb5]">
                 <MapPin className="w-4 h-4 text-[#22d3ee] flex-shrink-0 mt-0.5" />
-                Mumbai, India
+                Bhopal, MP - 462023
               </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-[#2a3f5f] flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-[#8a9bb5]">© 2025 Candor Survey. All rights reserved.</p>
-          <div className="flex gap-6">
-            <a href="#" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-sm text-[#8a9bb5] hover:text-[#22d3ee] transition-colors">
-              Terms of Service
+          <p className="text-sm text-[#8a9bb5]">
+            © 2025 Candor Survey. All rights reserved.
+          </p>
+          <div className="flex md:mr-24">
+            <a
+              href="https://sanjeetfolio.framer.website/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-sm text-white hover:underline"
+            >
+              Crafted By THE Dot.
             </a>
           </div>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
