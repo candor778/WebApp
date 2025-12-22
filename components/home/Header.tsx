@@ -47,12 +47,12 @@ const Header = () => {
     }`
 
   const mobileLinkClass = (active: boolean) =>
-    `text-lg font-medium transition-colors block py-3 ${
+    `text-lg font-medium transition-colors block py-3 text-left w-full ${
       active ? "text-white" : "text-[#8a9bb5] hover:text-[#e5e9f0]"
     }`
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f1724]/80 backdrop-blur-xl border-b border-[#2a3f5f]/50">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f1724]/80 border-b border-[#2a3f5f]/50">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -108,7 +108,7 @@ const Header = () => {
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <nav className="flex flex-col px-6 py-8">
+        <nav className="flex flex-col items-start px-6 py-8">
           <button
             onClick={() => scrollToSection("about")}
             className={mobileLinkClass(false)}
