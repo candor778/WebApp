@@ -1,6 +1,6 @@
 import About from "@/components/home/About";
 import Contact from "@/components/home/Contact";
-import Footer from "@/components/home/Footer";
+import Footer from "@/components/home/FooterLayout";
 import Header from "@/components/home/Header";
 import Hero from "@/components/home/Hero";
 import WhyChooseUs from "@/components/home/WhyChooseUs";

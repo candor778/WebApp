@@ -1,4 +1,5 @@
-import Footer from "@/components/home/Footer";
+
+import Footer from "@/components/home/FooterLayout";
 import Header from "@/components/home/Header";
 import CoreServices from "@/components/services/CoreServices";
 import DeepDiveAnalysis from "@/components/services/DeepDIveAnanlysis";
