@@ -8,39 +8,55 @@ import InfoPopup from "@/components/home/InfoPopup"
 // Define missionPoints and visionPoints
 const missionPoints = [
   {
-    label: "Capture Voices",
-    text: "We capture genuine, unfiltered human voices.",
-    popupTitle: "Capture Voices",
-    popupSubtitle: "Our Approach",
+    label: "Decode the Silent Language",
+    text: "Transform raw data into clear, human-centered narratives",
+    popupTitle: "Decode the Silent Language",
+    popupSubtitle: "Transform raw data into clear, human-centered narratives",
     popupDescription:
-      "At Candor Survey, we prioritize capturing authentic feedback to ensure our insights are accurate and actionable.",
+      "We don't just collect data - we interpret the unspoken signals in consumer behavior, market trends, and competitive dynamics. Our analysts are trained to identify patterns that others miss and translate complex data into compelling stories that drive decision-making."
   },
   {
-    label: "Transform Data",
-    text: "Transform them into precise strategies.",
-    popupTitle: "Transform Data",
-    popupSubtitle: "Our Expertise",
+    label: "Ignite Growth",
+    text: "Provide insights that directly lead to new products and market entry success",
+    popupTitle: "Ignite Growth",
+    popupSubtitle: "Provide insights that directly lead to new products and market entry success",
     popupDescription:
-      "Our team of data scientists and analysts work together to convert raw data into meaningful insights that drive business growth.",
+      "Our research doesn't just inform - it transforms. We focus on actionable insights that directly contribute to revenue growth, successful product launches, and strategic market expansions. Every recommendation is designed to create measurable business impact.",
+  },
+  {
+    label: "Champion Ethics",
+    text: "Provide insights that directly lead to new products and market entry success",
+    popupTitle: "Champion Ethics",
+    popupSubtitle: "Provide insights that directly lead to new products and market entry success",
+    popupDescription:
+      "Integrity is the foundation of everything we do. We adhere to strict ethical guidelines, ensure participant privacy, and maintain complete transparency in our methodologies. Our clients trust us because we never compromise on ethical standards.",
   },
 ]
 
 const visionPoints = [
   {
-    label: "Reshape Standards",
-    text: "We reshape industry standards.",
-    popupTitle: "Reshape Standards",
-    popupSubtitle: "Our Ambition",
+    label: "Reshape Industry Standards",
+    text: "Set the benchmark for insightful, reliable analysis globally",
+    popupTitle: "Reshape Industry Standards",
+    popupSubtitle: "Set the benchmark for insightful, reliable analysis globally",
     popupDescription:
-      "Our vision is to set new benchmarks in market research, providing businesses with the tools they need to lead with clarity.",
+      "We're not content with following industry norms - we're here to redefine them. Our innovative methodologies and commitment to excellence are setting new standards for what market research can achieve on a global scale.",
   },
   {
     label: "Drive Transformation",
     text: "Drive positive societal and commercial transformation.",
     popupTitle: "Drive Transformation",
-    popupSubtitle: "Our Impact",
+    popupSubtitle: "Drive positive societal and commercial transformation",
     popupDescription:
-      "Through ethical understanding and strategic insights, we help businesses make a positive impact on society and the economy.",
+      "Beyond business metrics, we believe in research that leads to products and services that make a real difference in people's lives. We help companies understand not just what consumers want, but what they truly need.",
+  },
+  {
+    label: "Be the Future Predictor",
+    text: "Utilize advanced analytics to foresee market shifts",
+    popupTitle: "Be the Future Predictor",
+    popupSubtitle: "Utilize advanced analytics to foresee market shifts",
+    popupDescription:
+      "Using cutting-edge predictive analytics and AI-driven insights, we help our clients anticipate market changes before they happen. Our forward-looking approach ensures you're always prepared for tomorrow's challenges and opportunities.",
   },
 ]
 
@@ -70,7 +86,7 @@ const About = () => {
       <div className="container mx-auto px-4 md:px-6">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="  text-3xl md:text-4xl lg:text-5xl text-[#1a1a2e] mb-4">
+          <h2 className="  text-3xl font-bold md:text-4xl lg:text-5xl text-[#1a1a2e] mb-4">
             About Candor Survey
           </h2>
           <div className="w-16 h-1 bg-[#22d3ee] mx-auto mb-4" />
@@ -83,14 +99,14 @@ const About = () => {
             <Image
               src="https://images.pexels.com/photos/5716032/pexels-photo-5716032.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
               alt="Team analyzing data"
-              className="rounded-xl shadow-lg w-full object-cover aspect-[4/3]"
+              className="rounded-xl shadow-lg w-full object-cover"
               width={600}
               height={450}
             />
           </div>
 
           <div className="space-y-6">
-            <h3 className="  text-2xl md:text-3xl text-[#1a1a2e]">
+            <h3 className="  text-2xl md:text-3xl font-semibold text-[#1a1a2e]">
               We are a trusted market research agency
             </h3>
             <p className="text-[#6b7280] leading-relaxed">
@@ -109,11 +125,11 @@ const About = () => {
         {/* Mission & Vision Cards */}
         <div className="grid md:grid-cols-2 gap-8">
           {/* Mission Card - Dark Blue */}
-          <div className="bg-[#1e3a5f] rounded-2xl p-8 text-white">
+          <div className="bg-[#1e3a5f] hover:scale-105 transition-all duration-300 rounded-2xl p-8 text-white">
             <div className="w-12 h-12 rounded-xl bg-[#22d3ee]/20 flex items-center justify-center mb-6">
               <Target className="w-6 h-6 text-[#22d3ee]" />
             </div>
-            <h3 className="  text-2xl text-white mb-4">Our Mission</h3>
+            <h3 className="  text-2xl text-white font-bold mb-4">Our Mission</h3>
             <p className="text-white/80 mb-6 leading-relaxed">
               At Candor Survey, our mission is to move beyond mere reporting. We actively decode the silent language of
               the market by capturing genuine, unfiltered human voices, transforming them into precise strategies that
@@ -136,11 +152,11 @@ const About = () => {
           </div>
 
           {/* Vision Card - Teal/Cyan Gradient */}
-          <div className="bg-gradient-to-br from-[#0891b2] to-[#06b6d4] rounded-2xl p-8 text-white">
+          <div className="bg-gradient-to-br hover:scale-105 transition-all duration-300 from-[#0891b2] to-[#06b6d4] rounded-2xl p-8 text-white">
             <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-6">
               <Eye className="w-6 h-6 text-white" />
             </div>
-            <h3 className="  text-2xl text-white mb-4">Our Vision</h3>
+            <h3 className="  text-2xl text-white font-bold mb-4">Our Vision</h3>
             <p className="text-white/90 mb-6 leading-relaxed">
               We aspire to be the force that reshapes industry standards. Our vision is to create a dynamic business
               environment where market leaders don`&apos;`t just react to change, but drive positive societal and commercial

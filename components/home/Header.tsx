@@ -64,14 +64,6 @@ const Header = () => {
               Contact
             </button>
           </nav>
-
-          <Button
-            size="sm"
-            className="hidden md:flex bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] text-[#0a1628] hover:opacity-90 transition-opacity"
-          >
-            <LogIn className="w-4 h-4" />
-            Sign In
-          </Button>
         </div>
       </div>
     </header>

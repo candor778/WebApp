@@ -18,7 +18,7 @@ const Hero = () => {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 pb-8"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628]/95 via-[#0d1e36]/90 to-[#0a1628]/95" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a1628]/50 to-[#0a1628]" />
@@ -32,7 +32,7 @@ const Hero = () => {
       />
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal leading-tight mb-6">
+          <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6">
             <span className="text-white">Uncovering the Truth</span>
             <br />
             <span className="bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] bg-clip-text text-transparent">
@@ -44,25 +44,65 @@ const Hero = () => {
             deliver unbiased, crystal-clear insights that empower your most
             critical business decisions.
           </p>
-          <div className="hero-buttons flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button
-              size="lg"
-              className="px-8 bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] text-[#0a1628] hover:opacity-90 transition-opacity"
+          <div className="hero-buttons flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <button
+              className="
+    inline-flex items-center justify-center gap-2
+    whitespace-nowrap font-semibold
+    ring-offset-background
+    transition-all duration-300
+    focus-visible:outline-none
+    focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+    disabled:pointer-events-none disabled:opacity-50
+    [&_svg]:pointer-events-none [&_svg]:shrink-0
+    bg-[linear-gradient(135deg,rgb(15,182,204)_0%,rgb(43,212,189)_100%)]
+    shadow-lg shadow-primary/30
+    hover:shadow-xl hover:shadow-[#0fb6cc4d]/40
+    hover:scale-105
+    h-12 px-8
+    rounded-lg text-[#0f1729]
+  "
             >
               Get Started
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-5 h-5 ml-2"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </button>
+
             <a href="/services">
-              <Button
-                size="lg"
-                className="px-8 bg-transparent border-2 border-[#22d3ee] text-[#22d3ee] hover:bg-[#22d3ee]/10"
+              <button
+                className="
+    inline-flex items-center justify-center gap-2
+    whitespace-nowrap font-medium
+    ring-offset-background
+    transition-all duration-300
+    focus-visible:outline-none
+    focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+    disabled:pointer-events-none disabled:opacity-50
+    [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0
+    border-2 border-[#2b3b55]
+    bg-[#0f1729]/50 hover:border-[#0fb6cc]/50
+    backdrop-blur-sm
+    h-12 px-8
+    rounded-lg text-white
+  "
               >
                 Explore Services
-              </Button>
+              </button>
             </a>
           </div>
           {/* Stats */}
-          <div className="hero-stats grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 md:mb-6 xl:mb-8 max-w-3xl mx-auto">
+          <div className="hero-stats grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 md:mb-6 xl:mb-10 max-w-3xl mx-auto">
             {stats.map((stat) => (
               <div
                 key={stat.label}
@@ -75,6 +115,14 @@ const Hero = () => {
                 <div className="text-sm text-[#8a9bb5]">{stat.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+        {/* Scroll Down Indicator - Hidden on small phones */}
+        <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 z-10 hidden sm:block">
+          <div className="animate-bounce">
+            <div className="w-7 h-11 sm:w-8 sm:h-12 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
+              <div className="w-1.5 h-3 bg-white rounded-full animate-pulse"></div>
+            </div>
           </div>
         </div>
       </div>

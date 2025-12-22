@@ -1,41 +1,45 @@
 "use client"
 
 import { useState } from "react"
-import { User, Shield, Target, Eye } from "lucide-react"
+import { User, Shield,Handshake, EyeIcon } from "lucide-react"
 import InfoPopup from "./InfoPopup"
 
 const features = [
   {
-    title: "Privacy",
-    description: "Your data is safe with us.",
-    icon: Shield,
-    popupTitle: "Privacy Policy",
-    popupSubtitle: "Protecting Your Information",
-    popupDescription: "We take the privacy of your data very seriously and ensure it is protected at all times.",
-  },
-  {
-    title: "Accuracy",
-    description: "Get reliable results.",
-    icon: Target,
-    popupTitle: "Accuracy Standards",
-    popupSubtitle: "High-Quality Data",
-    popupDescription: "Our methods ensure that the data collected is accurate and reliable.",
-  },
-  {
-    title: "Transparency",
-    description: "See behind the scenes.",
-    icon: Eye,
-    popupTitle: "Transparency Report",
-    popupSubtitle: "Open and Honest",
-    popupDescription: "We believe in transparency and provide detailed reports on our processes.",
-  },
-  {
-    title: "User-Friendly",
-    description: "Easy to use.",
+    title: "Unbiased Insights",
+    description: "We deliver crystal-clear, unfiltered insights free from bias or agenda",
     icon: User,
-    popupTitle: "User Experience",
-    popupSubtitle: "Intuitive Design",
-    popupDescription: "Our platform is designed to be user-friendly, making it easy for anyone to use.",
+    popupTitle: "Unbiased Insights",
+    popupSubtitle: "Crystal-clear, unfiltered analysis",
+    popupDescription:
+      "Our commitment to objectivity ensures every insight we deliver is free from bias or hidden agendas. We apply rigorous research methodologies, use blind analysis techniques, and maintain strict independence from external influence so your decisions are based on pure, reliable truth.",
+  },
+  {
+    title: "Ethical Standards",
+    description: "Highest standards of integrity and transparency in all our research",
+    icon: Shield,
+    popupTitle: "Ethical Standards",
+    popupSubtitle: "Integrity and transparency in everything we do",
+    popupDescription:
+      "Ethics are the foundation of our work. We ensure GDPR compliance, obtain proper participant consent, protect anonymity, and follow strict data-handling protocols. Our transparent reporting clearly shows how every conclusion is reached.",
+  },
+  {
+    title: "Strategic Partnership",
+    description: "We don't just provide data - we partner with you for long-term success",
+    icon: Handshake,
+    popupTitle: "Strategic Partnership",
+    popupSubtitle: "Your success is our mission",
+    popupDescription:
+      "We move beyond transactional relationships to become true strategic partners. Through ongoing support, proactive recommendations, and a deep understanding of your goals, we work alongside you to overcome challenges and celebrate successes.",
+  },
+  {
+    title: "Human-Centered Research",
+    description: "We uncover the human stories behind the numbers for deeper understanding",
+    icon: EyeIcon,
+    popupTitle: "Human-Centered Research",
+    popupSubtitle: "Stories behind the statistics",
+    popupDescription:
+      "Numbers alone don’t tell the full story. Our human-centered approach uncovers the emotions, motivations, and real-life experiences behind consumer behavior by combining quantitative data with rich qualitative insights.",
   },
 ]
 

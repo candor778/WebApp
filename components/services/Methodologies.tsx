@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BarChart2,
   MessageSquare,
@@ -12,7 +12,7 @@ import {
   Focus,
   FileText,
   Presentation,
-} from "lucide-react"
+} from "lucide-react";
 
 const quantitativeMethods = [
   {
@@ -30,26 +30,58 @@ const quantitativeMethods = [
     title: "Computer-Assisted Telephone Interviewing (CATI)",
     description: "Efficient telephone-based data collection",
   },
-  { icon: Laptop, title: "Digital Data Collection", description: "Online surveys and mobile-first research methods" },
-  { icon: Zap, title: "Real-Time Analysis", description: "Live data processing and immediate insights" },
-]
+  {
+    icon: Laptop,
+    title: "Digital Data Collection",
+    description: "Online surveys and mobile-first research methods",
+  },
+  {
+    icon: Zap,
+    title: "Real-Time Analysis",
+    description: "Live data processing and immediate insights",
+  },
+];
 
 const qualitativeMethods = [
-  { icon: Focus, title: "Focus Groups", description: "Moderated group discussions for deep insights" },
+  {
+    icon: Focus,
+    title: "Focus Groups",
+    description: "Moderated group discussions for deep insights",
+  },
   {
     icon: Users,
     title: "In-Depth Interviews (IDIs)",
     description: "One-on-one conversations for detailed exploration",
   },
-  { icon: Video, title: "Ethnographic Research", description: "Observational studies in natural environments" },
-  { icon: MessageSquare, title: "Online Communities", description: "Long-term digital engagement platforms" },
-]
+  {
+    icon: Video,
+    title: "Ethnographic Research",
+    description: "Observational studies in natural environments",
+  },
+  {
+    icon: MessageSquare,
+    title: "Online Communities",
+    description: "Long-term digital engagement platforms",
+  },
+];
 
 const supportServices = [
-  { icon: FileText, title: "Questionnaire Design", description: "Expert survey development and optimization" },
-  { icon: Presentation, title: "Data Visualization", description: "Clear, impactful presentation of findings" },
-  { icon: BarChart2, title: "Statistical Analysis", description: "Advanced analytics and modeling" },
-]
+  {
+    icon: FileText,
+    title: "Questionnaire Design",
+    description: "Expert survey development and optimization",
+  },
+  {
+    icon: Presentation,
+    title: "Data Visualization",
+    description: "Clear, impactful presentation of findings",
+  },
+  {
+    icon: BarChart2,
+    title: "Statistical Analysis",
+    description: "Advanced analytics and modeling",
+  },
+];
 
 const Methodologies = () => {
   return (
@@ -62,7 +94,7 @@ const Methodologies = () => {
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          <h2 className="  text-3xl md:text-4xl lg:text-5xl text-[#e5e9f0] mb-4">
+          <h2 className="  text-3xl md:text-4xl lg:text-5xl font-semibold text-[#e5e9f0] mb-4">
             Research{" "}
             <span className="bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] bg-clip-text text-transparent">
               Methodologies
@@ -74,22 +106,61 @@ const Methodologies = () => {
         </div>
 
         <Tabs defaultValue="quantitative" className="w-full">
-          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 mb-12 bg-[#1a2942] border border-[#2a3f5f]">
+          <TabsList
+            className="
+    grid w-full h-full max-w-2xl mx-auto grid-cols-3
+    mb-12
+    p-2
+    bg-[#1a2942]
+    border border-[#2a3f5f]
+    rounded-xl
+    gap-2
+  "
+          >
             <TabsTrigger
               value="quantitative"
-              className="data-[state=active]:bg-[#22d3ee] data-[state=active]:text-[#0a1628]"
+              className="
+      py-2 px-4
+      rounded-lg
+      text-sm md:text-base
+      transition-all
+      text-white
+      data-[state=active]:bg-[#22d3ee]
+      data-[state=active]:text-[#0a1628]
+      hover:bg-white/5
+    "
             >
               Quantitative Research
             </TabsTrigger>
+
             <TabsTrigger
               value="qualitative"
-              className="data-[state=active]:bg-[#22d3ee] data-[state=active]:text-[#0a1628]"
+              className="
+      py-2 px-4
+      rounded-lg
+      text-sm md:text-base
+      transition-all
+      text-white
+      data-[state=active]:bg-[#22d3ee]
+      data-[state=active]:text-[#0a1628]
+      hover:bg-white/5
+    "
             >
               Qualitative Research
             </TabsTrigger>
+
             <TabsTrigger
               value="support"
-              className="data-[state=active]:bg-[#22d3ee] data-[state=active]:text-[#0a1628]"
+              className="
+      py-2 px-4
+      rounded-lg
+      text-sm md:text-base
+      transition-all
+      text-white
+      data-[state=active]:bg-[#22d3ee]
+      data-[state=active]:text-[#0a1628]
+      hover:bg-white/5
+    "
             >
               Research Support
             </TabsTrigger>
@@ -101,11 +172,14 @@ const Methodologies = () => {
                 <h3 className="  text-2xl text-[#e5e9f0] mb-2">
                   Quantitative Research
                 </h3>
-                <p className="text-[#22d3ee] font-medium mb-4">Robust data collection</p>
+                <p className="text-[#22d3ee] font-medium mb-4">
+                  Robust data collection
+                </p>
                 <p className="text-[#8a9bb5]">
-                  We specialize in quantitative data collection via CLTs for sensory evaluation, alongside highly
-                  efficient interview methods like CAPI and CATI, ensuring robust sample reach and exceptional data
-                  accuracy.
+                  We specialize in quantitative data collection via CLTs for
+                  sensory evaluation, alongside highly efficient interview
+                  methods like CAPI and CATI, ensuring robust sample reach and
+                  exceptional data accuracy.
                 </p>
               </div>
 
@@ -121,15 +195,20 @@ const Methodologies = () => {
                       </span>
                       <method.icon className="w-5 h-5 text-[#22d3ee]" />
                     </div>
-                    <h4 className="font-medium text-[#e5e9f0] text-sm mb-1">{method.title}</h4>
-                    <p className="text-xs text-[#8a9bb5]">{method.description}</p>
+                    <h4 className="font-medium text-[#e5e9f0] text-sm mb-1">
+                      {method.title}
+                    </h4>
+                    <p className="text-xs text-[#8a9bb5]">
+                      {method.description}
+                    </p>
                   </div>
                 ))}
               </div>
 
               <div className="mt-8 p-4 rounded-xl bg-[#22d3ee]/10 border border-[#22d3ee]/20">
                 <p className="text-[#22d3ee] italic text-center">
-                  `&quot;`Data-driven methods for robust, scalable insights.`&quot;`
+                  `&quot;`Data-driven methods for robust, scalable
+                  insights.`&quot;`
                 </p>
               </div>
             </div>
@@ -141,10 +220,13 @@ const Methodologies = () => {
                 <h3 className="  text-2xl text-[#e5e9f0] mb-2">
                   Qualitative Research
                 </h3>
-                <p className="text-[#22d3ee] font-medium mb-4">Deep human understanding</p>
+                <p className="text-[#22d3ee] font-medium mb-4">
+                  Deep human understanding
+                </p>
                 <p className="text-[#8a9bb5]">
-                  Our qualitative methods uncover the `&apos;`why`&apos;` behind consumer behavior, providing rich narratives and
-                  emotional insights that quantitative data alone cannot reveal.
+                  Our qualitative methods uncover the `&apos;`why`&apos;` behind
+                  consumer behavior, providing rich narratives and emotional
+                  insights that quantitative data alone cannot reveal.
                 </p>
               </div>
 
@@ -160,8 +242,12 @@ const Methodologies = () => {
                       </span>
                       <method.icon className="w-5 h-5 text-[#14b8a6]" />
                     </div>
-                    <h4 className="font-medium text-[#e5e9f0] text-sm mb-1">{method.title}</h4>
-                    <p className="text-xs text-[#8a9bb5]">{method.description}</p>
+                    <h4 className="font-medium text-[#e5e9f0] text-sm mb-1">
+                      {method.title}
+                    </h4>
+                    <p className="text-xs text-[#8a9bb5]">
+                      {method.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -171,11 +257,16 @@ const Methodologies = () => {
           <TabsContent value="support">
             <div className="backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-2xl p-8">
               <div className="mb-8">
-                <h3 className="  text-2xl text-[#e5e9f0] mb-2">Research Support</h3>
-                <p className="text-[#22d3ee] font-medium mb-4">End-to-end assistance</p>
+                <h3 className="  text-2xl text-[#e5e9f0] mb-2">
+                  Research Support
+                </h3>
+                <p className="text-[#22d3ee] font-medium mb-4">
+                  End-to-end assistance
+                </p>
                 <p className="text-[#8a9bb5]">
-                  From questionnaire design to final presentation, our support services ensure your research project
-                  runs smoothly and delivers maximum impact.
+                  From questionnaire design to final presentation, our support
+                  services ensure your research project runs smoothly and
+                  delivers maximum impact.
                 </p>
               </div>
 
@@ -188,8 +279,12 @@ const Methodologies = () => {
                     <div className="w-12 h-12 rounded-xl bg-[#22d3ee]/10 flex items-center justify-center mx-auto mb-3">
                       <service.icon className="w-6 h-6 text-[#22d3ee]" />
                     </div>
-                    <h4 className="font-medium text-[#e5e9f0] text-sm mb-1">{service.title}</h4>
-                    <p className="text-xs text-[#8a9bb5]">{service.description}</p>
+                    <h4 className="font-medium text-[#e5e9f0] text-sm mb-1">
+                      {service.title}
+                    </h4>
+                    <p className="text-xs text-[#8a9bb5]">
+                      {service.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -198,7 +293,7 @@ const Methodologies = () => {
         </Tabs>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Methodologies
+export default Methodologies;
