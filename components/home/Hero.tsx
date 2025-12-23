@@ -15,7 +15,7 @@ const stats = [
   },
   { 
     icon: TbTargetArrow, 
-    value: "6.2%", 
+    value: "96.2%", 
     label: "Survey Accuracy",
   },
 ]
