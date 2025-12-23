@@ -45,9 +45,9 @@ const coreServices = [
       "Analyze key competitors, their strategies, market share, and positioning to identify gaps and opportunities.",
     image: "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&h=350",
     popupTitle: "Competitive Landscape Overview",
-    popupSubtitle: "Strategic competitive intelligence",
+    popupSubtitle: "Analyze key competitors, their strategies, market share, and positioning to identify gaps and opportunities.",
     popupDescription:
-      "Our competitive analysis covers market share estimation, positioning maps, SWOT analysis, pricing strategies, marketing spend analysis, and product portfolio comparison. We identify white space opportunities, potential threats, and strategic recommendations for differentiation.",
+      "Our competitive intelligence includes SWOT analysis, Porter's Five Forces evaluation, strategic group mapping, and white space identification. We track competitor moves in real-time and provide early warning signals for market disruptions.",
   },
   {
     icon: Lightbulb,
