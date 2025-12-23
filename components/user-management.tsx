@@ -84,13 +84,17 @@ export function UserManagement() {
   const [isChangingPassword, setIsChangingPassword] = useState<string | null>(null)
   const [isLoadingUsers, setIsLoadingUsers] = useState(true)
   const [users, setUsers] = useState<User[]>([])
-  const [deleteSuperPassword, setDeleteSuperPassword] = useState("")
-  const admin = process.env.ADMIN_EMAIL || "admin@admin.com"
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@admin.com"
 
   // Create user dialog state
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [createSuperPassword, setCreateSuperPassword] = useState("")
   const [newUser, setNewUser] = useState({ email: "", password: "" })
+
+  // Delete user dialog state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [userToDelete, setUserToDelete] = useState<{ id: string; email: string } | null>(null)
+  const [deleteSuperPassword, setDeleteSuperPassword] = useState("")
 
   // Change password dialog state
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false)
@@ -160,23 +164,31 @@ export function UserManagement() {
     }
   }
 
-  const handleDeleteUser = async (userId: string, userEmail: string) => {
+  const openDeleteDialog = (userId: string, userEmail: string) => {
+    setUserToDelete({ id: userId, email: userEmail })
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return
+
     if (!deleteSuperPassword) {
       toast({
         title: "Error",
-        description: "Please enter the Super Password to delete a user",
+        description: "Please enter the Super Password",
         variant: "destructive",
       })
       return
     }
-    setIsDeleting(userId)
+
+    setIsDeleting(userToDelete.id)
     try {
       const res = await fetch("/api/admin/users", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           superPassword: deleteSuperPassword,
-          userId,
+          userId: userToDelete.id,
         }),
       })
       const data = await res.json()
@@ -185,9 +197,11 @@ export function UserManagement() {
       }
       toast({
         title: "Success",
-        description: `User ${userEmail} deleted successfully`,
+        description: `User ${userToDelete.email} deleted successfully`,
       })
       setDeleteSuperPassword("")
+      setDeleteDialogOpen(false)
+      setUserToDelete(null)
       fetchUsers()
     } catch (error: any) {
       toast({
@@ -203,7 +217,6 @@ export function UserManagement() {
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedUserId) return
-
     if (newPassword !== confirmPassword) {
       toast({
         title: "Error",
@@ -212,7 +225,6 @@ export function UserManagement() {
       })
       return
     }
-
     if (newPassword.length < 6) {
       toast({
         title: "Error",
@@ -221,7 +233,6 @@ export function UserManagement() {
       })
       return
     }
-
     setIsChangingPassword(selectedUserId)
     try {
       const res = await fetch("/api/admin/users/password", {
@@ -274,8 +285,6 @@ export function UserManagement() {
       minute: "2-digit",
     })
   }
-
-  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMAIL
 
   return (
     <div className="space-y-6">
@@ -356,19 +365,6 @@ export function UserManagement() {
           </div>
         </CardHeader>
         <CardContent>
-          {/* Delete Super Password Input */}
-          <div className="mb-4 max-w-xs">
-            <Label htmlFor="deleteSuperPassword" className="text-sm text-muted-foreground">
-              Enter Super Password to enable deletion
-            </Label>
-            <PasswordInput
-              id="deleteSuperPassword"
-              placeholder="Super password for deletion"
-              value={deleteSuperPassword}
-              onChange={(e) => setDeleteSuperPassword(e.target.value)}
-              className="mt-1"
-            />
-          </div>
           {isLoadingUsers ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -419,40 +415,19 @@ export function UserManagement() {
                                 )}
                                 <span className="ml-1 hidden sm:inline">Password</span>
                               </Button>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                    disabled={!deleteSuperPassword || isDeleting === user.id || user.email === admin}
-                                  >
-                                    {isDeleting === user.id ? (
-                                      <Loader2 className="h-4 w-4 animate-spin" />
-                                    ) : (
-                                      <Trash2 className="h-4 w-4" />
-                                    )}
-                                  </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>Delete User</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      Are you sure you want to delete <strong>{user.email}</strong>? This action cannot be
-                                      undone. The user will lose access to the system immediately.
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction
-                                      onClick={() => handleDeleteUser(user.id, user.email || "")}
-                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                    >
-                                      Delete User
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                disabled={isAdmin || isDeleting === user.id}
+                                onClick={() => openDeleteDialog(user.id, user.email)}
+                              >
+                                {isDeleting === user.id ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="h-4 w-4" />
+                                )}
+                              </Button>
                             </div>
                           </td>
                         </tr>
@@ -465,6 +440,55 @@ export function UserManagement() {
           )}
         </CardContent>
       </Card>
+
+      {/* Delete User Dialog */}
+      <AlertDialog
+        open={deleteDialogOpen}
+        onOpenChange={(open) => {
+          setDeleteDialogOpen(open)
+          if (!open) {
+            setUserToDelete(null)
+            setDeleteSuperPassword("")
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete User</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{userToDelete?.email}</strong>? This action cannot be
+              undone. The user will lose access to the system immediately.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-2 py-4">
+            <Label htmlFor="deleteSuperPassword">Super Password</Label>
+            <PasswordInput
+              id="deleteSuperPassword"
+              placeholder="Enter super password to confirm"
+              required
+              value={deleteSuperPassword}
+              onChange={(e) => setDeleteSuperPassword(e.target.value)}
+            />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting !== null}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteUser}
+              className="border border-destructive bg-white text-destructive-foreground hover:bg-destructive/90 hover:text-white transition-all duration-100"
+              disabled={!deleteSuperPassword || isDeleting !== null}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete User"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Change Password Dialog */}
       <Dialog

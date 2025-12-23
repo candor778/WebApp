@@ -134,6 +134,7 @@ export default function Page() {
                         id="password"
                         type={showPassword ? "text" : "password"}
                         required
+                        placeholder="Enter Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="pl-10 pr-10 h-11 border-[#1b3750]/20 focus-visible:ring-[#1b3750] focus-visible:border-[#1b3750]"

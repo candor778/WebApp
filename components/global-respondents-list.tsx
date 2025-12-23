@@ -19,7 +19,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Loader2, Eye, X, Search, RefreshCw, Trash2, Delete } from "lucide-react";
+import {
+  Loader2,
+  Eye,
+  X,
+  Search,
+  RefreshCw,
+  Trash2,
+  Delete,
+} from "lucide-react";
 import { RespondentDetailDrawer } from "@/components/respondent-detail-drawer";
 import { ExportButton } from "@/components/respondent-export-button";
 import Link from "next/link";
@@ -93,7 +101,8 @@ export function GlobalRespondentsList({
   const [projectComboOpen, setProjectComboOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [respondentToDelete, setRespondentToDelete] = useState<Respondent | null>(null);
+  const [respondentToDelete, setRespondentToDelete] =
+    useState<Respondent | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
 
@@ -181,16 +190,19 @@ export function GlobalRespondentsList({
 
     setIsDeleting(true);
     try {
-      const response = await fetch(`/api/respondents/${respondentToDelete.id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/api/respondents/${respondentToDelete.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to delete respondent");
       }
 
       sonnerToast.success("Respondent deleted successfully");
-      
+
       // Refresh the data
       await mutate();
     } catch (error) {
@@ -224,10 +236,12 @@ export function GlobalRespondentsList({
       case "TERMINATED":
         return <Badge variant="destructive">Terminated</Badge>;
       case "QUOTA_FULL":
-        return <Badge className="bg-yellow-500 text-black">Quota Full</Badge>    
+        return <Badge className="bg-yellow-500 text-black">Quota Full</Badge>;
       case "QUALITY_TERMINATED":
-        return <Badge className="bg-blue-500  text-black">Quality_Terminated</Badge>;
-        default:
+        return (
+          <Badge className="bg-blue-500  text-black">Quality_Terminated</Badge>
+        );
+      default:
         return <Badge variant="outline">{status}</Badge>;
     }
   };
@@ -236,7 +250,7 @@ export function GlobalRespondentsList({
     if (status === "COMPLETED") return "100%";
     if (status === "QUOTA_FULL") return "Quota Full";
     if (status === "TERMINATED") return "Terminated";
-    if (status === "QUALITY_TERMINATED") return "Quality Terminated"
+    if (status === "QUALITY_TERMINATED") return "Quality Terminated";
 
     return "-";
   };
@@ -325,110 +339,96 @@ export function GlobalRespondentsList({
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50">
+                <TableHead className="font-semibold">Sr. No.</TableHead>
                 <TableHead className="font-semibold">User ID</TableHead>
                 <TableHead className="font-semibold">Project ID</TableHead>
                 <TableHead className="font-semibold">IP Address</TableHead>
                 <TableHead className="font-semibold">Device</TableHead>
-                <TableHead className="font-semibold">Click Time</TableHead>
+                {/* <TableHead className="font-semibold">Click Time</TableHead> */}
                 <TableHead className="font-semibold">Status</TableHead>
                 <TableHead className="font-semibold">Progress</TableHead>
-                <TableHead className="font-semibold">
-                  Actions
-                </TableHead>
+                <TableHead className="font-semibold">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            <TableHeader>
-  <TableRow className="bg-muted/50">
-    <TableHead className="font-semibold">Sr. No.</TableHead>
-    <TableHead className="font-semibold">User ID</TableHead>
-    <TableHead className="font-semibold">Project ID</TableHead>
-    <TableHead className="font-semibold">IP Address</TableHead>
-    <TableHead className="font-semibold">Device</TableHead>
-    <TableHead className="font-semibold">Click Time</TableHead>
-    <TableHead className="font-semibold">Status</TableHead>
-    <TableHead className="font-semibold">Progress</TableHead>
-    <TableHead className="font-semibold">Actions</TableHead>
-  </TableRow>
-</TableHeader>
-<TableBody>
-  {respondents.map((respondent, index) => {
-    // Calculate the actual serial number across all pages
-    const serialNumber = index + 1;
-    
-    return (
-      <TableRow
-        key={respondent.id}
-        className={cn(
-          "hover:bg-muted/50 transition-colors",
-          index % 2 === 0 ? "bg-background" : "bg-muted/20"
-        )}
-      >
-        <TableCell className="font-medium text-sm">
-          CSR-{serialNumber}
-        </TableCell>
-        <TableCell 
-          className="font-mono text-xs font-medium max-w-[200px] truncate"
-          title={respondent.respondentName}
-        >
-          {respondent.respondentName}
-        </TableCell>
-        <TableCell className="max-w-[150px]">
-          <Link
-            href={`/projects/${respondent.surveyId}`}
-            className="font-mono text-xs text-primary hover:underline underline-offset-4 transition-colors truncate block"
-            title={respondent.projectId}
-          >
-            {respondent.projectId}
-          </Link>
-        </TableCell>
-        <TableCell 
-          className="text-sm text-muted-foreground max-w-[120px] truncate"
-          title={respondent.ipAddress || "Unknown"}
-        >
-          {respondent.ipAddress || "Unknown"}
-        </TableCell>
-        <TableCell 
-          className="text-sm max-w-[100px] truncate"
-          title={respondent.deviceType || "Unknown"}
-        >
-          {respondent.deviceType
-            ? respondent.deviceType.charAt(0) +
-              respondent.deviceType.slice(1).toLowerCase()
-            : "Unknown"}
-        </TableCell>
-        <TableCell 
-          className="text-sm text-muted-foreground max-w-[180px] truncate whitespace-nowrap"
-          title={new Date(respondent.createdAt).toLocaleString()}
-        >
-          {new Date(respondent.createdAt).toLocaleString()}
-        </TableCell>
-        <TableCell className="whitespace-nowrap">
-          {getStatusBadge(respondent.status)}
-        </TableCell>
-        <TableCell className="text-sm font-medium whitespace-nowrap">
-          {getProgressDisplay(
-            respondent.status,
-            respondent.answerCount
-          )}
-        </TableCell>
-        <TableCell className="whitespace-nowrap">
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => viewDetails(respondent)}
-              className="hover:bg-primary/10"
-              title="View respondent details"
-            >
-              <Eye className="h-4 w-4 mr-1" />
-              <span className="hidden sm:inline">View</span>
-            </Button>
-          </div>
-        </TableCell>
-      </TableRow>
-    );
-  })}
-</TableBody>
+            <TableBody>
+              {respondents.map((respondent, index) => {
+                // Calculate the actual serial number across all pages
+                const serialNumber = index + 1;
+
+                return (
+                  <TableRow
+                    key={respondent.id}
+                    className={cn(
+                      "hover:bg-muted/50 transition-colors",
+                      index % 2 === 0 ? "bg-background" : "bg-muted/20"
+                    )}
+                  >
+                    <TableCell className="font-medium text-sm">
+                      CSR-{serialNumber}
+                    </TableCell>
+                    <TableCell
+                      className="font-mono text-xs font-medium max-w-[200px] truncate"
+                      title={respondent.respondentName}
+                    >
+                      {respondent.respondentName}
+                    </TableCell>
+                    <TableCell className="max-w-[150px]">
+                      <Link
+                        href={`/projects/${respondent.surveyId}`}
+                        className="font-mono text-xs text-primary hover:underline underline-offset-4 transition-colors truncate block"
+                        title={respondent.projectId}
+                      >
+                        {respondent.projectId}
+                      </Link>
+                    </TableCell>
+                    <TableCell
+                      className="text-sm text-muted-foreground max-w-[120px] truncate"
+                      title={respondent.ipAddress || "Unknown"}
+                    >
+                      {respondent.ipAddress || "Unknown"}
+                    </TableCell>
+                    <TableCell
+                      className="text-sm max-w-[100px] truncate"
+                      title={respondent.deviceType || "Unknown"}
+                    >
+                      {respondent.deviceType
+                        ? respondent.deviceType.charAt(0) +
+                          respondent.deviceType.slice(1).toLowerCase()
+                        : "Unknown"}
+                    </TableCell>
+                    {/* <TableCell
+                      className="text-sm text-muted-foreground max-w-[180px] truncate whitespace-nowrap"
+                      title={new Date(respondent.createdAt).toLocaleString()}
+                    >
+                      {new Date(respondent.createdAt).toLocaleString()}
+                    </TableCell> */}
+                    <TableCell className="whitespace-nowrap">
+                      {getStatusBadge(respondent.status)}
+                    </TableCell>
+                    <TableCell className="text-sm font-medium whitespace-nowrap">
+                      {getProgressDisplay(
+                        respondent.status,
+                        respondent.answerCount
+                      )}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => viewDetails(respondent)}
+                          className="hover:bg-primary/10"
+                          title="View respondent details"
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          <span className="hidden sm:inline">View</span>
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
           </Table>
         </div>
       )}
@@ -472,7 +472,8 @@ export function GlobalRespondentsList({
             <AlertDialogDescription>
               This will permanently delete the response from{" "}
               <strong>{respondentToDelete?.respondentName}</strong> for project{" "}
-              <strong>{respondentToDelete?.projectId}</strong>. This action cannot be undone.
+              <strong>{respondentToDelete?.projectId}</strong>. This action
+              cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
