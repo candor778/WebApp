@@ -131,7 +131,7 @@ const Contact = () => {
 
             <div className="space-y-4">
               <a
-                href="tel:+917688895925"
+                href="tel:+91 88823 93935"
                 className="flex items-center gap-4 p-4 backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-xl hover:border-[#22d3ee]/40 transition-all group"
               >
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -139,12 +139,12 @@ const Contact = () => {
                 </div>
                 <div>
                   <div className="text-sm text-[#8a9bb5]">Call Us</div>
-                  <div className="text-[#e5e9f0] font-medium">+91 76888 95925</div>
+                  <div className="text-[#e5e9f0] font-medium">+91 88823 93935</div>
                 </div>
               </a>
 
               <a
-                href="mailto:info@candorsurvey.com"
+                href="mailto:Infocandorsurvey@gmail.com"
                 className="flex items-center gap-4 p-4 backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-xl hover:border-[#22d3ee]/40 transition-all group"
               >
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -152,7 +152,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <div className="text-sm text-[#8a9bb5]">Email Us</div>
-                  <div className="text-[#e5e9f0] font-medium">Info@candorsurvey.com</div>
+                  <div className="text-[#e5e9f0] font-medium">Infocandorsurvey@gmail.com</div>
                 </div>
               </a>
             </div>
