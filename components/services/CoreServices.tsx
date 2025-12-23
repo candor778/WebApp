@@ -24,9 +24,9 @@ const coreServices = [
       "Understand the current landscape and future potential of your industry with reliable data and clear forecasts.",
     image: "https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&h=350",
     popupTitle: "Market Size & Growth Projections",
-    popupSubtitle: "Data-driven market intelligence",
+    popupSubtitle: "Understand the current landscape and future potential of your industry with reliable data and clear forecasts.",
     popupDescription:
-      "Our market sizing methodology combines top-down and bottom-up analysis with primary research validation. We provide current market valuations, 5-year growth projections, segment breakdowns, and regional analysis. Our forecasts include multiple scenarios (conservative, moderate, aggressive) with clear assumptions and sensitivity analysis.",
+      "Our market sizing methodology combines top-down and bottom-up approaches, validated through multiple data sources. We provide 5-year forecasts with quarterly updates, scenario planning, and sensitivity analysis to help you make confident investment decisions.",
   },
   {
     icon: Users,
