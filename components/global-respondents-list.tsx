@@ -337,78 +337,98 @@ export function GlobalRespondentsList({
                 </TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {respondents.map((respondent, index) => (
-                <TableRow
-                  key={respondent.id}
-                  className={cn(
-                    "hover:bg-muted/50 transition-colors",
-                    index % 2 === 0 ? "bg-background" : "bg-muted/20"
-                  )}
-                >
-                  <TableCell 
-                    className="font-mono text-xs font-medium max-w-[200px] truncate"
-                    title={respondent.respondentName}
-                  >
-                    {respondent.respondentName}
-                  </TableCell>
-                  <TableCell className="max-w-[150px]">
-                    <Link
-                      href={`/projects/${respondent.surveyId}`}
-                      className="font-mono text-xs text-primary hover:underline underline-offset-4 transition-colors truncate block"
-                      title={respondent.projectId}
-                    >
-                      {respondent.projectId}
-                    </Link>
-                  </TableCell>
-                  <TableCell 
-                    className="text-sm text-muted-foreground max-w-[120px] truncate"
-                    title={respondent.ipAddress || "Unknown"}
-                  >
-                    {respondent.ipAddress || "Unknown"}
-                  </TableCell>
-                  <TableCell 
-                    className="text-sm max-w-[100px] truncate"
-                    title={respondent.deviceType || "Unknown"}
-                  >
-                    {respondent.deviceType
-                      ? respondent.deviceType.charAt(0) +
-                        respondent.deviceType.slice(1).toLowerCase()
-                      : "Unknown"}
-                  </TableCell>
-                  <TableCell 
-                    className="text-sm text-muted-foreground max-w-[180px] truncate whitespace-nowrap"
-                    title={new Date(respondent.createdAt).toLocaleString()}
-                  >
-                    {new Date(respondent.createdAt).toLocaleString()}
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    {getStatusBadge(respondent.status)}
-                  </TableCell>
-                  <TableCell className="text-sm font-medium whitespace-nowrap">
-                    {getProgressDisplay(
-                      respondent.status,
-                      respondent.answerCount
-                    )}
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => viewDetails(respondent)}
-                        className="hover:bg-primary/10"
-                        title="View respondent details"
-                      >
-                        <Eye className="h-4 w-4 mr-1" />
-                        <span className="hidden sm:inline">View</span>
-                      </Button>
-                      {/* <DeleteRespondentButton id={respondent.id} /> */}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+            <TableHeader>
+  <TableRow className="bg-muted/50">
+    <TableHead className="font-semibold">Sr. No.</TableHead>
+    <TableHead className="font-semibold">User ID</TableHead>
+    <TableHead className="font-semibold">Project ID</TableHead>
+    <TableHead className="font-semibold">IP Address</TableHead>
+    <TableHead className="font-semibold">Device</TableHead>
+    <TableHead className="font-semibold">Click Time</TableHead>
+    <TableHead className="font-semibold">Status</TableHead>
+    <TableHead className="font-semibold">Progress</TableHead>
+    <TableHead className="font-semibold">Actions</TableHead>
+  </TableRow>
+</TableHeader>
+<TableBody>
+  {respondents.map((respondent, index) => {
+    // Calculate the actual serial number across all pages
+    const serialNumber = index + 1;
+    
+    return (
+      <TableRow
+        key={respondent.id}
+        className={cn(
+          "hover:bg-muted/50 transition-colors",
+          index % 2 === 0 ? "bg-background" : "bg-muted/20"
+        )}
+      >
+        <TableCell className="font-medium text-sm">
+          CSR-{serialNumber}
+        </TableCell>
+        <TableCell 
+          className="font-mono text-xs font-medium max-w-[200px] truncate"
+          title={respondent.respondentName}
+        >
+          {respondent.respondentName}
+        </TableCell>
+        <TableCell className="max-w-[150px]">
+          <Link
+            href={`/projects/${respondent.surveyId}`}
+            className="font-mono text-xs text-primary hover:underline underline-offset-4 transition-colors truncate block"
+            title={respondent.projectId}
+          >
+            {respondent.projectId}
+          </Link>
+        </TableCell>
+        <TableCell 
+          className="text-sm text-muted-foreground max-w-[120px] truncate"
+          title={respondent.ipAddress || "Unknown"}
+        >
+          {respondent.ipAddress || "Unknown"}
+        </TableCell>
+        <TableCell 
+          className="text-sm max-w-[100px] truncate"
+          title={respondent.deviceType || "Unknown"}
+        >
+          {respondent.deviceType
+            ? respondent.deviceType.charAt(0) +
+              respondent.deviceType.slice(1).toLowerCase()
+            : "Unknown"}
+        </TableCell>
+        <TableCell 
+          className="text-sm text-muted-foreground max-w-[180px] truncate whitespace-nowrap"
+          title={new Date(respondent.createdAt).toLocaleString()}
+        >
+          {new Date(respondent.createdAt).toLocaleString()}
+        </TableCell>
+        <TableCell className="whitespace-nowrap">
+          {getStatusBadge(respondent.status)}
+        </TableCell>
+        <TableCell className="text-sm font-medium whitespace-nowrap">
+          {getProgressDisplay(
+            respondent.status,
+            respondent.answerCount
+          )}
+        </TableCell>
+        <TableCell className="whitespace-nowrap">
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => viewDetails(respondent)}
+              className="hover:bg-primary/10"
+              title="View respondent details"
+            >
+              <Eye className="h-4 w-4 mr-1" />
+              <span className="hidden sm:inline">View</span>
+            </Button>
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
           </Table>
         </div>
       )}

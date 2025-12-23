@@ -85,6 +85,7 @@ export function UserManagement() {
   const [isLoadingUsers, setIsLoadingUsers] = useState(true)
   const [users, setUsers] = useState<User[]>([])
   const [deleteSuperPassword, setDeleteSuperPassword] = useState("")
+  const admin = process.env.ADMIN_EMAIL || "admin@admin.com"
 
   // Create user dialog state
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
@@ -424,7 +425,7 @@ export function UserManagement() {
                                     variant="ghost"
                                     size="sm"
                                     className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                    disabled={isAdmin || !deleteSuperPassword || isDeleting === user.id}
+                                    disabled={!deleteSuperPassword || isDeleting === user.id || user.email === admin}
                                   >
                                     {isDeleting === user.id ? (
                                       <Loader2 className="h-4 w-4 animate-spin" />
