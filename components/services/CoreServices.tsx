@@ -34,9 +34,9 @@ const coreServices = [
     description: "Get detailed insights into evolving customer preferences, motivations, and purchase behavior.",
     image: "https://images.pexels.com/photos/7567537/pexels-photo-7567537.jpeg?auto=compress&cs=tinysrgb&h=350",
     popupTitle: "Consumer Behavior Analysis",
-    popupSubtitle: "Understanding the 'why' behind decisions",
+    popupSubtitle: "Get detailed insights into evolving customer preferences, motivations, and purchase behavior.",
     popupDescription:
-      "We go beyond demographics to understand psychographics, decision journeys, and behavioral triggers. Our analysis includes purchase path mapping, brand perception studies, price sensitivity testing, and emotional driver identification. We help you understand not just what consumers do, but why they do it.",
+      "We employ advanced behavioral economics principles, neuromarketing techniques, and psychological profiling to understand the 'why' behind consumer choices. Our analysis includes purchase journey mapping, decision-making triggers, and emotional drivers.",
   },
   {
     icon: BarChart3,
@@ -45,9 +45,9 @@ const coreServices = [
       "Analyze key competitors, their strategies, market share, and positioning to identify gaps and opportunities.",
     image: "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&h=350",
     popupTitle: "Competitive Landscape Overview",
-    popupSubtitle: "Strategic competitive intelligence",
+    popupSubtitle: "Analyze key competitors, their strategies, market share, and positioning to identify gaps and opportunities.",
     popupDescription:
-      "Our competitive analysis covers market share estimation, positioning maps, SWOT analysis, pricing strategies, marketing spend analysis, and product portfolio comparison. We identify white space opportunities, potential threats, and strategic recommendations for differentiation.",
+      "Our competitive intelligence includes SWOT analysis, Porter's Five Forces evaluation, strategic group mapping, and white space identification. We track competitor moves in real-time and provide early warning signals for market disruptions.",
   },
   {
     icon: Lightbulb,
@@ -56,9 +56,9 @@ const coreServices = [
       "Turn data into actionable strategies that drive growth, optimize operations, and enhance market positioning.",
     image: "https://images.pexels.com/photos/7947663/pexels-photo-7947663.jpeg?auto=compress&cs=tinysrgb&h=350",
     popupTitle: "Strategic Recommendations",
-    popupSubtitle: "From insight to action",
+    popupSubtitle: "Turn data into actionable strategies that drive growth, optimize operations, and enhance market positioning.",
     popupDescription:
-      "Every research project culminates in clear, prioritized strategic recommendations. We provide implementation roadmaps, resource requirements, timeline estimates, and success metrics. Our team can also support post-research strategy workshops and ongoing advisory services.",
+      "We don't just deliver insights - we provide implementation roadmaps. Our strategic recommendations include prioritized action plans, resource allocation guidance, risk mitigation strategies, and KPIs to measure success.",
   },
 ]
 
@@ -68,57 +68,57 @@ const processItems = [
     title: "Analytics",
     description:
       "We use strong data analysis to predict market changes and help you get the best return on your investment.",
-    popupTitle: "Advanced Analytics",
-    popupSubtitle: "Predictive intelligence for smarter decisions",
+    popupTitle: "Analytics",
+    popupSubtitle: "We use strong data analysis to predict market changes and help you get the best return on your investment.",
     popupDescription:
-      "Our analytics capabilities include regression analysis, cluster segmentation, conjoint analysis, MaxDiff, and predictive modeling. We employ machine learning algorithms to identify patterns in large datasets and provide statistical confidence levels for all findings.",
+      "Our analytics suite includes predictive modeling, machine learning algorithms, statistical forecasting, and real-time dashboards. We transform raw data into visual insights that drive immediate action.",
   },
   {
     icon: Code,
     title: "Programming",
     description:
       "We carefully build complex surveys and trackers, so they are easy for people to use on every platform.",
-    popupTitle: "Survey Programming",
-    popupSubtitle: "Technical excellence in data collection",
+    popupTitle: "Programming",
+    popupSubtitle: "We carefully build complex surveys and trackers, so they are easy for people to use on every platform.",
     popupDescription:
-      "Our programming team builds mobile-first, accessible surveys with advanced logic, multimedia capabilities, and real-time validation. We support 40+ languages, complex routing, quota management, and integration with client systems. All surveys undergo rigorous QA testing before launch.",
+      "Our survey programming uses adaptive questioning, logic branching, and mobile-first design. We ensure 99.9% uptime, cross-device compatibility, and accessibility compliance for all respondents.",
   },
   {
     icon: Brain,
     title: "Diverse Insights",
     description: "We have a diverse variety of respondents who provide us with real and accurate opinions.",
     popupTitle: "Diverse Insights",
-    popupSubtitle: "Authentic voices from every demographic",
+    popupSubtitle: "We have a diverse variety of respondents who provide us with real and accurate opinions.",
     popupDescription:
-      "Our panels represent true population diversity across age, gender, ethnicity, income, geography, and lifestyle. We actively recruit hard-to-reach segments and maintain strict quality controls to ensure genuine, thoughtful responses from engaged participants.",
+      "Our panel includes over 10 million verified respondents across 50+ countries, representing diverse demographics, professions, and psychographic profiles. We ensure representative sampling and quality control.",
   },
   {
     icon: Globe,
     title: "Global Reach",
     description: "We maintain a dedicated global footprint, drawing perspectives from diverse international markets.",
-    popupTitle: "Global Research Capabilities",
-    popupSubtitle: "Local expertise, global scale",
+    popupTitle: "Global Research",
+    popupSubtitle: "We maintain a dedicated global footprint, drawing perspectives from diverse international markets.",
     popupDescription:
-      "With operations in 50+ countries and native-speaking research teams, we deliver culturally nuanced insights from any market. Our global operations center ensures consistent methodology while our local teams provide market-specific expertise and respondent recruitment capabilities.",
+      "With research teams in 30+ countries and multilingual capabilities in 40+ languages, we provide truly global insights while respecting local cultural nuances and market-specific dynamics.",
   },
   {
     icon: ShoppingCart,
     title: "Mystery Shopping",
     description: "We check real customer experiences secretly to provide honest information on service quality.",
-    popupTitle: "Mystery Shopping Programs",
-    popupSubtitle: "Real experiences, real insights",
+    popupTitle: "Mystery Shopping",
+    popupSubtitle: "We check real customer experiences secretly to provide honest information on service quality.",
     popupDescription:
-      "Our mystery shopping network includes trained evaluators who assess customer experience touchpoints across retail, hospitality, financial services, and more. We provide detailed scoring, photo/video documentation, benchmarking against competitors, and trend analysis over time.",
+      "Our mystery shopping program includes trained evaluators, standardized assessment criteria, photo/video documentation, and detailed reporting. We conduct both announced and unannounced evaluations.",
   },
   {
     icon: ClipboardCheck,
     title: "Survey Audit",
     description:
       "We check surveys to make sure the data is accurate and high-quality, giving reliable and unbiased results.",
-    popupTitle: "Data Quality Assurance",
-    popupSubtitle: "Rigorous validation for reliable results",
+    popupTitle: "Survey Audit",
+    popupSubtitle: "We check surveys to make sure the data is accurate and high-quality, giving reliable and unbiased results.",
     popupDescription:
-      "Every dataset undergoes multi-stage quality checks including speeder detection, straight-liner identification, open-end quality review, and consistency validation. We remove fraudulent responses and provide transparency on data cleaning decisions and final sample composition.",
+      "Our audit process includes data validation, response pattern analysis, fraud detection, and quality scoring. We ensure every data point meets our rigorous standards before delivery.",
   },
 ]
 
@@ -149,7 +149,7 @@ const CoreServices = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="  text-3xl md:text-4xl lg:text-5xl text-[#1a1a2e] mb-2">
-            Core Services
+            Result That Matter
           </h2>
           <div className="w-16 h-1 bg-[#22d3ee] mx-auto mb-4" />
           <p className="text-lg text-[#6b7280] max-w-2xl mx-auto">

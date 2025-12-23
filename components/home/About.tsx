@@ -22,16 +22,16 @@ const missionPoints = [
     popupSubtitle:
       "Provide insights that directly lead to new products and market entry success",
     popupDescription:
-      "Our research doesn't just inform - it transforms. We focus on actionable insights that directly contribute to revenue growth, successful product launches, and strategic market expansions. Every recommendation is designed to create measurable business impact.",
+      "Our research has helped clients launch over 200 successful products, enter 50+ new markets, and identify opportunities worth billions in revenue. We focus on actionable insights that create tangible business value and competitive advantage.",
   },
   {
     label: "Champion Ethics",
-    text: "Provide insights that directly lead to new products and market entry success",
+    text: "Conduct all research with the highest standard of integrity",
     popupTitle: "Champion Ethics",
     popupSubtitle:
-      "Provide insights that directly lead to new products and market entry success",
+      "Conduct all research with the highest standard of integrity",
     popupDescription:
-      "Integrity is the foundation of everything we do. We adhere to strict ethical guidelines, ensure participant privacy, and maintain complete transparency in our methodologies. Our clients trust us because we never compromise on ethical standards.",
+      "Ethics isn't just a policy - it's our foundation. We ensure informed consent, protect participant privacy, maintain data security, and conduct research that respects cultural sensitivities and social responsibility. Our commitment to ethics builds trust with participants and clients alike.",
   },
 ];
 
@@ -43,15 +43,15 @@ const visionPoints = [
     popupSubtitle:
       "Set the benchmark for insightful, reliable analysis globally",
     popupDescription:
-      "We're not content with following industry norms - we're here to redefine them. Our innovative methodologies and commitment to excellence are setting new standards for what market research can achieve on a global scale.",
+      "We're pioneering new research methodologies that combine AI-powered analytics with human insight. Our goal is to establish new standards for research quality, speed, and impact that the entire industry will follow.",
   },
   {
     label: "Drive Transformation",
-    text: "Drive positive societal and commercial transformation.",
+    text: "Empower businesses to create products that genuinely improve lives",
     popupTitle: "Drive Transformation",
-    popupSubtitle: "Drive positive societal and commercial transformation",
+    popupSubtitle: "Empower businesses to create products that genuinely improve lives",
     popupDescription:
-      "Beyond business metrics, we believe in research that leads to products and services that make a real difference in people's lives. We help companies understand not just what consumers want, but what they truly need.",
+      "We believe business success and social impact go hand in hand. Our research helps companies develop products and services that solve real problems, improve quality of life, and create positive change in communities worldwide.",
   },
   {
     label: "Be the Future Predictor",
@@ -59,7 +59,7 @@ const visionPoints = [
     popupTitle: "Be the Future Predictor",
     popupSubtitle: "Utilize advanced analytics to foresee market shifts",
     popupDescription:
-      "Using cutting-edge predictive analytics and AI-driven insights, we help our clients anticipate market changes before they happen. Our forward-looking approach ensures you're always prepared for tomorrow's challenges and opportunities.",
+      "Using predictive modeling, AI-driven trend analysis, and scenario planning, we help clients anticipate market changes before they happen. Our foresight capabilities give businesses the lead time needed to adapt and capitalize on emerging opportunities.",
   },
 ];
 

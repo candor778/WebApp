@@ -44,107 +44,107 @@ const quantitativeMethods: Method[] = [
   {
     icon: Headphones,
     title: "Computer-Assisted Personal Interviewing (CAPI)",
-    description: "Face-to-face interviews with digital data capture",
+    description: "Digital face-to-face data collection with offline functionality, ideal for complex surveys and visual aids.",
     popupTitle: "Computer-Assisted Personal Interviewing (CAPI)",
-    popupSubtitle: "Face-to-face interviews enhanced with digital technology",
+    popupSubtitle: "Digital face-to-face data collection with offline functionality, ideal for complex surveys and visual aids.",
     popupDescription:
-      "CAPI combines the personal touch of face-to-face interviews with the efficiency of digital data collection. Our interviewers use tablets or laptops to capture responses in real-time, ensuring data accuracy and enabling complex skip patterns and validation rules.",
+      "CAPI combines the personal touch of face-to-face interviews with digital efficiency. Our interviewers use tablets with intelligent skip logic, real-time data validation, and multimedia capabilities to enhance respondent engagement and data quality.",
   },
   {
     icon: MessageSquare,
     title: "Computer-Assisted Telephone Interviewing (CATI)",
-    description: "Efficient telephone-based data collection",
+    description: "Centralized quality assurance with real-time scripting and built-in quality control for efficient large-scale sampling.",
     popupTitle: "Computer-Assisted Telephone Interviewing (CATI)",
-    popupSubtitle: "Reaching respondents efficiently via telephone",
+    popupSubtitle: "Centralized quality assurance with real-time scripting and built-in quality control for efficient large-scale sampling.",
     popupDescription:
-      "Our CATI system enables trained interviewers to conduct structured telephone interviews while capturing responses directly into a database. This method is ideal for reaching geographically dispersed samples quickly and cost-effectively.",
+      "Our CATI system features automatic dialing, call recording, supervisor monitoring, and real-time data dashboards. We achieve high response rates through trained interviewers and optimal call-time algorithms.",
   },
   {
     icon: Laptop,
     title: "Digital Data Collection",
-    description: "Online surveys and mobile-first research methods",
+    description: "Online surveys with advanced programming, mobile optimization, and real-time analytics for rapid insights.",
     popupTitle: "Digital Data Collection",
-    popupSubtitle: "Modern, flexible online research methods",
+    popupSubtitle: "Online surveys with advanced programming, mobile optimization, and real-time analytics for rapid insights.",
     popupDescription:
-      "We leverage cutting-edge digital platforms to reach respondents where they are—on desktop, mobile, or tablet. Our surveys are optimized for all devices, ensuring high completion rates and quality data through engaging, user-friendly interfaces.",
+      "Our digital platform supports complex survey logic, multimedia integration, and works seamlessly across devices. We use geolocation, time-stamping, and fraud detection to ensure data authenticity.",
   },
   {
     icon: Zap,
     title: "Real-Time Analysis",
-    description: "Live data processing and immediate insights",
+    description: "Live dashboards and automated reporting that transform data into insights as responses come in.",
     popupTitle: "Real-Time Analysis",
-    popupSubtitle: "Instant insights as data comes in",
+    popupSubtitle: "Live dashboards and automated reporting that transform data into insights as responses come in.",
     popupDescription:
-      "Our real-time dashboards allow you to monitor fieldwork progress and analyze results as they come in. Make faster decisions with live data visualization, automatic alerts for quota fulfillment, and instant access to preliminary findings.",
+      "Our analytics engine processes data in real-time, generating automated reports, trend alerts, and predictive insights. Stakeholders can access live dashboards showing response patterns, demographic breakdowns, and key metrics.",
   },
 ]
 
 const qualitativeMethods: Method[] = [
   {
     icon: Focus,
-    title: "Focus Groups",
-    description: "Moderated group discussions for deep insights",
-    popupTitle: "Focus Groups",
-    popupSubtitle: "Facilitated group discussions for rich insights",
+    title: "Focus Group Discussions (FGD)",
+    description: "Leveraging group synergy for collective ideation, opinion contagion, and collaborative memory to refine concepts.",
+    popupTitle: "Focus Group Discussions (FGD)",
+    popupSubtitle: "Leveraging group synergy for collective ideation, opinion contagion, and collaborative memory to refine concepts.",
     popupDescription:
-      "Our experienced moderators facilitate engaging discussions that uncover group dynamics, consensus, and divergent opinions. Focus groups are ideal for exploring perceptions, generating ideas, and understanding the 'why' behind consumer behavior.",
+      "Our FGDs are moderated by experienced facilitators who create safe spaces for honest dialogue. We use specialized techniques like brainstorming, concept boards, and group activities to stimulate discussion and uncover deeper insights through group dynamics.",
   },
   {
     icon: Users,
     title: "In-Depth Interviews (IDIs)",
-    description: "One-on-one conversations for detailed exploration",
+    description: "One-on-one conversations that dive deep into individual experiences, motivations, and decision-making processes.",
     popupTitle: "In-Depth Interviews (IDIs)",
-    popupSubtitle: "Deep, personal conversations revealing individual perspectives",
+    popupSubtitle: "One-on-one conversations that dive deep into individual experiences, motivations, and decision-making processes.",
     popupDescription:
-      "IDIs provide a confidential setting for exploring sensitive topics, complex decision-making processes, and personal experiences. Our skilled interviewers build rapport quickly and probe deeply to uncover motivations and barriers.",
+      "IDIs allow us to explore sensitive topics, complex behaviors, and personal narratives without group influence. Our interviewers are trained in active listening, probing techniques, and building rapport to elicit authentic, detailed responses.",
   },
   {
     icon: Video,
     title: "Ethnographic Research",
-    description: "Observational studies in natural environments",
+    description: "Observing consumers in their natural environments to understand context, behavior, and unspoken needs.",
     popupTitle: "Ethnographic Research",
-    popupSubtitle: "Understanding behavior in context",
+    popupSubtitle: "Observing consumers in their natural environments to understand context, behavior, and unspoken needs.",
     popupDescription:
-      "We observe consumers in their natural environments—homes, stores, workplaces—to understand how they actually behave versus what they say. This method reveals unarticulated needs and unconscious behaviors that surveys cannot capture.",
+      "Our ethnographers conduct home visits, shop-alongs, and workplace observations to see how products fit into real life. We capture video, photos, and field notes to document the rich context surrounding consumer behavior.",
   },
   {
     icon: MessageSquare,
     title: "Online Communities",
-    description: "Long-term digital engagement platforms",
+    description: "Multi-day digital discussions that build deeper relationships and allow for longitudinal insight gathering.",
     popupTitle: "Online Communities",
-    popupSubtitle: "Ongoing conversations with your target audience",
+    popupSubtitle: "Multi-day digital discussions that build deeper relationships and allow for longitudinal insight gathering.",
     popupDescription:
-      "Build lasting relationships with customers through private online communities. Conduct multiple activities over days or weeks—discussions, diaries, concept tests—allowing for deeper engagement and longitudinal insights.",
+      "Our private online communities enable ongoing dialogue, homework assignments, and multimedia sharing. Participants engage at their convenience, leading to more thoughtful responses and relationship building over time.",
   },
 ]
 
 const supportServices: Method[] = [
   {
     icon: FileText,
-    title: "Questionnaire Design",
-    description: "Expert survey development and optimization",
-    popupTitle: "Questionnaire Design",
-    popupSubtitle: "Crafting effective research instruments",
+    title: "Professional Panel Sourcing",
+    description: "Recruiting hard-to-reach professionals, executives, and specialists from our verified database.",
+    popupTitle: "Professional Panel Sourcing",
+    popupSubtitle: "Recruiting hard-to-reach professionals, executives, and specialists from our verified database.",
     popupDescription:
-      "Our research experts design questionnaires that minimize bias, maximize response quality, and align perfectly with your objectives. We apply best practices in question wording, scale selection, and survey flow to ensure reliable data.",
+      "We maintain relationships with over 100,000 verified professionals across industries. Our recruitment process includes identity verification, credential checking, and profile validation to ensure you reach the right respondents.",
   },
   {
     icon: Presentation,
-    title: "Data Visualization",
-    description: "Clear, impactful presentation of findings",
-    popupTitle: "Data Visualization",
-    popupSubtitle: "Transforming data into compelling stories",
+    title: "Statistical Analysis",
+    description: "Advanced analytics including regression, factor analysis, conjoint, and predictive modeling.",
+    popupTitle: "Statistical Analysis",
+    popupSubtitle: "Advanced analytics including regression, factor analysis, conjoint, and predictive modeling.",
     popupDescription:
-      "We create intuitive charts, infographics, and interactive dashboards that make complex findings accessible to all stakeholders. Our visualizations highlight key insights and support data-driven decision-making.",
+      "Our statisticians employ sophisticated techniques like multivariate analysis, structural equation modeling, and machine learning to uncover patterns, test hypotheses, and build predictive models.",
   },
   {
     icon: BarChart2,
-    title: "Statistical Analysis",
-    description: "Advanced analytics and modeling",
-    popupTitle: "Statistical Analysis",
-    popupSubtitle: "Rigorous analysis for actionable insights",
+    title: "Data Transformation",
+    description: "Converting raw survey data into clean, structured datasets ready for analysis and reporting.",
+    popupTitle: "Data Transformation",
+    popupSubtitle: "Converting raw survey data into clean, structured datasets ready for analysis and reporting.",
     popupDescription:
-      "Our statisticians apply advanced techniques—regression analysis, segmentation, conjoint analysis, and more—to uncover patterns, test hypotheses, and predict outcomes. We translate statistical findings into clear business recommendations.",
+      "Our data processing includes cleaning, coding, weighting, and validation. We handle open-ends with text analytics, create derived variables, and prepare data files in multiple formats (SPSS, Excel, CSV).",
   },
 ]
 
