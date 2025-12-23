@@ -56,9 +56,9 @@ const coreServices = [
       "Turn data into actionable strategies that drive growth, optimize operations, and enhance market positioning.",
     image: "https://images.pexels.com/photos/7947663/pexels-photo-7947663.jpeg?auto=compress&cs=tinysrgb&h=350",
     popupTitle: "Strategic Recommendations",
-    popupSubtitle: "From insight to action",
+    popupSubtitle: "Turn data into actionable strategies that drive growth, optimize operations, and enhance market positioning.",
     popupDescription:
-      "Every research project culminates in clear, prioritized strategic recommendations. We provide implementation roadmaps, resource requirements, timeline estimates, and success metrics. Our team can also support post-research strategy workshops and ongoing advisory services.",
+      "We don't just deliver insights - we provide implementation roadmaps. Our strategic recommendations include prioritized action plans, resource allocation guidance, risk mitigation strategies, and KPIs to measure success.",
   },
 ]
 
