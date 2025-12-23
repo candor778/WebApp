@@ -149,7 +149,7 @@ const CoreServices = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="  text-3xl md:text-4xl lg:text-5xl text-[#1a1a2e] mb-2">
-            Core Services
+            Result That Matter
           </h2>
           <div className="w-16 h-1 bg-[#22d3ee] mx-auto mb-4" />
           <p className="text-lg text-[#6b7280] max-w-2xl mx-auto">
