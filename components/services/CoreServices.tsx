@@ -34,9 +34,9 @@ const coreServices = [
     description: "Get detailed insights into evolving customer preferences, motivations, and purchase behavior.",
     image: "https://images.pexels.com/photos/7567537/pexels-photo-7567537.jpeg?auto=compress&cs=tinysrgb&h=350",
     popupTitle: "Consumer Behavior Analysis",
-    popupSubtitle: "Understanding the 'why' behind decisions",
+    popupSubtitle: "Get detailed insights into evolving customer preferences, motivations, and purchase behavior.",
     popupDescription:
-      "We go beyond demographics to understand psychographics, decision journeys, and behavioral triggers. Our analysis includes purchase path mapping, brand perception studies, price sensitivity testing, and emotional driver identification. We help you understand not just what consumers do, but why they do it.",
+      "We employ advanced behavioral economics principles, neuromarketing techniques, and psychological profiling to understand the 'why' behind consumer choices. Our analysis includes purchase journey mapping, decision-making triggers, and emotional drivers.",
   },
   {
     icon: BarChart3,
