@@ -96,7 +96,7 @@ const processItems = [
     icon: Globe,
     title: "Global Reach",
     description: "We maintain a dedicated global footprint, drawing perspectives from diverse international markets.",
-    popupTitle: "Global Research",
+    popupTitle: "Global Reach",
     popupSubtitle: "We maintain a dedicated global footprint, drawing perspectives from diverse international markets.",
     popupDescription:
       "With research teams in 30+ countries and multilingual capabilities in 40+ languages, we provide truly global insights while respecting local cultural nuances and market-specific dynamics.",
