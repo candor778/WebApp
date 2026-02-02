@@ -10,36 +10,36 @@ const features = [
     description: "We deliver crystal-clear, unfiltered insights free from bias or agenda",
     icon: User,
     popupTitle: "Unbiased Insights",
-    popupSubtitle: "Crystal-clear, unfiltered analysis",
+    popupSubtitle: "We deliver crystal-clear, unfiltered insights free from bias or agenda",
     popupDescription:
-      "Our commitment to objectivity ensures every insight we deliver is free from bias or hidden agendas. We apply rigorous research methodologies, use blind analysis techniques, and maintain strict independence from external influence so your decisions are based on pure, reliable truth.",
+      "Our research methodology is built on scientific rigor and ethical standards. We employ multiple validation techniques and cross-reference data sources to ensure complete objectivity. Every insight is backed by verifiable data and transparent analysis.",
   },
   {
     title: "Ethical Standards",
     description: "Highest standards of integrity and transparency in all our research",
     icon: Shield,
     popupTitle: "Ethical Standards",
-    popupSubtitle: "Integrity and transparency in everything we do",
+    popupSubtitle: "Highest standards of integrity and transparency in all our research",
     popupDescription:
-      "Ethics are the foundation of our work. We ensure GDPR compliance, obtain proper participant consent, protect anonymity, and follow strict data-handling protocols. Our transparent reporting clearly shows how every conclusion is reached.",
+      "We adhere to international research ethics guidelines including ESOMAR and MRS codes of conduct. All participant data is protected with enterprise-grade security, and we maintain complete confidentiality throughout the research process.",
   },
   {
     title: "Strategic Partnership",
     description: "We don't just provide data - we partner with you for long-term success",
     icon: Handshake,
     popupTitle: "Strategic Partnership",
-    popupSubtitle: "Your success is our mission",
+    popupSubtitle: "We don't just provide data - we partner with you for long-term success",
     popupDescription:
-      "We move beyond transactional relationships to become true strategic partners. Through ongoing support, proactive recommendations, and a deep understanding of your goals, we work alongside you to overcome challenges and celebrate successes.",
+      "Beyond delivering reports, we work alongside your team to implement insights. We provide ongoing support, strategic consultation, and help translate research findings into actionable business strategies that drive measurable results.",
   },
   {
     title: "Human-Centered Research",
     description: "We uncover the human stories behind the numbers for deeper understanding",
     icon: EyeIcon,
     popupTitle: "Human-Centered Research",
-    popupSubtitle: "Stories behind the statistics",
+    popupSubtitle: "We uncover the human stories behind the numbers for deeper understanding",
     popupDescription:
-      "Numbers alone don’t tell the full story. Our human-centered approach uncovers the emotions, motivations, and real-life experiences behind consumer behavior by combining quantitative data with rich qualitative insights.",
+      "Numbers tell part of the story, but we go deeper. Through qualitative research, ethnographic studies, and behavioral analysis, we reveal the motivations, emotions, and contexts that drive consumer decisions and market trends.",
   },
 ]
 

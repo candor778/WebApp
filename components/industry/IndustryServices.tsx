@@ -34,39 +34,39 @@ const industries = [
         popupTitle: "Key Stakeholder & Expert Interviews",
         popupSubtitle: "Insights from decision-makers",
         popupDescription:
-          "We conduct in-depth interviews with C-suite executives, industry experts, and key decision-makers. Our experienced moderators use discussion guides tailored to your objectives and can accommodate various formats including video calls, phone interviews, or in-person meetings.",
+          "We conduct in-depth interviews with C-suite executives, industry experts, and key decision-makers to gather strategic insights. Our interviewers are trained in executive communication and use structured protocols to ensure consistency and depth.",
       },
       {
         title: "Product/Service Feasibility & Needs Assessment",
         icon: Target,
-        popupTitle: "Feasibility & Needs Assessment",
+        popupTitle: "Product/Service Feasibility & Needs Assessment",
         popupSubtitle: "Validating market opportunities",
         popupDescription:
-          "Before you invest in development, we help validate product-market fit through needs assessment studies, concept testing, and feasibility analysis. We identify unmet needs, willingness to pay, and potential barriers to adoption.",
+          "Through comprehensive market validation, we test your product concepts with target buyers, assess market readiness, identify feature priorities, and provide go/no-go recommendations backed by quantitative and qualitative data.",
       },
       {
         title: "Vendor Evaluation & Competitive Benchmarking",
         icon: TrendingUp,
-        popupTitle: "Vendor Evaluation & Benchmarking",
+        popupTitle: "Vendor Evaluation & Competitive Benchmarking",
         popupSubtitle: "Know where you stand",
         popupDescription:
-          "We conduct comprehensive vendor perception studies, competitive benchmarking, and win/loss analysis. Understand how your offering compares to alternatives and identify opportunities for differentiation and improvement.",
+          "We evaluate suppliers and partners against industry standards, assess their capabilities, reliability, and value proposition, and provide comparative analysis to support your procurement and partnership decisions.",
       },
       {
         title: "Sales Channel Optimization & Partner Strategy",
         icon: Handshake,
-        popupTitle: "Channel & Partner Strategy",
+        popupTitle: "Sales Channel Optimization & Partner Strategy",
         popupSubtitle: "Maximizing go-to-market effectiveness",
         popupDescription:
-          "Evaluate channel performance, identify optimal partner profiles, and develop strategies for channel expansion. We help you understand partner needs, motivations, and how to create mutually beneficial relationships.",
+          "Our channel analysis identifies the most effective distribution routes, evaluates partner performance, recommends channel mix optimization, and provides strategies to maximize market coverage and sales efficiency.",
       },
       {
         title: "Technology Adoption & Trend Forecasting",
         icon: Zap,
-        popupTitle: "Technology Adoption Research",
+        popupTitle: "Technology Adoption & Trend Forecasting",
         popupSubtitle: "Stay ahead of digital transformation",
         popupDescription:
-          "Track technology adoption curves, identify early adopters, and understand barriers to adoption. We help you anticipate market shifts and position your technology offerings for maximum impact.",
+          "We track emerging technologies, assess adoption curves, identify early adopters vs. laggards, and provide technology roadmaps that align with market evolution and your business strategy.",
       },
     ],
   },
@@ -78,42 +78,42 @@ const industries = [
       {
         title: "Consumer Segmentation & Persona Development",
         icon: UserCheck,
-        popupTitle: "Consumer Segmentation",
+        popupTitle: "Consumer Segmentation & Persona Development",
         popupSubtitle: "Know your customers deeply",
         popupDescription:
-          "We create data-driven consumer segments based on behaviors, attitudes, needs, and values. Each segment includes detailed personas with demographics, psychographics, media habits, and marketing implications.",
+          "Using advanced clustering algorithms and behavioral analysis, we create detailed consumer segments and personas that bring your target audience to life with demographics, psychographics, needs, and behaviors.",
       },
       {
         title: "Brand Perception & Health Tracking",
         icon: Eye,
-        popupTitle: "Brand Health Tracking",
+        popupTitle: "Brand Perception & Health Tracking",
         popupSubtitle: "Monitor and protect your brand",
         popupDescription:
-          "Continuous or periodic brand tracking studies measure awareness, consideration, preference, and loyalty over time. We benchmark against competitors and identify drivers of brand equity.",
+          "We measure brand awareness, consideration, preference, and loyalty over time. Our tracking includes brand equity metrics, competitive positioning, and early warning indicators for brand health issues.",
       },
       {
         title: "Customer Experience (CX) & Journey Mapping",
         icon: Map,
-        popupTitle: "Customer Experience Research",
+        popupTitle: "Customer Experience (CX) & Journey Mapping",
         popupSubtitle: "Optimize every touchpoint",
         popupDescription:
-          "Map the complete customer journey from awareness to advocacy. We identify pain points, moments of truth, and opportunities to exceed expectations. Our CX research combines surveys, interviews, and behavioral data.",
+          "Through touchpoint analysis, we map the complete customer journey, identify pain points and moments of delight, measure satisfaction at each stage, and recommend experience improvements that drive loyalty.",
       },
       {
         title: "Multimedia & Concept Testing",
         icon: TestTube,
-        popupTitle: "Concept & Creative Testing",
+        popupTitle: "Multimedia & Concept Testing",
         popupSubtitle: "Validate before you launch",
         popupDescription:
-          "Test advertising concepts, packaging designs, product ideas, and marketing messages before investing in full production. We provide diagnostic feedback and optimization recommendations.",
+          "We test ads, packaging, messaging, and creative concepts with your target audience using both quantitative metrics (recall, persuasion) and qualitative feedback (emotional response, clarity) to optimize before launch.",
       },
       {
         title: "Product Concept & Packaging Testing",
         icon: Package,
-        popupTitle: "Product & Packaging Research",
+        popupTitle: "Product Concept & Packaging Testing",
         popupSubtitle: "Design for success",
         popupDescription:
-          "Evaluate product concepts, features, pricing, and packaging options with your target consumers. We use conjoint analysis, shelf testing, and home use tests to optimize your product offering.",
+          "Our testing methodology evaluates purchase intent, uniqueness, value perception, and shelf appeal. We use A/B testing, conjoint analysis, and sensory evaluation to optimize product-market fit.",
       },
     ],
   },
@@ -128,39 +128,39 @@ const industries = [
         popupTitle: "Physician & KOL Research",
         popupSubtitle: "Expert medical insights",
         popupDescription:
-          "We have extensive experience recruiting and interviewing physicians, specialists, and key opinion leaders across therapeutic areas. Our healthcare-trained moderators understand medical terminology and can probe deeply on clinical topics.",
+          "We recruit and interview medical specialists, key opinion leaders, and healthcare practitioners using medically-trained interviewers. Our research covers clinical practices, treatment protocols, and emerging medical trends.",
       },
       {
         title: "Patient Journey & Needs Assessment",
         icon: Heart,
-        popupTitle: "Patient Journey Research",
+        popupTitle: "Patient Journey & Needs Assessment",
         popupSubtitle: "Understanding the patient experience",
         popupDescription:
-          "Map the complete patient journey from symptom onset through treatment and beyond. We identify unmet needs, information gaps, and opportunities to improve patient outcomes and satisfaction.",
+          "Through empathetic patient research, we map the complete healthcare journey from symptom awareness to treatment and follow-up, identifying unmet needs, barriers to care, and opportunities for intervention.",
       },
       {
         title: "Regulatory Compliance & Data Security",
         icon: Shield,
-        popupTitle: "Healthcare Compliance",
+        popupTitle: "Regulatory Compliance & Data Security",
         popupSubtitle: "Research you can trust",
         popupDescription:
-          "All healthcare research follows strict ethical guidelines, IRB protocols, and data security standards including HIPAA compliance. We maintain rigorous informed consent procedures and data anonymization practices.",
+          "All healthcare research is HIPAA-compliant, with IRB approval when required. We maintain the highest standards of patient privacy, data encryption, and regulatory adherence across all jurisdictions.",
       },
       {
         title: "Clinical Trial Recruitment Support",
         icon: UserPlus,
-        popupTitle: "Clinical Trial Support",
+        popupTitle: "Clinical Trial Recruitment Support",
         popupSubtitle: "Accelerating patient recruitment",
         popupDescription:
-          "We help pharma and biotech companies understand patient awareness, willingness to participate, and barriers to clinical trial enrollment. Our insights help optimize recruitment strategies and improve enrollment rates.",
+          "We assist with patient recruitment for clinical trials through targeted outreach, screening, and enrollment support. Our database includes pre-qualified patients interested in trial participation.",
       },
       {
         title: "Pharma/Device Concept Testing",
         icon: Microscope,
-        popupTitle: "Medical Product Testing",
+        popupTitle: "Pharma/Device Concept Testing",
         popupSubtitle: "Validate with HCPs and patients",
         popupDescription:
-          "Test pharmaceutical concepts, medical devices, and therapeutic approaches with both healthcare providers and patients. We provide insights on perceived efficacy, safety concerns, adoption barriers, and positioning strategies.",
+          "We test pharmaceutical products, medical devices, and digital health solutions with patients and providers, assessing efficacy perceptions, usability, adoption barriers, and market potential.",
       },
     ],
   },
