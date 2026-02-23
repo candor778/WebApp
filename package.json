@@ -68,7 +68,8 @@
     "tsx": "^4.20.6",
     "tw-animate-css": "latest",
     "vaul": "latest",
-    "xlsx": "latest"
+    "xlsx": "latest",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
