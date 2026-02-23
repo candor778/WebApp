@@ -152,7 +152,7 @@ const Footer = () => {
                   href="mailto:Infocandorsurvey@gmail.com"
                   className="hover:text-white transition-colors lowercase"
                 >
-                  Infocandorsurvey@gmail.com
+                  Info@candorsurvey.com
                 </a>
               </li>
 
