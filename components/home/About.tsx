@@ -116,10 +116,7 @@ const About = () => {
             </h3>
             <p className="text-[#6b7280] leading-relaxed">
               Candor Survey isn&apos;t just a research firm; we are your
-              strategic partner in navigating complexity. We combine advanced
-              data science with genuine human empathy to deliver unbiased,
-              crystal-clear insights that empower your most critical business
-              decisions.
+              strategic partner in navigating complexity.
             </p>
             <p className="text-[#6b7280] leading-relaxed">
               We are committed to delivering precise, data-driven insights that
