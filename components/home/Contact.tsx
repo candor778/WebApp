@@ -152,7 +152,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <div className="text-sm text-[#8a9bb5]">Email Us</div>
-                  <div className="text-[#e5e9f0] font-medium">Infocandorsurvey@gmail.com</div>
+                  <div className="text-[#e5e9f0] font-medium">Info@candorsurvey.com</div>
                 </div>
               </a>
             </div>
