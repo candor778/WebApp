@@ -73,7 +73,7 @@ const PanelBookDialog = ({
     const result = formSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof FormData, string>> = {};
-      result.error.errors.forEach((err) => {
+      result.error.issues.forEach((err) => {
         const field = err.path[0] as keyof FormData;
         fieldErrors[field] = err.message;
       });
