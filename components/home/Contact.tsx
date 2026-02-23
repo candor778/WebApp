@@ -1,46 +1,46 @@
-"use client"
-import type React from "react"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Phone, Mail, Send, CheckCircle, AlertCircle } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import Image from "next/image"
+"use client";
+import type React from "react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Phone, Mail, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 interface FormData {
-  fullName: string
-  email: string
-  phone: string
-  company: string
-  message: string
+  fullName: string;
+  email: string;
+  phone: string;
+  company: string;
+  message: string;
 }
 
 interface ToastState {
-  show: boolean
-  type: "success" | "error"
-  message: string
+  show: boolean;
+  type: "success" | "error";
+  message: string;
 }
 
 interface Web3FormsResponse {
-  success: boolean
-  message?: string
+  success: boolean;
+  message?: string;
 }
 
 const Contact = () => {
-  const { toast } = useToast()
+  const { toast } = useToast();
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
     phone: "",
     company: "",
     message: "",
-  })
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  });
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -50,7 +50,9 @@ const Contact = () => {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "88c1d037-376d-4731-a174-d57d6b20c176", // Use environment variable
+          access_key:
+            process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
+            "88c1d037-376d-4731-a174-d57d6b20c176", // Use environment variable
           name: formData.fullName,
           email: formData.email,
           phone: formData.phone,
@@ -59,16 +61,25 @@ const Contact = () => {
           subject: "New Contact Form Submission from Candor Survey",
           from_name: "Candor Survey Website",
         }),
-      })
+      });
 
-      const result: Web3FormsResponse = await response.json()
+      const result: Web3FormsResponse = await response.json();
 
       if (result.success) {
         toast({
           title: "Message Sent!",
           description: "We'll get back to you as soon as possible.",
-        })
-        
+        });
+
+        // Auto-download PannelBook after successful submission
+        const link = document.createElement("a");
+        link.href =
+          "/assets/CANDORSURVEY.pdf"; // replace with your Cloudinary URL
+        link.download = "CANDORSURVEY_PannelBook.pdf";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
         // Reset form
         setFormData({
           fullName: "",
@@ -76,25 +87,25 @@ const Contact = () => {
           phone: "",
           company: "",
           message: "",
-        })
+        });
       } else {
         toast({
           title: "Error",
           description: "Something went wrong. Please try again.",
           variant: "destructive",
-        })
+        });
       }
     } catch (error) {
-      console.error("Form submission error:", error)
+      console.error("Form submission error:", error);
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <section
@@ -114,7 +125,8 @@ const Contact = () => {
             </span>
           </h2>
           <p className="text-lg text-[#8a9bb5] max-w-2xl mx-auto">
-            Ready to transform your business with data-driven insights? Let&apos;s start a conversation.
+            Ready to transform your business with data-driven insights?
+            Let&apos;s start a conversation.
           </p>
         </div>
 
@@ -122,10 +134,13 @@ const Contact = () => {
           {/* Left Column - Info */}
           <div className="space-y-8">
             <div>
-              <h3 className="text-2xl text-[#e5e9f0] mb-4">Let&apos;s Work Together</h3>
+              <h3 className="text-2xl text-[#e5e9f0] mb-4">
+                Let&apos;s Work Together
+              </h3>
               <p className="text-[#8a9bb5]">
-                Whether you need market research, consumer insights, or competitive analysis, our team is ready to
-                help you make informed decisions that drive growth.
+                Whether you need market research, consumer insights, or
+                competitive analysis, our team is ready to help you make
+                informed decisions that drive growth.
               </p>
             </div>
 
@@ -139,12 +154,14 @@ const Contact = () => {
                 </div>
                 <div>
                   <div className="text-sm text-[#8a9bb5]">Call Us</div>
-                  <div className="text-[#e5e9f0] font-medium">+91 88823 93935</div>
+                  <div className="text-[#e5e9f0] font-medium">
+                    +91 88823 93935
+                  </div>
                 </div>
               </a>
 
               <a
-                href="mailto:Infocandorsurvey@gmail.com"
+                href="mailto:Info@candorsurvey.com"
                 className="flex items-center gap-4 p-4 backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-xl hover:border-[#22d3ee]/40 transition-all group"
               >
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-[#22d3ee] to-[#14b8a6] flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -152,7 +169,9 @@ const Contact = () => {
                 </div>
                 <div>
                   <div className="text-sm text-[#8a9bb5]">Email Us</div>
-                  <div className="text-[#e5e9f0] font-medium">Infocandorsurvey@gmail.com</div>
+                  <div className="text-[#e5e9f0] font-medium">
+                    Infocandorsurvey@gmail.com
+                  </div>
                 </div>
               </a>
             </div>
@@ -174,14 +193,19 @@ const Contact = () => {
           <div className="backdrop-blur-xl border border-[#2a3f5f]/50 bg-[#1a2942]/80 rounded-2xl p-8">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-[#e5e9f0] mb-2">
+                <label
+                  htmlFor="fullName"
+                  className="block text-sm font-medium text-[#e5e9f0] mb-2"
+                >
                   Full Name <span className="text-[#22d3ee]">*</span>
                 </label>
                 <Input
                   id="fullName"
                   name="fullName"
                   value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
                   required
                   className="bg-[#1e293b]/50 border-[#2a3f5f] focus:border-[#22d3ee] text-white"
                   placeholder="John Doe"
@@ -189,7 +213,10 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-[#e5e9f0] mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-[#e5e9f0] mb-2"
+                >
                   Email Address <span className="text-[#22d3ee]">*</span>
                 </label>
                 <Input
@@ -197,7 +224,9 @@ const Contact = () => {
                   name="email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   required
                   className="bg-[#1e293b]/50 border-[#2a3f5f] focus:border-[#22d3ee] text-white"
                   placeholder="john@example.com"
@@ -205,7 +234,10 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-[#e5e9f0] mb-2">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-[#e5e9f0] mb-2"
+                >
                   Phone Number <span className="text-[#22d3ee]">*</span>
                 </label>
                 <Input
@@ -213,7 +245,9 @@ const Contact = () => {
                   name="phone"
                   type="tel"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
                   required
                   className="bg-[#1e293b]/50 border-[#2a3f5f] focus:border-[#22d3ee] text-white"
                   placeholder="+91 98765 43210"
@@ -221,28 +255,38 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="company" className="block text-sm font-medium text-[#e5e9f0] mb-2">
+                <label
+                  htmlFor="company"
+                  className="block text-sm font-medium text-[#e5e9f0] mb-2"
+                >
                   Company Name
                 </label>
                 <Input
                   id="company"
                   name="company"
                   value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, company: e.target.value })
+                  }
                   className="bg-[#1e293b]/50 border-[#2a3f5f] focus:border-[#22d3ee] text-white"
                   placeholder="Your Company"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-[#e5e9f0] mb-2">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-[#e5e9f0] mb-2"
+                >
                   Message
                 </label>
                 <Textarea
                   id="message"
                   name="message"
                   value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.target.value })
+                  }
                   rows={4}
                   className="bg-[#1e293b]/50 border-[#2a3f5f] focus:border-[#22d3ee] resize-none text-white"
                   placeholder="Tell us about your project..."
@@ -263,7 +307,7 @@ const Contact = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

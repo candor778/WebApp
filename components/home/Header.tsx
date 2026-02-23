@@ -1,62 +1,63 @@
-"use client"
-import Image from "next/image"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
-import { Menu, X } from "lucide-react"
-import Logo from "@/public/assets/candor-logo-transparent.png"
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { Menu, X, BookOpen } from "lucide-react";
+import Logo from "@/public/assets/candor-logo-transparent.png";
 
 const Header = () => {
-  const pathname = usePathname()
-  const isHomePage = pathname === "/"
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Prevent scroll when menu is open
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = "hidden"
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "unset"
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = "unset"
-    }
-  }, [isMenuOpen])
+      document.body.style.overflow = "unset";
+    };
+  }, [isMenuOpen]);
 
   const scrollToSection = (sectionId: string) => {
-    setIsMenuOpen(false)
-    
+    setIsMenuOpen(false);
     if (!isHomePage) {
-      window.location.href = `/#${sectionId}`
-      return
+      window.location.href = `/#${sectionId}`;
+      return;
     }
-    
-    const element = document.getElementById(sectionId)
+    const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+      element.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  };
 
   const handleLinkClick = () => {
-    setIsMenuOpen(false)
-  }
+    setIsMenuOpen(false);
+  };
 
   const linkClass = (active: boolean) =>
     `text-sm font-medium transition-colors ${
       active ? "text-white" : "text-[#8a9bb5] hover:text-[#e5e9f0]"
-    }`
+    }`;
 
   const mobileLinkClass = (active: boolean) =>
     `text-lg font-medium transition-colors block py-3 text-left w-full ${
       active ? "text-white" : "text-[#8a9bb5] hover:text-[#e5e9f0]"
-    }`
+    }`;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0f1724]/80 border-b border-[#2a3f5f]/50">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center z-50" onClick={handleLinkClick}>
+          <Link
+            href="/"
+            className="flex items-center z-50"
+            onClick={handleLinkClick}
+          >
             <Image
               src={Logo}
               alt="Candor Survey"
@@ -69,28 +70,58 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <button onClick={() => scrollToSection("about")} className={linkClass(false)}>
+            <button
+              onClick={() => scrollToSection("about")}
+              className={linkClass(false)}
+            >
               About
             </button>
-            <Link href="/services" className={linkClass(pathname === "/services")}>
+            <Link
+              href="/services"
+              className={linkClass(pathname === "/services")}
+            >
               Services
             </Link>
-            <Link href="/industry" className={linkClass(pathname === "/industry")}>
+            <Link
+              href="/industry"
+              className={linkClass(pathname === "/industry")}
+            >
               Industry
             </Link>
-            <button onClick={() => scrollToSection("contact")} className={linkClass(false)}>
+            <button
+              onClick={() => scrollToSection("contact")}
+              className={linkClass(false)}
+            >
               Contact
             </button>
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden z-50 p-2 text-[#8a9bb5] hover:text-white transition-colors"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Right side actions */}
+          <div className="flex items-center gap-2 z-50">
+            {/* Get PannelBook Button — visible on all screen sizes */}
+            <a
+              href="/assets/CANDORSURVEY.pdf"
+              download="CANDORSURVEY_PannelBook.pdf"
+              className="flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-semibold rounded-lg bg-[#1e6fbf] hover:bg-[#2a85d8] text-white transition-colors whitespace-nowrap"
+            >
+              <BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" />
+              <span className="hidden sm:inline">Get PannelBook</span>
+              <span className="sm:hidden">PannelBook</span>
+            </a>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 text-[#8a9bb5] hover:text-white transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -115,15 +146,15 @@ const Header = () => {
           >
             About
           </button>
-          <Link 
-            href="/services" 
+          <Link
+            href="/services"
             className={mobileLinkClass(pathname === "/services")}
             onClick={handleLinkClick}
           >
             Services
           </Link>
-          <Link 
-            href="/industry" 
+          <Link
+            href="/industry"
             className={mobileLinkClass(pathname === "/industry")}
             onClick={handleLinkClick}
           >
@@ -138,7 +169,7 @@ const Header = () => {
         </nav>
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
