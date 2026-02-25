@@ -30,7 +30,7 @@ type FormData = z.infer<typeof formSchema>;
 
 // ✅ Replace with your actual Cloudinary raw file URL
 const PANEL_BOOK_URL =
-  "https://res.cloudinary.com/dt5h8byda/raw/upload/pannelbook.pdf";
+  "/assets/CANDORSURVEY.pdf";
 
 const PanelBookDialog = ({
   open,
