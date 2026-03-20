@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Order and paginate
-    query = query.order("created_at", { ascending: false }).range(offset, offset + limit - 1)
+    query = query.order("created_at", { ascending: true }).range(offset, offset + limit - 1)
 
     const { data: responses, error, count } = await query
 
