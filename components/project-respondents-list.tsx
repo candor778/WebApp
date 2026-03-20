@@ -94,7 +94,6 @@ function GeoCell({
   return (
     <div className="flex flex-col gap-0.5 min-w-0">
       <div className="flex items-center gap-1">
-        <CountryFlag code={countryCode} />
         <span
           className="text-xs font-medium text-foreground truncate"
           title={country || ""}
