@@ -1,26 +1,37 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
-import { getSupabaseAdmin } from "@/lib/supabase/admin"
+import { type NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
+
+// Whitelist of columns the geo filter is allowed to target.
+// This prevents arbitrary column injection from query params.
+const ALLOWED_GEO_FIELDS = new Set([
+  "country",
+  "country_code",
+  "city",
+  "state",
+]);
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient()
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const searchParams = request.nextUrl.searchParams
-    const offset = Number.parseInt(searchParams.get("offset") || "0")
-    const limit = Number.parseInt(searchParams.get("limit") || "50")
-    const projectId = searchParams.get("projectId")
-    const status = searchParams.get("status")
-    const userId = searchParams.get("userId")
+    const searchParams = request.nextUrl.searchParams;
+    const offset = Number.parseInt(searchParams.get("offset") || "0");
+    const limit = Number.parseInt(searchParams.get("limit") || "50");
+    const projectId = searchParams.get("projectId");
+    const status = searchParams.get("status");
+    const userId = searchParams.get("userId");
+    const geoField = searchParams.get("geoField"); // e.g. "country", "country_code", "state", "city"
+    const geoValue = searchParams.get("geoValue");
 
-    const adminClient = getSupabaseAdmin()
+    const adminClient = getSupabaseAdmin();
 
     // Build query
     let query = adminClient.from("responses").select(
@@ -35,37 +46,50 @@ export async function GET(request: NextRequest) {
         status,
         created_at,
         completed_at,
+        country,
+        country_code,
+        city,
+        state,
+        latitude,
+        longitude,
+        isp,
+        timezone,
         projects!inner(id, project_id, title)
       `,
       { count: "exact" },
-    )
+    );
 
-    // Apply filters with case-insensitive matching
     if (projectId && projectId !== "all") {
-      // case-sensitive exact match on project_id
-      query = query.eq("project_id", projectId)
+      query = query.eq("project_id", projectId);
     }
 
     if (status && status !== "all") {
-      query = query.eq("status", status)
+      query = query.eq("status", status);
     }
 
     if (userId) {
-      // Case-sensitive partial match on user_id
-      query = query.like("user_id", `%${userId}%`)
+      query = query.like("user_id", `%${userId}%`);
     }
 
-    // Order and paginate
-    query = query.order("created_at", { ascending: true }).range(offset, offset + limit - 1)
+    // Geo filter — only applied when both params are present and the field is whitelisted
+    if (geoField && geoValue && ALLOWED_GEO_FIELDS.has(geoField)) {
+      query = query.ilike(geoField, `%${geoValue}%`);
+    }
 
-    const { data: responses, error, count } = await query
+    query = query
+      .order("created_at", { ascending: true })
+      .range(offset, offset + limit - 1);
+
+    const { data: responses, error, count } = await query;
 
     if (error) {
-      console.error("Error fetching respondents:", error)
-      return NextResponse.json({ error: "Failed to fetch respondents" }, { status: 500 })
+      console.error("Error fetching respondents:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch respondents" },
+        { status: 500 },
+      );
     }
 
-    // Transform data
     const respondents = (responses || []).map((response: any) => ({
       id: response.id,
       surveyId: response.project_id,
@@ -78,12 +102,21 @@ export async function GET(request: NextRequest) {
       status: response.status,
       createdAt: response.created_at,
       completedAt: response.completed_at,
-      // For backward compatibility with existing UI
+      // 🌍 GEO DATA
+      country: response.country || "Unknown",
+      countryCode: response.country_code || "Unknown",
+      city: response.city || "Unknown",
+      state: response.state || "Unknown",
+      latitude: response.latitude || "Unknown",
+      longitude: response.longitude || "Unknown",
+      isp: response.isp || "Unknown",
+      timezone: response.timezone || "Unknown",
+      // Backward compat
       respondentName: response.user_id,
       respondentEmail: null,
       respondentPhone: "N/A",
       answerCount: 0,
-    }))
+    }));
 
     return NextResponse.json({
       respondents,
@@ -93,9 +126,12 @@ export async function GET(request: NextRequest) {
         limit,
         hasMore: (count || 0) > offset + limit,
       },
-    })
+    });
   } catch (error) {
-    console.error("Error fetching respondents:", error)
-    return NextResponse.json({ error: "Failed to fetch respondents" }, { status: 500 })
+    console.error("Error fetching respondents:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch respondents" },
+      { status: 500 },
+    );
   }
 }

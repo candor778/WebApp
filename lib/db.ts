@@ -29,6 +29,28 @@ export interface ResponseWithProject extends Response {
   projects: Project
 }
 
+export interface GeoData {
+  country: string | null
+  country_code: string | null
+  city: string | null
+  state: string | null
+  latitude: number | null
+  longitude: number | null
+  isp: string | null
+  timezone: string | null
+}
+
+export const EMPTY_GEO: GeoData = {
+  country: null,
+  country_code: null,
+  city: null,
+  state: null,
+  latitude: null,
+  longitude: null,
+  isp: null,
+  timezone: null,
+}
+
 // Helper to parse device type from user agent
 export function parseDeviceType(userAgent: string): DeviceType {
   const ua = userAgent.toLowerCase()
@@ -70,4 +92,36 @@ export function getIpAddress(headers: Headers): string {
   if (xForwardedFor) return xForwardedFor.split(",")[0].trim()
 
   return "127.0.0.1"
+}
+
+export async function getGeoData(ip: string): Promise<GeoData> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 2000)
+
+  try {
+    const res = await fetch(
+      `https://api.ipgeolocation.io/v3/ipgeo?apiKey=${process.env.IPGEO_API_KEY}&ip=${ip}`,
+      { signal: controller.signal }
+    )
+
+    if (!res.ok) return EMPTY_GEO
+
+    const data = await res.json()
+
+    return {
+      country: data?.location?.country_name ?? null,
+      country_code: data?.location?.country_code2 ?? null,
+      city: data?.location?.city ?? null,
+      state: data?.location?.state_prov ?? null,
+      latitude: data?.location?.latitude ? parseFloat(data.location.latitude) : null,
+      longitude: data?.location?.longitude ? parseFloat(data.location.longitude) : null,
+      isp: data?.asn?.organization ?? null,
+      timezone: data?.time_zone?.name ?? null,
+    }
+  } catch (error) {
+    console.error("Geo fetch failed:", error)
+    return EMPTY_GEO
+  } finally {
+    clearTimeout(timer)
+  }
 }

@@ -1,13 +1,14 @@
-//app/survey/route.ts
+// app/survey/route.ts
 // Survey Capture Route
 // This is called when external surveys redirect users to capture metadata
+
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseAdmin } from "@/lib/supabase/admin"
-import { parseDeviceType, parseBrowserName, getIpAddress } from "@/lib/db"
+import { parseDeviceType, parseBrowserName, getIpAddress, getGeoData, type GeoData, EMPTY_GEO } from "@/lib/db"
 
-// 👇 Add a small helper + list of known preview/crawler agents
+// ================= BLOCK BOTS =================
 const BLOCKED_AGENT_SUBSTRINGS = [
-  "WhatsApp",           // WhatsApp link preview
+  "WhatsApp",
   "facebookexternalhit",
   "Facebot",
   "Twitterbot",
@@ -23,12 +24,24 @@ function isPreviewOrCrawler(ua: string | null): boolean {
   return BLOCKED_AGENT_SUBSTRINGS.some(token => lower.includes(token.toLowerCase()))
 }
 
+// ================= VALID STATUSES =================
+const VALID_STATUSES = new Set([
+  "STARTED",
+  "COMPLETED",
+  "TERMINATED",
+  "QUOTA_FULL",
+  "QUALITY_TERMINATED",
+])
+
+// ================= SUSPICIOUS PATTERNS =================
+const SUSPICIOUS_PATTERNS = [/script/i, /<.*>/, /javascript:/i, /on\w+=/i]
+
+// ================= MAIN ROUTE =================
 export async function GET(request: NextRequest) {
   try {
-    // 👇 Read UA immediately and block previews BEFORE any DB / heavy logic
+    // Block previews/crawlers BEFORE any DB or heavy logic
     const userAgent = request.headers.get("user-agent") || "unknown"
     if (isPreviewOrCrawler(userAgent)) {
-      // 204 = No Content (safe for bots, invisible to users)
       return new NextResponse(null, { status: 204 })
     }
 
@@ -37,7 +50,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status")
     const userId = searchParams.get("userId")
 
-    // Validate required parameters
+    // ================= VALIDATION =================
     if (!projectId || !status || !userId) {
       return NextResponse.json(
         { error: "Missing required parameters: projectId, status, and userId are required" },
@@ -45,7 +58,6 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Validate projectId format (alphanumeric, hyphens, underscores only)
     if (!/^[a-zA-Z0-9_-]+$/.test(projectId)) {
       return NextResponse.json(
         { error: "Invalid projectId format. Only alphanumeric characters, hyphens, and underscores allowed" },
@@ -53,7 +65,6 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Validate userId format and length
     if (userId.length < 1 || userId.length > 255) {
       return NextResponse.json(
         { error: "Invalid userId. Must be between 1 and 255 characters" },
@@ -61,56 +72,39 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Validate status enum
-    const validStatuses = ["STARTED", "COMPLETED", "TERMINATED", "QUOTA_FULL", "QUALITY_TERMINATED"]
+    // Check suspicious patterns before any DB work
+    if (SUSPICIOUS_PATTERNS.some(pattern => pattern.test(userId))) {
+      console.warn(`Suspicious userId detected: ${userId}`)
+      return NextResponse.json({ error: "Invalid userId format" }, { status: 400 })
+    }
+
     const upperStatus = status.toUpperCase()
-    if (!validStatuses.includes(upperStatus)) {
+    if (!VALID_STATUSES.has(upperStatus)) {
       return NextResponse.json(
-        { error: "Invalid status. Must be one of: completed, terminated, quota full" },
+        { error: "Invalid status. Must be one of: STARTED, COMPLETED, TERMINATED, QUOTA_FULL, QUALITY_TERMINATED" },
         { status: 400 },
       )
     }
 
-    // Get metadata from request
+    // ================= METADATA =================
     const ipAddress = getIpAddress(request.headers)
     const deviceType = parseDeviceType(userAgent)
     const browserName = parseBrowserName(userAgent)
 
     const adminClient = getSupabaseAdmin()
 
-    // Parallel fetch: Check both project and existing response simultaneously
-    const [projectResult, existingResponsesResult] = await Promise.allSettled([
-      adminClient
-        .from("projects")
-        .select("id, is_active, title")
-        .eq("project_id", projectId)
-        .single(),
-      adminClient
-        .from("responses")
-        .select("id, status, ip_address, created_at")
-        .eq("project_id", projectId) // Use projectId string for initial check
-        .eq("user_id", userId)
-    ])
+    // ================= PROJECT =================
+    // Fetch existing project first
+    const { data: existingProject, error: fetchError } = await adminClient
+      .from("projects")
+      .select("id, is_active, title")
+      .eq("project_id", projectId)
+      .single()
 
-    // Handle project fetch result
-    let project = null
-    if (projectResult.status === "fulfilled") {
-      const { data, error } = projectResult.value
-      if (error && error.code !== "PGRST116") {
-        console.error("Error fetching project:", error)
-        return NextResponse.json(
-          { error: "Failed to verify project", details: error.message },
-          { status: 500 },
-        )
-      }
-      project = data
-    } else {
-      console.error("Project fetch failed:", projectResult.reason)
-      return NextResponse.json({ error: "Failed to verify project" }, { status: 500 })
-    }
+    let project = existingProject
 
-    // Create project only if it doesn't exist
-    if (!project) {
+    // Create project if it doesn't exist
+    if (fetchError?.code === "PGRST116" || !project) {
       const { data: newProject, error: createError } = await adminClient
         .from("projects")
         .insert({
@@ -123,22 +117,18 @@ export async function GET(request: NextRequest) {
         .single()
 
       if (createError) {
-        // Check if it's a duplicate key error (race condition)
+        // Race condition: another request created it simultaneously
         if (createError.code === "23505") {
-          // Try to fetch again - another request may have created it
           const { data: retryProject } = await adminClient
             .from("projects")
             .select("id, is_active, title")
             .eq("project_id", projectId)
             .single()
-          
+
           if (retryProject) {
             project = retryProject
           } else {
-            return NextResponse.json(
-              { error: "Failed to create or retrieve project" },
-              { status: 500 },
-            )
+            return NextResponse.json({ error: "Failed to create or retrieve project" }, { status: 500 })
           }
         } else {
           console.error("Error creating project:", createError)
@@ -150,69 +140,66 @@ export async function GET(request: NextRequest) {
       } else {
         project = newProject
       }
+    } else if (fetchError) {
+      // Any error other than "no rows"
+      console.error("Error fetching project:", fetchError)
+      return NextResponse.json(
+        { error: "Failed to verify project", details: fetchError.message },
+        { status: 500 },
+      )
     }
 
-    // Check if project is active - REDIRECT TO DISABLED PAGE
+    if (!project) {
+      return NextResponse.json({ error: "Failed to resolve project" }, { status: 500 })
+    }
+
     if (!project.is_active) {
       const disabledUrl = new URL("/project-disabled", request.url)
       disabledUrl.searchParams.set("projectId", projectId)
       disabledUrl.searchParams.set("projectName", project.title || projectId)
-      
       return NextResponse.redirect(disabledUrl)
     }
 
-    // Handle existing responses check result
-    let existingResponses: Array<{ id: string; status: string; ip_address: string | null; created_at: string }> = []
-    if (existingResponsesResult.status === "fulfilled") {
-      const { data, error } = existingResponsesResult.value
-      if (error) {
-        console.error("Error checking for existing responses:", error)
-        // Continue anyway - better to allow potential duplicate than block legitimate user
-      } else {
-        existingResponses = data || []
-      }
-    }
+    // ================= DUPLICATE CHECK =================
+    // Only COMPLETED responses from the same IP are true duplicates.
+    // A prior STARTED from the same IP should not block a legitimate completion.
+    const { data: existingCompleted } = await adminClient
+      .from("responses")
+      .select("id, status, ip_address")
+      .eq("project_id", project.id)
+      .eq("ip_address", ipAddress)
+      .eq("status", "COMPLETED")
+      .maybeSingle()
 
-    // NEW LOGIC: Check if user has already submitted from THIS IP address
-    const existingResponseFromSameIP = existingResponses.find(
-      (response) => response.ip_address === ipAddress
-    )
-
-    if (existingResponseFromSameIP) {
-      // User already submitted from this IP - redirect with existing data
+    if (existingCompleted) {
       const thankYouUrl = new URL("/thank-you", request.url)
       thankYouUrl.searchParams.set("projectId", projectId)
       thankYouUrl.searchParams.set("userId", userId)
-      thankYouUrl.searchParams.set("status", existingResponseFromSameIP.status)
-      thankYouUrl.searchParams.set("ipAddress", existingResponseFromSameIP.ip_address || "N/A")
-      thankYouUrl.searchParams.set("responseId", existingResponseFromSameIP.id)
+      thankYouUrl.searchParams.set("status", existingCompleted.status)
+      thankYouUrl.searchParams.set("ipAddress", existingCompleted.ip_address || "N/A")
+      thankYouUrl.searchParams.set("responseId", existingCompleted.id)
       thankYouUrl.searchParams.set("duplicate", "true")
-      
       return NextResponse.redirect(thankYouUrl)
     }
 
-    // If we reach here, either:
-    // 1. User has never submitted for this project, OR
-    // 2. User has submitted before but from a different IP address
-    // In both cases, we allow the submission
+    // ================= GEO CACHE =================
+    let geo: GeoData = EMPTY_GEO
 
-    // Additional check: Verify userId doesn't contain suspicious patterns
-    const suspiciousPatterns = [
-      /script/i,
-      /<.*>/,
-      /javascript:/i,
-      /on\w+=/i
-    ]
-    
-    if (suspiciousPatterns.some(pattern => pattern.test(userId))) {
-      console.warn(`Suspicious userId detected: ${userId}`)
-      return NextResponse.json(
-        { error: "Invalid userId format" },
-        { status: 400 },
-      )
+    const { data: cached } = await adminClient
+      .from("ip_geo_cache")
+      // Select only geo columns — avoids spreading DB metadata into responses
+      .select("country, country_code, city, state, latitude, longitude, isp, timezone")
+      .eq("ip", ipAddress)
+      .maybeSingle()
+
+    if (cached) {
+      geo = cached as GeoData
+    } else {
+      geo = await getGeoData(ipAddress)
+      await adminClient.from("ip_geo_cache").upsert({ ip: ipAddress, ...geo })
     }
 
-    // Create new response
+    // ================= INSERT RESPONSE =================
     const { data: response, error: responseError } = await adminClient
       .from("responses")
       .insert({
@@ -224,17 +211,24 @@ export async function GET(request: NextRequest) {
         browser_name: browserName,
         status: upperStatus,
         completed_at: upperStatus === "COMPLETED" ? new Date().toISOString() : null,
+        // GEO DATA
+        country: geo.country,
+        country_code: geo.country_code,
+        city: geo.city,
+        state: geo.state,
+        latitude: geo.latitude,
+        longitude: geo.longitude,
+        isp: geo.isp,
+        timezone: geo.timezone,
       })
       .select("id")
       .single()
 
     if (responseError) {
       console.error("Error creating response:", responseError)
-      
-      // Handle duplicate key error (race condition)
-      // Note: This should rarely happen now since we're checking IP address
+
+      // Race condition: another request inserted same (project_id, user_id, ip_address) simultaneously
       if (responseError.code === "23505") {
-        // Fetch the existing response that was created in parallel
         const { data: racedResponse } = await adminClient
           .from("responses")
           .select("id, status, ip_address")
@@ -242,7 +236,7 @@ export async function GET(request: NextRequest) {
           .eq("user_id", userId)
           .eq("ip_address", ipAddress)
           .single()
-        
+
         if (racedResponse) {
           const thankYouUrl = new URL("/thank-you", request.url)
           thankYouUrl.searchParams.set("projectId", projectId)
@@ -251,30 +245,30 @@ export async function GET(request: NextRequest) {
           thankYouUrl.searchParams.set("ipAddress", racedResponse.ip_address || "N/A")
           thankYouUrl.searchParams.set("responseId", racedResponse.id)
           thankYouUrl.searchParams.set("duplicate", "true")
-          
           return NextResponse.redirect(thankYouUrl)
         }
       }
-      
+
       return NextResponse.json(
         { error: "Failed to create response", details: responseError.message },
         { status: 500 },
       )
     }
 
-    // Log successful response creation
-    console.log(`Response created successfully - userId: ${userId}, projectId: ${projectId}, responseId: ${response.id}, ipAddress: ${ipAddress}`)
-    
-    // If this is a subsequent submission from a different IP, log it
-    if (existingResponses.length > 0) {
-      console.log(`User ${userId} has submitted ${existingResponses.length} time(s) before from different IP address(es)`)
+    if (!response) {
+      console.error("Response insert returned no data")
+      return NextResponse.json({ error: "Failed to record response" }, { status: 500 })
     }
 
-    // Redirect to thank you page
+    console.log(
+      `Response created — userId: ${userId}, projectId: ${projectId}, responseId: ${response.id}, ip: ${ipAddress}`
+    )
+
+    // ================= REDIRECT =================
     const thankYouUrl = new URL("/thank-you", request.url)
     thankYouUrl.searchParams.set("projectId", projectId)
     thankYouUrl.searchParams.set("userId", userId)
-    thankYouUrl.searchParams.set("status", status)
+    thankYouUrl.searchParams.set("status", upperStatus)
     thankYouUrl.searchParams.set("ipAddress", ipAddress)
     thankYouUrl.searchParams.set("responseId", response.id)
 

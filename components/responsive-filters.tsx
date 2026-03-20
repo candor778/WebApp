@@ -37,6 +37,8 @@ import {
   Check,
   RefreshCw,
   SlidersHorizontal,
+  MapPin,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -49,9 +51,133 @@ interface Project {
 
 type FilterMode = "global" | "project";
 
+export type SearchField =
+  | "userId"
+  | "country"
+  | "countryCode"
+  | "state"
+  | "city";
+
+const SEARCH_FIELD_OPTIONS: { value: SearchField; label: string }[] = [
+  { value: "userId",      label: "User ID"      },
+  { value: "country",     label: "Country"      },
+  { value: "countryCode", label: "Country Code" },
+  { value: "state",       label: "State"        },
+  { value: "city",        label: "City"         },
+];
+
+// ── Hoisted prop interfaces ───────────────────────────────────────────────────
+
+interface SearchBarProps {
+  searchField: SearchField;
+  setSearchField: (v: SearchField) => void;
+  searchUserId: string;
+  setSearchUserId: (v: string) => void;
+  className?: string;
+}
+
+interface SearchChipProps {
+  searchField: SearchField;
+  searchUserId: string;
+  setSearchUserId: (v: string) => void;
+  variant?: "secondary" | "outline";
+}
+
+// ── Hoisted sub-components ────────────────────────────────────────────────────
+
+function SearchBar({
+  searchField,
+  setSearchField,
+  searchUserId,
+  setSearchUserId,
+  className,
+}: SearchBarProps) {
+  const currentLabel =
+    SEARCH_FIELD_OPTIONS.find((o) => o.value === searchField)?.label ?? "User ID";
+
+  return (
+    <div className={cn("flex items-center gap-0", className)}>
+      <Select
+        value={searchField}
+        onValueChange={(v) => {
+          setSearchField(v as SearchField);
+          setSearchUserId("");
+        }}
+      >
+        <SelectTrigger
+          className={cn(
+            "h-9 shrink-0 rounded-r-none border-r-0 bg-muted/60 px-2.5 text-xs font-medium",
+            "focus:ring-0 focus:ring-offset-0 w-[108px]"
+          )}
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent align="start" className="min-w-[140px]">
+          {SEARCH_FIELD_OPTIONS.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value} className="text-xs">
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <div className="relative flex-1">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          placeholder={`Search by ${currentLabel}…`}
+          value={searchUserId}
+          onChange={(e) => setSearchUserId(e.target.value)}
+          className="h-9 rounded-l-none pl-8 pr-8 text-sm"
+        />
+        {searchUserId && (
+          <button
+            onClick={() => setSearchUserId("")}
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SearchChip({
+  searchField,
+  searchUserId,
+  setSearchUserId,
+  variant = "secondary",
+}: SearchChipProps) {
+  if (!searchUserId) return null;
+
+  const label =
+    SEARCH_FIELD_OPTIONS.find((o) => o.value === searchField)?.label ?? "User ID";
+
+  return (
+    <Button
+      variant={variant}
+      size="sm"
+      onClick={() => setSearchUserId("")}
+      className="h-7 rounded-full px-2 text-xs gap-1"
+    >
+      {searchField === "userId" ? (
+        <User className="h-3 w-3" />
+      ) : (
+        <MapPin className="h-3 w-3" />
+      )}
+      {label}: {searchUserId.length > 12 ? searchUserId.slice(0, 12) + "…" : searchUserId}
+      <X className="h-3 w-3" />
+    </Button>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
+
 interface ResponsiveFiltersProps {
   searchUserId: string;
   setSearchUserId: (value: string) => void;
+  searchField: SearchField;
+  setSearchField: (value: SearchField) => void;
   selectedStatus: string;
   setSelectedStatus: (value: string) => void;
   hasFilters: boolean;
@@ -61,8 +187,6 @@ interface ResponsiveFiltersProps {
   isLoading: boolean;
   handleRefresh: () => void;
   ExportButton: React.ComponentType<any>;
-
-  // Optional - only for global mode
   mode?: FilterMode;
   selectedProject?: string;
   setSelectedProject?: (value: string) => void;
@@ -73,14 +197,14 @@ interface ResponsiveFiltersProps {
   setProjectSearchQuery?: (value: string) => void;
   projectComboOpen?: boolean;
   setProjectComboOpen?: (value: boolean) => void;
-
-  // Optional - only for project mode
   projectId?: string;
 }
 
 export function ResponsiveFilters({
   searchUserId,
   setSearchUserId,
+  searchField,
+  setSearchField,
   selectedStatus,
   setSelectedStatus,
   hasFilters,
@@ -103,106 +227,107 @@ export function ResponsiveFilters({
   projectId,
 }: ResponsiveFiltersProps) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  // Each breakpoint gets its own open state so they never conflict with each other
+  const [desktopComboOpen, setDesktopComboOpen] = useState(false);
+  const [tabletComboOpen,  setTabletComboOpen]  = useState(false);
   const isGlobalMode = mode === "global";
+
+  // Factory — returns combobox JSX wired to a specific close callback
+  const makeComboContent = (closeCombo: () => void) => (
+    <Command>
+      <CommandInput
+        placeholder="Search projects..."
+        value={projectSearchQuery}
+        onValueChange={setProjectSearchQuery}
+      />
+      <CommandEmpty>No project found.</CommandEmpty>
+      <CommandGroup className="max-h-[calc(5*2.5rem)] overflow-auto">
+        <CommandItem
+          value="all"
+          onSelect={() => {
+            setSelectedProject?.("all");
+            setProjectSearchQuery?.("");
+            closeCombo();
+          }}
+        >
+          <Check
+            className={cn(
+              "mr-2 h-4 w-4",
+              selectedProject === "all" || !selectedProject ? "opacity-100" : "opacity-0"
+            )}
+          />
+          All Projects
+        </CommandItem>
+        {filteredProjects?.map((project) => (
+          <CommandItem
+            key={project.id}
+            value={`${project.project_id} ${project.title}`}
+            onSelect={() => {
+              setSelectedProject?.(project.id);
+              setProjectSearchQuery?.("");
+              closeCombo();
+            }}
+          >
+            <Check
+              className={cn(
+                "mr-2 h-4 w-4",
+                selectedProject === project.id ? "opacity-100" : "opacity-0"
+              )}
+            />
+            <span className="truncate">{project.project_id}</span>
+          </CommandItem>
+        ))}
+      </CommandGroup>
+    </Command>
+  );
+
+  const projectButtonLabel =
+    selectedProject && selectedProject !== "all" && selectedProjectData
+      ? selectedProjectData.project_id
+      : "All Projects";
+
+  const exportProps = isGlobalMode
+    ? { selectedProject, selectedStatus, searchUserId, searchField, searchProjectId: "" }
+    : { projectId, selectedStatus, searchUserId, searchField };
 
   return (
     <>
-      {/* Desktop Filters - Hidden on Mobile */}
-      <div className="hidden md:flex items-center gap-3 mb-6 flex-wrap">
-        {/* User ID Search */}
-        <div className="relative w-[240px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-          <Input
-            placeholder="Search User ID..."
-            value={searchUserId}
-            onChange={(e) => setSearchUserId(e.target.value)}
-            className="pl-9 pr-8"
-          />
-          {searchUserId && (
-            <button
-              onClick={() => setSearchUserId("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
+      {/* ════════════════════════════════════════════════════════════════════
+          DESKTOP (lg+) — strictly one row, never wraps
+          ════════════════════════════════════════════════════════════════════ */}
+      <div className="hidden lg:flex items-center gap-2 mb-5">
 
-        {/* Project Filter with Search - Only in Global Mode */}
+        {/* Search bar */}
+        <SearchBar
+          searchField={searchField}
+          setSearchField={setSearchField}
+          searchUserId={searchUserId}
+          setSearchUserId={setSearchUserId}
+          className="w-[260px] shrink-0"
+        />
+
+        {/* Project combobox */}
         {isGlobalMode && (
-          <Popover open={projectComboOpen} onOpenChange={setProjectComboOpen}>
+          <Popover open={desktopComboOpen} onOpenChange={setDesktopComboOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
-                aria-expanded={projectComboOpen}
-                className="w-[280px] justify-between font-normal"
+                className="w-[185px] shrink-0 h-9 justify-between font-normal text-sm"
               >
-                {selectedProject &&
-                selectedProject !== "all" &&
-                selectedProjectData
-                  ? `${selectedProjectData.project_id} - ${selectedProjectData.title}`
-                  : "All Projects"}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                <span className="truncate">{projectButtonLabel}</span>
+                <ChevronsUpDown className="ml-1 h-3.5 w-3.5 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[280px] p-0" align="start">
-              <Command>
-                <CommandInput
-                  placeholder="Search projects..."
-                  value={projectSearchQuery}
-                  onValueChange={setProjectSearchQuery}
-                />
-                <CommandEmpty>No project found.</CommandEmpty>
-                <CommandGroup className="max-h-[calc(5*2.5rem)] overflow-auto">
-                  <CommandItem
-                    value="all"
-                    onSelect={() => {
-                      setSelectedProject?.("all");
-                      setProjectComboOpen?.(false);
-                      setProjectSearchQuery?.("");
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selectedProject === "all" || !selectedProject
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                    All Projects
-                  </CommandItem>
-                  {filteredProjects?.map((project) => (
-                    <CommandItem
-                      key={project.id}
-                      value={`${project.project_id} ${project.title}`}
-                      onSelect={() => {
-                        setSelectedProject?.(project.id);
-                        setProjectComboOpen?.(false);
-                        setProjectSearchQuery?.("");
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          selectedProject === project.id
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                      <span className="truncate">{project.project_id}</span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </Command>
+            <PopoverContent className="w-[240px] p-0" align="start">
+              {makeComboContent(() => setDesktopComboOpen(false))}
             </PopoverContent>
           </Popover>
         )}
 
-        {/* Status Filter */}
+        {/* Status */}
         <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-[145px] shrink-0 h-9 text-sm">
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
           <SelectContent>
@@ -211,154 +336,204 @@ export function ResponsiveFilters({
             <SelectItem value="TERMINATED">Terminated</SelectItem>
             <SelectItem value="STARTED">Started</SelectItem>
             <SelectItem value="QUOTA_FULL">Quota Full</SelectItem>
-            <SelectItem value="QUALITY_TERMINATED">
-              QUALITY_TERMINATED
-            </SelectItem>
+            <SelectItem value="QUALITY_TERMINATED">Quality Terminated</SelectItem>
           </SelectContent>
         </Select>
 
-        {/* Clear Filters */}
+        {/* Clear */}
         {hasFilters && (
           <Button
             variant="ghost"
             size="sm"
             onClick={clearFilters}
-            className="h-10"
+            className="h-9 shrink-0 px-2.5 text-xs text-muted-foreground hover:text-foreground"
           >
-            <X className="h-4 w-4 mr-1" />
-            Clear Filters
+            <X className="h-3.5 w-3.5 mr-1" />
+            Clear
           </Button>
         )}
 
-        {/* Right Side Actions */}
-        <div className="ml-auto flex items-center gap-3">
-          <div
-            title={`${totalCount.toLocaleString()} ${
-              totalCount === 1 ? "respondent" : "respondents"
-            }`}
-            className="text-xs text-muted-foreground font-medium"
-          >
-            {totalCount.toLocaleString()}{" "}
-            {totalCount === 1 ? "respondent" : "respondents"}
-          </div>
-          <ExportButton
-            {...(isGlobalMode
-              ? {
-                  selectedProject: selectedProject,
-                  selectedStatus: selectedStatus,
-                  searchUserId: searchUserId,
-                  searchProjectId: "",
-                }
-              : {
-                  projectId: projectId,
-                  selectedStatus: selectedStatus,
-                  searchUserId: searchUserId,
-                })}
+        {/* Flex spacer */}
+        <div className="flex-1" />
+
+        {/* Count */}
+        <span className="shrink-0 text-xs font-medium text-muted-foreground whitespace-nowrap">
+          {totalCount.toLocaleString()}{" "}
+          {totalCount === 1 ? "respondent" : "respondents"}
+        </span>
+
+        {/* Export */}
+        <div className="shrink-0">
+          <ExportButton {...exportProps} />
+        </div>
+
+        {/* Refresh */}
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={handleRefresh}
+          disabled={isRefreshing || isLoading}
+          className="shrink-0 h-9 w-9"
+        >
+          <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+        </Button>
+      </div>
+
+      {/* ════════════════════════════════════════════════════════════════════
+          TABLET (md–lg) — two clean rows, no sheet
+          ════════════════════════════════════════════════════════════════════ */}
+      <div className="hidden md:flex lg:hidden flex-col gap-2 mb-5">
+        {/* Row 1: all filter controls */}
+        <div className="flex items-center gap-2">
+          <SearchBar
+            searchField={searchField}
+            setSearchField={setSearchField}
+            searchUserId={searchUserId}
+            setSearchUserId={setSearchUserId}
+            className="flex-1 min-w-0"
           />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing || isLoading}
-          >
-            <RefreshCw
-              className={`h-4 w-4 mr-1 ${isRefreshing ? "animate-spin" : ""}`}
-            />
-          </Button>
+          {isGlobalMode && (
+            <Popover open={tabletComboOpen} onOpenChange={setTabletComboOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className="w-[160px] shrink-0 h-9 justify-between font-normal text-sm"
+                >
+                  <span className="truncate">{projectButtonLabel}</span>
+                  <ChevronsUpDown className="ml-1 h-3.5 w-3.5 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[220px] p-0" align="start">
+                {makeComboContent(() => setTabletComboOpen(false))}
+              </PopoverContent>
+            </Popover>
+          )}
+          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+            <SelectTrigger className="w-[138px] shrink-0 h-9 text-sm">
+              <SelectValue placeholder="All Statuses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="COMPLETED">Completed</SelectItem>
+              <SelectItem value="TERMINATED">Terminated</SelectItem>
+              <SelectItem value="STARTED">Started</SelectItem>
+              <SelectItem value="QUOTA_FULL">Quota Full</SelectItem>
+              <SelectItem value="QUALITY_TERMINATED">Quality Terminated</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Row 2: count · chips · actions */}
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="shrink-0 text-xs font-medium text-muted-foreground whitespace-nowrap">
+            {totalCount.toLocaleString()} {totalCount === 1 ? "respondent" : "respondents"}
+          </span>
+
+          {/* Active chips */}
+          <div className="flex flex-1 flex-wrap items-center gap-1.5 min-w-0 overflow-hidden">
+            <SearchChip searchField={searchField} searchUserId={searchUserId} setSearchUserId={setSearchUserId} />
+            {isGlobalMode && selectedProject !== "all" && selectedProjectData && (
+              <Button variant="secondary" size="sm" onClick={() => setSelectedProject?.("all")}
+                className="h-7 rounded-full px-2 text-xs gap-1">
+                {selectedProjectData.project_id}<X className="h-3 w-3" />
+              </Button>
+            )}
+            {selectedStatus !== "all" && (
+              <Button variant="secondary" size="sm" onClick={() => setSelectedStatus("all")}
+                className="h-7 rounded-full px-2 text-xs gap-1">
+                {selectedStatus}<X className="h-3 w-3" />
+              </Button>
+            )}
+            {hasFilters && (
+              <button onClick={clearFilters}
+                className="text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors shrink-0">
+                Clear all
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            <ExportButton {...exportProps} />
+            <Button variant="outline" size="icon" className="h-9 w-9"
+              onClick={handleRefresh} disabled={isRefreshing || isLoading}>
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Filters */}
-      <div className="md:hidden mb-6 space-y-3">
-        {/* Container card */}
-        <div className="rounded-xl border bg-background/80 px-3 py-3 shadow-sm space-y-3">
-          {/* Top Row - Search + Filters */}
-          <div className="flex items-center gap-2">
-            {/* Search */}
-            <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search by User ID"
-                value={searchUserId}
-                onChange={(e) => setSearchUserId(e.target.value)}
-                className="h-9 rounded-lg pl-9 pr-9 text-sm"
-              />
-              {searchUserId && (
-                <button
-                  onClick={() => setSearchUserId("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              )}
-            </div>
+      {/* ════════════════════════════════════════════════════════════════════
+          MOBILE (<md) — search + sheet drawer
+          ════════════════════════════════════════════════════════════════════ */}
+      <div className="flex md:hidden flex-col gap-2 mb-5">
+        {/* Row 1: search bar + sheet trigger */}
+        <div className="flex items-center gap-2">
+          <SearchBar
+            searchField={searchField}
+            setSearchField={setSearchField}
+            searchUserId={searchUserId}
+            setSearchUserId={setSearchUserId}
+            className="flex-1 min-w-0"
+          />
 
-            {/* Filter Sheet Trigger */}
-            <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-9 w-9 shrink-0 rounded-lg border-dashed relative"
-                >
-                  <SlidersHorizontal className="h-4 w-4" />
-                  {hasFilters && (
-                    <span className="absolute -top-1 -right-1 inline-flex h-3 w-3 items-center justify-center rounded-full bg-primary">
-                      <span className="h-2 w-2 rounded-full bg-primary-foreground" />
-                    </span>
-                  )}
-                </Button>
-              </SheetTrigger>
-
-              <SheetContent
-                side="bottom"
-                className="h-[82vh] px-4 rounded-t-2xl border-t bg-background/95 pb-6"
+          <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="relative h-9 w-9 shrink-0 rounded-lg"
               >
-                <SheetHeader className="space-y-1 pb-2">
-                  <SheetTitle>Filters</SheetTitle>
-                  <SheetDescription>
+                <SlidersHorizontal className="h-4 w-4" />
+                {hasFilters && (
+                  <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-primary">
+                    <span className="h-2 w-2 rounded-full bg-primary-foreground" />
+                  </span>
+                )}
+              </Button>
+            </SheetTrigger>
+
+            <SheetContent side="bottom"
+              className="h-auto max-h-[78vh] rounded-t-3xl border-t bg-background px-0 pb-0">
+              {/* Drag handle */}
+              <div className="mx-auto mb-1 mt-3 h-1 w-10 rounded-full bg-muted-foreground/20" />
+
+              <div className="px-5 pb-8 pt-2">
+                <SheetHeader className="mb-5 space-y-0.5 text-left">
+                  <SheetTitle className="text-base font-semibold">Filters</SheetTitle>
+                  <SheetDescription className="text-xs">
                     {isGlobalMode
-                      ? "Refine respondents by project and status."
-                      : "Refine respondents by status."}
+                      ? "Narrow by project, location and status."
+                      : "Narrow by status."}
                   </SheetDescription>
                 </SheetHeader>
 
-                <div className="mt-4 space-y-5">
-                  {/* Project Filter - Only in Global Mode */}
+                <div className="space-y-4">
                   {isGlobalMode && (
                     <div className="space-y-1.5">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Project
-                      </span>
-                      <Select
-                        value={selectedProject}
-                        onValueChange={setSelectedProject}
-                      >
-                        <SelectTrigger className="h-9 w-full rounded-lg text-sm">
+                      </p>
+                      <Select value={selectedProject} onValueChange={setSelectedProject}>
+                        <SelectTrigger className="h-11 w-full rounded-xl text-sm">
                           <SelectValue placeholder="All projects" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all">All projects</SelectItem>
-                          {projects?.map((project) => (
-                            <SelectItem key={project.id} value={project.id}>
-                              {project.project_id}
-                            </SelectItem>
+                          {projects?.map((p) => (
+                            <SelectItem key={p.id} value={p.id}>{p.project_id}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
                   )}
 
-                  {/* Status Filter */}
                   <div className="space-y-1.5">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                       Status
-                    </span>
-                    <Select
-                      value={selectedStatus}
-                      onValueChange={setSelectedStatus}
-                    >
-                      <SelectTrigger className="h-9 rounded-lg text-sm w-full">
+                    </p>
+                    <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                      <SelectTrigger className="h-11 w-full rounded-xl text-sm">
                         <SelectValue placeholder="All statuses" />
                       </SelectTrigger>
                       <SelectContent>
@@ -367,165 +542,86 @@ export function ResponsiveFilters({
                         <SelectItem value="TERMINATED">Terminated</SelectItem>
                         <SelectItem value="STARTED">Started</SelectItem>
                         <SelectItem value="QUOTA_FULL">Quota Full</SelectItem>
-                        <SelectItem value="QUALITY_TERMINATED">
-                          QUALITY_TERMINATED
-                        </SelectItem>
+                        <SelectItem value="QUALITY_TERMINATED">Quality Terminated</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  {/* Active Filters Summary */}
+                  {/* Active chips inside sheet */}
                   {hasFilters && (
-                    <div className="rounded-lg border bg-muted/40 px-3 py-2.5 space-y-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    <div className="rounded-2xl border bg-muted/30 p-3 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Active filters
-                        </span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-7 px-2 text-xs"
-                          onClick={() => {
-                            clearFilters();
-                            setMobileFiltersOpen(false);
-                          }}
+                        </p>
+                        <button
+                          onClick={() => { clearFilters(); setMobileFiltersOpen(false); }}
+                          className="text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground"
                         >
                           Clear all
-                        </Button>
+                        </button>
                       </div>
-
-                      {/* Chips inside sheet */}
                       <div className="flex flex-wrap gap-1.5">
-                        {searchUserId && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setSearchUserId("")}
-                            className="h-7 rounded-full px-2 text-xs"
-                          >
-                            User: {searchUserId.slice(0, 15)}
-                            {searchUserId.length > 15 ? "..." : ""}
-                            <X className="ml-1 h-3 w-3" />
+                        <SearchChip searchField={searchField} searchUserId={searchUserId} setSearchUserId={setSearchUserId} />
+                        {isGlobalMode && selectedProject !== "all" && selectedProjectData && (
+                          <Button variant="secondary" size="sm" onClick={() => setSelectedProject?.("all")}
+                            className="h-7 rounded-full px-2 text-xs gap-1">
+                            {selectedProjectData.project_id}<X className="h-3 w-3" />
                           </Button>
                         )}
-                        {isGlobalMode &&
-                          selectedProject !== "all" &&
-                          selectedProjectData && (
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              onClick={() => setSelectedProject?.("all")}
-                              className="h-7 rounded-full px-2 text-xs"
-                            >
-                              {selectedProjectData.project_id}
-                              <X className="ml-1 h-3 w-3" />
-                            </Button>
-                          )}
                         {selectedStatus !== "all" && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setSelectedStatus("all")}
-                            className="h-7 rounded-full px-2 text-xs"
-                          >
-                            {selectedStatus}
-                            <X className="ml-1 h-3 w-3" />
+                          <Button variant="secondary" size="sm" onClick={() => setSelectedStatus("all")}
+                            className="h-7 rounded-full px-2 text-xs gap-1">
+                            {selectedStatus}<X className="h-3 w-3" />
                           </Button>
                         )}
                       </div>
                     </div>
                   )}
 
-                  {/* Apply Button */}
                   <Button
-                    className="mt-2 w-full h-10 rounded-lg text-sm font-medium"
+                    className="h-12 w-full rounded-2xl text-sm font-semibold"
                     onClick={() => setMobileFiltersOpen(false)}
                   >
                     Apply filters
                   </Button>
                 </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-
-          {/* Bottom Row - Stats and Actions */}
-          <div className="flex items-center justify-between pt-1">
-            <div className="text-xs font-medium text-muted-foreground">
-              {totalCount.toLocaleString()}{" "}
-              {totalCount === 1 ? "respondent" : "respondents"}
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              <ExportButton
-                {...(isGlobalMode
-                  ? {
-                      selectedProject: selectedProject,
-                      selectedStatus: selectedStatus,
-                      searchUserId: searchUserId,
-                      searchProjectId: "",
-                    }
-                  : {
-                      projectId: projectId,
-                      selectedStatus: selectedStatus,
-                      searchUserId: searchUserId,
-                    })}
-              />
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 rounded-lg"
-                onClick={handleRefresh}
-                disabled={isRefreshing || isLoading}
-              >
-                <RefreshCw
-                  className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
-                />
-              </Button>
-            </div>
-          </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
 
-        {/* Active Filters Chips (inline under card) */}
-        {hasFilters && (
-          <div className="flex flex-wrap gap-1.5 px-1">
-            {searchUserId && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSearchUserId("")}
-                className="h-7 rounded-full border-dashed px-2 text-xs"
-              >
-                User: {searchUserId.slice(0, 15)}
-                {searchUserId.length > 15 ? "..." : ""}
-                <X className="ml-1 h-3 w-3" />
+        {/* Row 2: count + export + refresh + active chips */}
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="shrink-0 text-xs font-medium text-muted-foreground whitespace-nowrap">
+            {totalCount.toLocaleString()} {totalCount === 1 ? "respondent" : "respondents"}
+          </span>
+
+          {/* Active chips (overflow hidden on mobile) */}
+          <div className="flex flex-1 flex-wrap items-center gap-1 min-w-0 overflow-hidden">
+            <SearchChip searchField={searchField} searchUserId={searchUserId} setSearchUserId={setSearchUserId} variant="outline" />
+            {isGlobalMode && selectedProject !== "all" && selectedProjectData && (
+              <Button variant="outline" size="sm" onClick={() => setSelectedProject?.("all")}
+                className="h-6 rounded-full border-dashed px-2 text-[11px] gap-1">
+                {selectedProjectData.project_id}<X className="h-3 w-3" />
               </Button>
             )}
-            {isGlobalMode &&
-              selectedProject !== "all" &&
-              selectedProjectData && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setSelectedProject?.("all")}
-                  className="h-7 rounded-full border-dashed px-2 text-xs"
-                >
-                  {selectedProjectData.project_id}
-                  <X className="ml-1 h-3 w-3" />
-                </Button>
-              )}
             {selectedStatus !== "all" && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedStatus("all")}
-                className="h-7 rounded-full border-dashed px-2 text-xs"
-              >
-                {selectedStatus}
-                <X className="ml-1 h-3 w-3" />
+              <Button variant="outline" size="sm" onClick={() => setSelectedStatus("all")}
+                className="h-6 rounded-full border-dashed px-2 text-[11px] gap-1">
+                {selectedStatus}<X className="h-3 w-3" />
               </Button>
             )}
           </div>
-        )}
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            <ExportButton {...exportProps} />
+            <Button variant="outline" size="icon" className="h-9 w-9 rounded-lg"
+              onClick={handleRefresh} disabled={isRefreshing || isLoading}>
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+            </Button>
+          </div>
+        </div>
       </div>
     </>
   );

@@ -1,45 +1,47 @@
 // app/api/projects/[id]/respondents/route.ts
-import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
-import { getSupabaseAdmin } from "@/lib/supabase/admin"
+import { type NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
+
+const ALLOWED_GEO_FIELDS = new Set(["country", "country_code", "city", "state"]);
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const supabase = await createClient()
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { id: projectId } = await params
-    const searchParams = request.nextUrl.searchParams
-    const offset = Number.parseInt(searchParams.get("offset") || "0")
-    const limit = Number.parseInt(searchParams.get("limit") || "50")
-    const status = searchParams.get("status")
-    const userId = searchParams.get("userId")
+    const { id: projectId } = await params;
+    const searchParams = request.nextUrl.searchParams;
+    const offset   = Number.parseInt(searchParams.get("offset") || "0");
+    const limit    = Number.parseInt(searchParams.get("limit")  || "50");
+    const status   = searchParams.get("status");
+    const userId   = searchParams.get("userId");
+    const geoField = searchParams.get("geoField"); // e.g. "country", "country_code", "state", "city"
+    const geoValue = searchParams.get("geoValue");
 
-    
-
-    const adminClient = getSupabaseAdmin()
+    const adminClient = getSupabaseAdmin();
 
     // Verify project exists
     const { data: project, error: projectError } = await adminClient
       .from("projects")
       .select("id, project_id, title")
       .eq("id", projectId)
-      .single()
+      .single();
 
     if (projectError || !project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 })
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    // Build query for responses
+    // Build query — note the comma after completed_at (was missing before)
     let query = adminClient
       .from("responses")
       .select(
@@ -53,125 +55,154 @@ export async function GET(
         browser_name,
         status,
         created_at,
-        completed_at
-      `,
-        { count: "exact" }
+        completed_at,
+        country,
+        country_code,
+        city,
+        state,
+        latitude,
+        longitude,
+        isp,
+        timezone
+        `,
+        { count: "exact" },
       )
-      .eq("project_id", projectId)
+      .eq("project_id", projectId);
 
-    // Apply filters
     if (status && status !== "all") {
-      query = query.eq("status", status)
+      query = query.eq("status", status);
     }
 
+    // userId — case-SENSITIVE partial match
     if (userId && userId.trim()) {
-      query = query.like("user_id", `%${userId.trim()}%`)
+      query = query.like("user_id", `%${userId.trim()}%`);
     }
 
-    // Order and paginate
-    query = query.order("created_at", { ascending: true }).range(offset, offset + limit - 1)
+    // Geo filter — case-INSENSITIVE (ilike), whitelisted columns only
+    if (geoField && geoValue && ALLOWED_GEO_FIELDS.has(geoField)) {
+      query = query.ilike(geoField, `%${geoValue.trim()}%`);
+    }
 
-    const { data: responses, error, count } = await query
+    query = query
+      .order("created_at", { ascending: true })
+      .range(offset, offset + limit - 1);
+
+    const { data: responses, error, count } = await query;
 
     if (error) {
-      console.error("Error fetching respondents:", error)
-      return NextResponse.json({ error: "Failed to fetch respondents" }, { status: 500 })
+      console.error("Error fetching respondents:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch respondents" },
+        { status: 500 },
+      );
     }
 
-    // Transform data
     const respondents = (responses || []).map((response: any) => ({
-      id: response.id,
-      projectId: project.project_id,
-      userId: response.user_id,
-      ipAddress: response.ip_address,
-      deviceType: response.device_type,
+      id:          response.id,
+      projectId:   project.project_id,
+      userId:      response.user_id,
+      ipAddress:   response.ip_address,
+      deviceType:  response.device_type,
       browserName: response.browser_name,
-      status: response.status,
-      createdAt: response.created_at,
+      status:      response.status,
+      createdAt:   response.created_at,
       completedAt: response.completed_at,
-      // For backward compatibility with existing UI
-      respondentName: response.user_id,
+      // 🌍 GEO DATA
+      country:     response.country      ?? "Unknown",
+      countryCode: response.country_code ?? "Unknown",
+      city:        response.city         ?? "Unknown",
+      state:       response.state        ?? "Unknown",
+      latitude:    response.latitude     ?? "Unknown",
+      longitude:   response.longitude    ?? "Unknown",
+      isp:         response.isp          ?? "Unknown",
+      timezone:    response.timezone     ?? "Unknown",
+      // Backward compat
+      respondentName:  response.user_id,
       respondentEmail: null,
       respondentPhone: "N/A",
-    }))
+    }));
 
     return NextResponse.json({
       respondents,
       pagination: {
-        total: count || 0,
+        total:   count || 0,
         offset,
         limit,
         hasMore: (count || 0) > offset + limit,
       },
-    })
+    });
   } catch (error) {
-    console.error("Error fetching project respondents:", error)
-    return NextResponse.json({ error: "Failed to fetch respondents" }, { status: 500 })
+    console.error("Error fetching project respondents:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch respondents" },
+      { status: 500 },
+    );
   }
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = await params
-    
-    // Verify user is authenticated
-    const supabase = await createClient()
+    const { id } = await params;
+
+    const supabase = await createClient();
     const {
       data: { user },
-    } = await supabase.auth.getUser()
+    } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Validate ID format
     if (!id || id.trim() === "") {
-      return NextResponse.json({ error: "Invalid respondent ID" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Invalid respondent ID" },
+        { status: 400 },
+      );
     }
 
-    const adminClient = getSupabaseAdmin()
+    const adminClient = getSupabaseAdmin();
 
-    // Check if respondent exists
     const { data: respondent, error: fetchError } = await adminClient
       .from("responses")
       .select("id, user_id, project_id")
       .eq("id", id)
-      .single()
+      .single();
 
     if (fetchError || !respondent) {
-      return NextResponse.json({ error: "Respondent not found" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Respondent not found" },
+        { status: 404 },
+      );
     }
 
-    // Delete the respondent
     const { error: deleteError } = await adminClient
       .from("responses")
       .delete()
-      .eq("id", id)
+      .eq("id", id);
 
     if (deleteError) {
-      console.error("Error deleting respondent:", deleteError)
+      console.error("Error deleting respondent:", deleteError);
       return NextResponse.json(
         { error: "Failed to delete respondent", details: deleteError.message },
-        { status: 500 }
-      )
+        { status: 500 },
+      );
     }
 
     return NextResponse.json(
-      { 
-        success: true, 
-        message: "Respondent deleted successfully",
-        deletedId: id 
-      },
-      { status: 200 }
-    )
+      { success: true, message: "Respondent deleted successfully", deletedId: id },
+      { status: 200 },
+    );
   } catch (error) {
-    console.error("Delete respondent error:", error)
+    console.error("Delete respondent error:", error);
     return NextResponse.json(
-      { error: "Internal server error", details: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 }
-    )
+      {
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    );
   }
 }

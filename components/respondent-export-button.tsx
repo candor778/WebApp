@@ -21,125 +21,130 @@ import {
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 
-interface ExportButtonProps {
-  projectId?: string
-  selectedProject?: string
-  selectedStatus?: string
-  searchUserId?: string
-  searchProjectId?: string
-  variant?: "outline" | "default" | "secondary" | "ghost" | "link" | "destructive"
-  size?: "default" | "sm" | "lg" | "icon"
+// Must stay in sync with SearchField in responsive-filters.tsx
+type SearchField = "userId" | "country" | "countryCode" | "state" | "city"
+
+// Maps camelCase UI field → actual DB column name sent to the API
+const GEO_COLUMN_MAP: Record<string, string> = {
+  country:     "country",
+  countryCode: "country_code",
+  state:       "state",
+  city:        "city",
 }
 
-export function ExportButton({ 
-  projectId, 
+interface ExportButtonProps {
+  projectId?:      string
+  selectedProject?: string
+  selectedStatus?:  string
+  searchUserId?:    string
+  searchField?:     SearchField
+  searchProjectId?: string
+  variant?: "outline" | "default" | "secondary" | "ghost" | "link" | "destructive"
+  size?:    "default" | "sm" | "lg" | "icon"
+}
+
+export function ExportButton({
+  projectId,
   selectedProject,
   selectedStatus,
   searchUserId,
+  searchField = "userId",
   searchProjectId,
-  variant = "outline", 
-  size = "sm" 
+  variant = "outline",
+  size = "sm",
 }: ExportButtonProps) {
-  const [isExporting, setIsExporting] = useState(false)
+  const [isExporting, setIsExporting]     = useState(false)
   const [showDateDialog, setShowDateDialog] = useState(false)
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
+  const [startDate, setStartDate]         = useState("")
+  const [endDate, setEndDate]             = useState("")
   const { toast } = useToast()
 
-  const handleExport = async (includeDate: boolean = false) => {
+  const handleExport = async (includeDate = false) => {
     setIsExporting(true)
     try {
       let endpoint: string
-      
-      // Use project-specific endpoint if projectId is provided
+
       if (projectId) {
-        endpoint = `/api/projects/${projectId}/respondents/export`
-        
-        // Add filters as query parameters for project-specific export
+        // ── Project-specific export ──────────────────────────────────
+        // Route file lives at /api/projects/[id]/export/route.ts
+        endpoint = `/api/projects/${projectId}/export`
         const params = new URLSearchParams()
-        if (selectedStatus && selectedStatus !== "all") {
+
+        if (selectedStatus && selectedStatus !== "all")
           params.set("status", selectedStatus)
+
+        // userId is case-sensitive; geo fields go as geoField/geoValue
+        if (searchUserId?.trim()) {
+          if (searchField === "userId") {
+            params.set("userId", searchUserId.trim())
+          } else {
+            params.set("geoField", GEO_COLUMN_MAP[searchField] ?? searchField)
+            params.set("geoValue", searchUserId.trim())
+          }
         }
-        if (searchUserId && searchUserId.trim()) {
-          params.set("userId", searchUserId.trim())
-        }
-        if (projectId && projectId.trim()) {
-          params.set("projectId", projectId.trim())
-        }
-        
-        // Add date parameters if filtering by date
+
         if (includeDate && startDate && endDate) {
           params.set("startDate", startDate)
-          params.set("endDate", endDate)
+          params.set("endDate",   endDate)
         }
-        
-        if (params.toString()) {
-          endpoint += `?${params.toString()}`
-        }
+        if (params.toString()) endpoint += `?${params.toString()}`
+
       } else {
-        // Use global endpoint
+        // ── Global export ────────────────────────────────────────────
         endpoint = `/api/respondents/export`
-        
-        // Add filters as query parameters for global export
         const params = new URLSearchParams()
-        if (selectedProject && selectedProject !== "all") {
+
+        if (selectedProject && selectedProject !== "all")
           params.set("projectId", selectedProject)
-        }
-        if (selectedStatus && selectedStatus !== "all") {
+        if (selectedStatus && selectedStatus !== "all")
           params.set("status", selectedStatus)
+
+        // userId is case-sensitive; geo fields go as geoField/geoValue
+        if (searchUserId?.trim()) {
+          if (searchField === "userId") {
+            params.set("userId", searchUserId.trim())
+          } else {
+            params.set("geoField", GEO_COLUMN_MAP[searchField] ?? searchField)
+            params.set("geoValue", searchUserId.trim())
+          }
         }
-        if (searchUserId && searchUserId.trim()) {
-          params.set("userId", searchUserId.trim())
-        }
-        if (searchProjectId && searchProjectId.trim()) {
+
+        if (searchProjectId?.trim())
           params.set("searchProjectId", searchProjectId.trim())
-        }
-        
-        // Add date parameters if filtering by date
         if (includeDate && startDate && endDate) {
           params.set("startDate", startDate)
-          params.set("endDate", endDate)
+          params.set("endDate",   endDate)
         }
-        
-        if (params.toString()) {
-          endpoint += `?${params.toString()}`
-        }
+        if (params.toString()) endpoint += `?${params.toString()}`
       }
-      
+
       const response = await fetch(endpoint)
-      
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
-        console.error('Export failed:', response.status, errorData)
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }))
+        console.error("Export failed:", response.status, errorData)
         throw new Error(`Failed to export data: ${errorData.error || response.statusText}`)
       }
 
-      // Get the filename from the Content-Disposition header
       const contentDisposition = response.headers.get("Content-Disposition")
       const filenameMatch = contentDisposition?.match(/filename="(.+)"/)
       const filename = filenameMatch ? filenameMatch[1] : `responses_${Date.now()}.xlsx`
 
-      // Create a blob from the response
       const blob = await response.blob()
-      
-      // Create a download link and trigger it
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
+      const url  = window.URL.createObjectURL(blob)
+      const a    = document.createElement("a")
+      a.href     = url
       a.download = filename
       document.body.appendChild(a)
       a.click()
-      
-      // Cleanup
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
 
       toast({
-        title: "Export successful",
+        title:       "Export successful",
         description: "Your data has been exported to Excel.",
       })
 
-      // Close dialog and reset dates if it was a date export
       if (includeDate) {
         setShowDateDialog(false)
         setStartDate("")
@@ -148,9 +153,9 @@ export function ExportButton({
     } catch (error) {
       console.error("Export error:", error)
       toast({
-        title: "Export failed",
+        title:       "Export failed",
         description: "Failed to export data. Please try again.",
-        variant: "destructive",
+        variant:     "destructive",
       })
     } finally {
       setIsExporting(false)
@@ -160,22 +165,20 @@ export function ExportButton({
   const handleDateExport = () => {
     if (!startDate || !endDate) {
       toast({
-        title: "Invalid date range",
+        title:       "Invalid date range",
         description: "Please select both start and end dates.",
-        variant: "destructive",
+        variant:     "destructive",
       })
       return
     }
-
     if (new Date(startDate) > new Date(endDate)) {
       toast({
-        title: "Invalid date range",
+        title:       "Invalid date range",
         description: "Start date must be before end date.",
-        variant: "destructive",
+        variant:     "destructive",
       })
       return
     }
-
     handleExport(true)
   }
 

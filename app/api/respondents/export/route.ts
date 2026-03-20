@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server"
 import { getSupabaseAdmin } from "@/lib/supabase/admin"
 import * as XLSX from "xlsx"
 
+const ALLOWED_GEO_FIELDS = new Set(["country", "country_code", "city", "state"])
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()
@@ -15,19 +17,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Get filter parameters from URL
     const searchParams = request.nextUrl.searchParams
-    const projectId = searchParams.get("projectId")
-    const status = searchParams.get("status")
-    const userId = searchParams.get("userId")
+    const projectId     = searchParams.get("projectId")
+    const status        = searchParams.get("status")
+    const userId        = searchParams.get("userId")
     const searchProjectId = searchParams.get("searchProjectId")
-    const startDate = searchParams.get("startDate")
-    const endDate = searchParams.get("endDate")
+    const geoField      = searchParams.get("geoField")
+    const geoValue      = searchParams.get("geoValue")
+    const startDate     = searchParams.get("startDate")
+    const endDate       = searchParams.get("endDate")
 
     const adminClient = getSupabaseAdmin()
-    console.log(searchParams, projectId, status, userId, searchProjectId, startDate, endDate);
-    
-    // Fetch all projects
+
+    // Fetch all projects (for filename resolution)
     const { data: projects, error: projectsError } = await adminClient
       .from("projects")
       .select("*")
@@ -37,13 +39,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "No projects found" }, { status: 404 })
     }
 
-    // Build query for responses
+    // Build query
     let query = adminClient.from("responses").select(`
       *,
       projects!inner(id, project_id, title)
     `)
 
-    // Apply filters
     if (projectId && projectId !== "all") {
       query = query.eq("project_id", projectId)
     }
@@ -52,24 +53,28 @@ export async function GET(request: NextRequest) {
       query = query.eq("status", status)
     }
 
+    // userId — case-SENSITIVE partial match (like, not ilike)
     if (userId && userId.trim()) {
-      query = query.ilike("user_id", `%${userId.trim()}%`)
+      query = query.like("user_id", `%${userId.trim()}%`)
     }
 
     if (searchProjectId && searchProjectId.trim()) {
       query = query.ilike("projects.project_id", `%${searchProjectId.trim()}%`)
     }
 
-    // Apply date range filter
+    // Geo filter — case-INSENSITIVE (ilike), whitelisted columns only
+    if (geoField && geoValue && ALLOWED_GEO_FIELDS.has(geoField)) {
+      query = query.ilike(geoField, `%${geoValue.trim()}%`)
+    }
+
     if (startDate && endDate) {
       const start = new Date(startDate)
       start.setHours(0, 0, 0, 0)
-      
       const end = new Date(endDate)
       end.setHours(23, 59, 59, 999)
-      
-      query = query.gte("created_at", start.toISOString())
-      query = query.lte("created_at", end.toISOString())
+      query = query
+        .gte("created_at", start.toISOString())
+        .lte("created_at", end.toISOString())
     }
 
     const { data: responses, error: responsesError } = await query.order("created_at", { ascending: false })
@@ -79,81 +84,75 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Failed to fetch responses" }, { status: 500 })
     }
 
-    // Prepare data for Excel - metadata only
+    // Build Excel rows — geo columns inserted right after "IP Address"
     const excelData = (responses || []).map((response: any) => ({
-      "Project ID": response.projects?.project_id || "-",
+      "Project ID":    response.projects?.project_id || "-",
       "Project Title": response.projects?.title || "-",
-      "Response ID": response.id,
-      "User ID": response.user_id,
-      Status: response.status,
-      "Device Type": response.device_type || "-",
-      Browser: response.browser_name || "-",
-      "IP Address": response.ip_address || "-",
-      "User Agent": response.user_agent || "-",
-      "Created At": new Date(response.created_at).toLocaleString(),
-      "Completed At": response.completed_at ? new Date(response.completed_at).toLocaleString() : "-",
+      "Response ID":   response.id,
+      "User ID":       response.user_id,
+      "Status":        response.status,
+      "Device Type":   response.device_type || "-",
+      "Browser":       response.browser_name || "-",
+      "IP Address":    response.ip_address || "-",
+      // ── Geo columns (after IP Address) ──────────────────────────────
+      "Country":       response.country      || "-",
+      "Country Code":  response.country_code || "-",
+      "City":          response.city         || "-",
+      "State":         response.state        || "-",
+      "Latitude":      response.latitude     || "-",
+      "Longitude":     response.longitude    || "-",
+      "ISP":           response.isp          || "-",
+      "Timezone":      response.timezone     || "-",
+      // ────────────────────────────────────────────────────────────────
+      "User Agent":    response.user_agent   || "-",
+      "Created At":    new Date(response.created_at).toLocaleString(),
+      "Completed At":  response.completed_at
+        ? new Date(response.completed_at).toLocaleString()
+        : "-",
     }))
 
-    // Handle empty responses case
+    // Empty-state placeholder row
     if (excelData.length === 0) {
       excelData.push({
-        "Project ID": "",
-        "Project Title": "",
-        "Response ID": "",
-        "User ID": "",
-        Status: "",
-        "Device Type": "",
-        Browser: "",
-        "IP Address": "",
-        "User Agent": "",
-        "Created At": "",
-        "Completed At": "",
+        "Project ID": "", "Project Title": "", "Response ID": "", "User ID": "",
+        "Status": "", "Device Type": "", "Browser": "", "IP Address": "",
+        "Country": "", "Country Code": "", "City": "", "State": "",
+        "Latitude": "", "Longitude": "", "ISP": "", "Timezone": "",
+        "User Agent": "", "Created At": "", "Completed At": "",
       })
     }
 
-    // Create workbook and worksheet
-    const workbook = XLSX.utils.book_new()
+    const workbook  = XLSX.utils.book_new()
     const worksheet = XLSX.utils.json_to_sheet(excelData)
 
     // Auto-size columns
     const maxWidth = 50
-    const firstRow = excelData[0]
-    const columnWidths = Object.keys(firstRow).map((key) => {
-      const maxLength = Math.max(key.length, ...excelData.map((row: any) => String(row[key] || "").length))
-      return { wch: Math.min(maxLength + 2, maxWidth) }
+    const columnWidths = Object.keys(excelData[0]).map((key) => {
+      const maxLen = Math.max(
+        key.length,
+        ...excelData.map((row: any) => String(row[key] || "").length)
+      )
+      return { wch: Math.min(maxLen + 2, maxWidth) }
     })
     worksheet["!cols"] = columnWidths
 
-    // Generate filename based on filters
+    // Build filename
     let filename = "responses"
     if (projectId && projectId !== "all") {
       const project = projects.find((p: any) => p.id === projectId)
-      if (project) {
-        filename = `${project.project_id}_responses`
-      }
+      if (project) filename = `${project.project_id}_responses`
     } else if (searchProjectId) {
       filename = `${searchProjectId}_filtered_responses`
     } else {
       filename = "all_responses"
     }
-
-    if (status && status !== "all") {
-      filename += `_${status.toLowerCase()}`
-    }
-
-    // Add date range to filename if present
-    if (startDate && endDate) {
-      filename += `_${startDate}_to_${endDate}`
-    }
-
+    if (status && status !== "all") filename += `_${status.toLowerCase()}`
+    if (startDate && endDate)       filename += `_${startDate}_to_${endDate}`
     filename += `_${new Date().toISOString().split("T")[0]}.xlsx`
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Responses")
-
-    // Generate buffer
     const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" })
 
-    // Return file
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -163,11 +162,8 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Export error details:", error)
     return NextResponse.json(
-      {
-        error: "Failed to export data",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 },
+      { error: "Failed to export data", details: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
     )
   }
 }
