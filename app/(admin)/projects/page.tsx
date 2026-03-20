@@ -26,7 +26,7 @@ export default async function ProjectsPage() {
       created_at,
       responses(count)
     `)
-    .order("created_at", { ascending: false })
+    .order("created_at", { ascending: true })
 
   if (error) {
     console.error("Error fetching projects:", error)
