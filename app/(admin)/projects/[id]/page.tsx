@@ -1,45 +1,64 @@
 // app/(admin)/projects/[id]/page.tsx
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { createClient } from "@/lib/supabase/server"
-import { redirect, notFound } from "next/navigation"
-import Link from "next/link"
-import { ArrowLeft, Users, CheckCircle, XCircle, Clock, TrendingUp, AlertTriangle } from "lucide-react"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
-import { ProjectRespondentsList } from "@/components/project-respondents-list"
-import { getSupabaseAdmin } from "@/lib/supabase/admin"
-import { ExportButton } from "@/components/export-button"
-import { ProjectRemarks } from "@/components/project-remakrs"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/server";
+import { redirect, notFound } from "next/navigation";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  Users,
+  CheckCircle,
+  XCircle,
+  Clock,
+  TrendingUp,
+  AlertTriangle,
+} from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import { ProjectRespondentsList } from "@/components/project-respondents-list";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { ExportButton } from "@/components/export-button";
+import { ProjectRemarks } from "@/components/project-remakrs";
+import { EditTitleButton } from "@/components/Dashboard/edit-title-button";
 
 export default async function ProjectDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = await params
-  const supabase = await createClient()
+  const { id } = await params;
+  const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/auth/login")
+    redirect("/auth/login");
   }
 
-  const adminClient = getSupabaseAdmin()
+  const adminClient = getSupabaseAdmin();
 
-  const { data: project, error: projectError } = await adminClient.from("projects").select("*").eq("id", id).single()
+  const { data: project, error: projectError } = await adminClient
+    .from("projects")
+    .select("*")
+    .eq("id", id)
+    .single();
 
   if (projectError || !project) {
-    notFound()
+    notFound();
   }
 
-  const now = new Date()
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  const weekStart = new Date(todayStart)
-  weekStart.setDate(weekStart.getDate() - 7)
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const weekStart = new Date(todayStart);
+  weekStart.setDate(weekStart.getDate() - 7);
 
   const [
     { count: totalResponses },
@@ -49,7 +68,10 @@ export default async function ProjectDetailPage({
     { count: responsesToday },
     { count: responsesThisWeek },
   ] = await Promise.all([
-    adminClient.from("responses").select("*", { count: "exact", head: true }).eq("project_id", id),
+    adminClient
+      .from("responses")
+      .select("*", { count: "exact", head: true })
+      .eq("project_id", id),
     adminClient
       .from("responses")
       .select("*", { count: "exact", head: true })
@@ -65,7 +87,7 @@ export default async function ProjectDetailPage({
       .select("*", { count: "exact", head: true })
       .eq("project_id", id)
       .eq("status", "QUOTA_FULL"),
-      adminClient
+    adminClient
       .from("responses")
       .select("*", { count: "exact", head: true })
       .eq("project_id", id)
@@ -80,7 +102,7 @@ export default async function ProjectDetailPage({
       .select("*", { count: "exact", head: true })
       .eq("project_id", id)
       .gte("created_at", weekStart.toISOString()),
-  ])
+  ]);
 
   const statsCards = [
     {
@@ -125,7 +147,7 @@ export default async function ProjectDetailPage({
       color: "text-pink-600",
       bgColor: "bg-pink-50 dark:bg-pink-950",
     },
-  ]
+  ];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -144,7 +166,12 @@ export default async function ProjectDetailPage({
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-mono text-sm text-muted-foreground">{project.project_id}</span>
+              <span className="text-sm text-muted-foreground font-medium">
+                Project ID:
+              </span>
+              <span className="font-mono text-sm text-muted-foreground">
+                {project.project_id}
+              </span>
               <Badge
                 variant={project.is_active ? "default" : "secondary"}
                 className={project.is_active ? "bg-green-600" : ""}
@@ -152,8 +179,22 @@ export default async function ProjectDetailPage({
                 {project.is_active ? "Active" : "Inactive"}
               </Badge>
             </div>
-            <h1 className="text-2xl font-bold">{project.title}</h1>
-            {project.description && <p className="text-muted-foreground mt-1">{project.description}</p>}
+
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground font-medium">
+                Title:
+              </span>
+              <EditTitleButton
+                projectId={project.id}
+                currentTitle={project.title}
+              />
+            </div>
+
+            {project.description && (
+              <p className="text-muted-foreground mt-1">
+                {project.description}
+              </p>
+            )}
           </div>
           <div className="ml-4">
             <ProjectRemarks projectId={project.id} />
@@ -164,7 +205,9 @@ export default async function ProjectDetailPage({
           {statsCards.map((stat) => (
             <Card key={stat.title}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {stat.title}
+                </CardTitle>
                 <div className={`p-2 rounded-md ${stat.bgColor}`}>
                   <stat.icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
@@ -187,5 +230,5 @@ export default async function ProjectDetailPage({
         </Card>
       </main>
     </div>
-  )
+  );
 }
